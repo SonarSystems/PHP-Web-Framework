@@ -14,7 +14,24 @@ if ( Config::get( "mysql/enabled" ) )
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8" />
+        <meta charset="<?= Config::get( "meta/charset" ); ?>" />
+        <meta name="description" content="<?= Config::get( "meta/description" ); ?>" />
+        <meta name="keywords" content="<?php
+                                       $index = 0;
+                                       
+                                       foreach( Config::get( "meta/keywords" ) as $keyword )
+                                       {
+                                           $index++;
+                                           
+                                           echo $keyword;
+                                           
+                                           if ( $index < count( Config::get( "meta/keywords" ) ) )
+                                           {
+                                            echo ", ";
+                                           }
+                                       }
+                                       ?>" />
+        <meta name="author" content="<?= Config::get( "meta/author" ); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <?php require_once( "SUB/FAVICON.php" ); ?>

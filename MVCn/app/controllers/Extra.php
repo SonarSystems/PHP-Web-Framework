@@ -4,12 +4,17 @@ class Extra extends Controller
 {
 	public function index( )
 	{
-		$this->view( "extra/policy" );
+		Extra::policy( );
 	}
     
     public function policy( )
 	{
 		$this->view( "extra/policy" );
+	}
+    
+    public function changelog( )
+	{
+		$this->view( "extra/changelog" );
 	}
 }
 

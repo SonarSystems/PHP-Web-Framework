@@ -41,6 +41,7 @@ foreach ( $JS_INTERNAL_FILES as $file )
 }
         
 ?>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     </body>
 </html>
 

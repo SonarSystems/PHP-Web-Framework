@@ -54,7 +54,7 @@ $LIBS_BUILT_IN = array
     
     array( "Foundation-V6-2-3", 0 ),
     
-    array( "W3.CSS", 0 ),
+    array( "W3.CSS", 1 ),
     
     array( "Materialize-V0-97-7", 0 )
 );

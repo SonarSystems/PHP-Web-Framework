@@ -1,6 +1,7 @@
 <?php
 
 $user = new User( );
+$recaptcha = new ReCAPTCHA( );
 
 if ( $user->isLoggedIn( ) )
 {
@@ -18,7 +19,8 @@ if ( Input::exists( "post" ) )
                 'min' => 2,
                 'max' => 32,
                 'unique' => 'users',
-                'numeric' => false
+                'numeric' => false,
+                'email' => false
             ),
             'password' => array(
                 'required' => true,
@@ -34,7 +36,7 @@ if ( Input::exists( "post" ) )
                 'email' => true,
                 'min' => 2,
                 'max' => 32,
-                'unique' => 'users'
+                'unique' => Config::get( "mysql/usersTableName" )
             )
         ), array(
             "User",
@@ -45,24 +47,57 @@ if ( Input::exists( "post" ) )
 
         if ( $validation->passed( ) )
         {
-            $user = new User( );
-            
-            try
+            if ( $recaptcha->check( ) && $recaptcha->passed( ) )
             {
-                $user->create( array(
-                    "username" => Input::get( "username", $_POST ),
-                    "password" => password_hash( Input::get( "password", $_POST ), PASSWORD_DEFAULT ),
-                    "email_address" => Input::get( "email_address", $_POST ),
-                    "salt" => Hash::salt( 128 ),
-                    "joined" => time( )
-                ) );
-                
-                Session::flash( "home", "You have been registered, please check your email for an activation email." );
-                Redirect::to( "home/temp" );
+                try
+                {
+                    $username = Input::get( "username", $_POST );
+                    $emailAddress = Input::get( "email_address", $_POST );
+                    $salt = Hash::salt( 128 );
+
+                    $user->create( array(
+                        "username" => $username,
+                        "password" => password_hash( Input::get( "password", $_POST ), PASSWORD_DEFAULT ),
+                        "email_address" => $emailAddress,
+                        "salt" => $salt,
+                        "joined" => time( )
+                    ) );
+
+                    $email = new Email( );
+
+                    $email = $email->send(
+                        array(
+                            array( $emailAddress, $username )
+                        ),
+                        array( "f.hussain@gymshark.com", "Gymshark" ),
+                        array( "f.hussain@gymshark.com", "Gymshark" ),
+                        "Activation Email",
+                        Config::get( "website/domainName" ).Config::get( "website/root" )."/home/activate/".$salt."/".$username
+                    );
+
+                    if ( $email )
+                    {
+                        echo "Account created, please check your emails for an activation email.";
+                    }
+                    else
+                    {
+                        echo "Error creating account please try again later.";
+                    }
+
+                    //Session::flash( "home", "You have been registered, please check your email for an activation email." );
+                    //Redirect::to( "home/temp" );
+                }
+                catch ( Exception $error )
+                {
+                    die( $error->getMessage( ) );
+                }
             }
-            catch ( Exception $error )
+            else
             {
-                die( $error->getMessage( ) );
+                foreach( $recaptcha->errors( ) as $error )
+                {
+                    echo $error."<br />";
+                }
             }
         }
         else
@@ -80,7 +115,7 @@ if ( Input::exists( "post" ) )
 <form action="" method="POST">
     <div class="field">
         <label for="username">Username</label>
-        <input type="text" name="username" id="username" value="<?php echo Input::get( "username", $_POST ); ?>" autocomplete="off" />
+        <input type="text" name="username" id="username" value="<?php echo Input::get( "username", $_POST ); ?>" />
     </div>
     
     <div class="field">
@@ -95,9 +130,11 @@ if ( Input::exists( "post" ) )
     
     <div class="field">
         <label for="email_address">Enter your Email Address MOFO</label>
-        <input type="text" name="email_address" id="email_address" value="<?php echo Input::get( "email_address", $_POST ); ?>" />
+        <input type="email" name="email_address" id="email_address" value="<?php echo Input::get( "email_address", $_POST ); ?>" />
     </div>
     
     <input type="hidden" name="token" value="<?php echo Token::generate( ); ?>" />
     <input type="submit" value="Register" />
+    
+    <div class="g-recaptcha" data-sitekey="<?= Config::get( "security/GooglereCAPTCHA" )["sitekey"]; ?>"></div>
 </form>

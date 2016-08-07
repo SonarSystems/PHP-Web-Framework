@@ -109,6 +109,78 @@ class Time
         return $time;
     }
     
+    /*
+    *   Convert a unit of time to seconds
+    *   For Example
+    *   convertToSeconds( 10, "minutes" ); => 10 * 60 => 600
+    *   convertToSeconds( 10, "hours" ); => 10 * 60 * 60 => 36000
+    *   convertToSeconds( 10, "days" ); => 10 * 24 * 60 * 60 => 864000
+    *   convertToSeconds( 10, "weeks" ); => 10 * 7 * 24 * 60 * 60 => 6048000
+    *   convertToSeconds( 10, "months" ); => 10 * 30 * 24 * 60 * 60 => 25920000
+    *   convertToSeconds( 10, "years" ); => 10 * 365 * 24 * 60 * 60 => 315360000
+    */
+    public static function convertToSeconds( $unit, $type )
+    {
+        $time = null;
+        
+        switch ( strtolower( $type ) )
+        {
+            case "seconds":
+                $time = $unit;
+                
+                break;
+                
+            case "minutes":
+                $time = $unit * 60;
+                
+                break;
+                
+            case "hours":
+                $time = $unit * 60 * 60;
+                
+                break;
+                
+            case "days":
+                $time = $unit * 24 * 60 * 60;
+                
+                break;
+                
+            case "weeks":
+                $time = $unit * 7 * 24 * 60 * 60;
+                
+                break;
+                
+            case "months":
+                $time = $unit * 30 * 24 * 60 * 60;
+                
+                break;
+                
+            case "years":
+                $time = $unit * 365 * 24 * 60 * 60;
+                
+                break;
+        }
+        
+        return $time;
+    }
+    
+    /*
+    *   Convert a unit of time to milliseconds
+    *   For Example
+    *   convertToMilliseconds( 10, "minutes" ); => 10 * 60 * 1000 => 600000
+    *   convertToMilliseconds( 10, "hours" ); => 10 * 60 * 60 * 1000 => 36000000
+    *   convertToMilliseconds( 10, "days" ); => 10 * 24 * 60 * 60 * 1000 => 864000000
+    *   convertToMilliseconds( 10, "weeks" ); => 10 * 7 * 24 * 60 * 60 * 1000 => 6048000000
+    *   convertToMilliseconds( 10, "months" ); => 10 * 30 * 24 * 60 * 60 * 1000 => 25920000000
+    *   convertToMilliseconds( 10, "years" ); => 10 * 365 * 24 * 60 * 60 * 1000 => 315360000000
+    */
+    public static function convertToMilliseconds( $unit, $type )
+    {
+        $time = Time::convertToSeconds( $unit, $type ) * 1000;
+        
+        return $time;
+    }
+    
     // Convert a value below 10 such as 9 to 09
     private static function addZero( $number )
     {

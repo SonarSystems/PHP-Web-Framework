@@ -1,69 +1,68 @@
 <?php
 
 require_once( "DB.php" );
+require_once( "Error.php" );
 
-class Email
-{
-    private $_passed = false,
-            $_errors = array( ),
-            $_db = null;
-    
+require_once( "../libs/PHPMailer/PHPMailerAutoload.php" );
+
+class Email extends __Error
+{   
     public function __construct( )
     {
-        if ( Config::get( "mysql/enabled" ) )
-        {
-            $this->_db = DB::getInstance( );
-        }
+        
     }
     
-    public function send( $to = array( ), $subject, $body, $headers = array( ) )
+    public function send( $to = array( ), $from = array( ), $replyTo = array( ), $subject, $body )
     {
-        $headersString = "";
+        $mail = new PHPMailer;
         
-        $headersString .= "MIME-Version: 1.0" . "\r\n";
-        $headersString .= "Content-type: text/html;charset=UTF-8" . "\r\n";
+        // Set PHPMailer to use the sendmail transport
+        $mail->isSendmail( );
 
-        foreach( $headers as $header  )
+        // check if the name is present in the from email
+        if ( !empty( $from[1] ) )
         {
-            $headersString .= $header . "\r\n";
+            $mail->setFrom( $from[0], $from[1] );
+        }
+        else
+        {
+            $mail->setFrom( $from[0] );
         }
         
-        $emails = "";
+        // check if the name is present in the reply to email
+        if ( !empty( $replyTo[1] ) )
+        {
+            $mail->addReplyTo( $replyTo[0], $replyTo[1] );
+        }
+        else
+        {
+            $mail->addReplyTo( $replyTo[0] );
+        }
         
         foreach( $to as $email )
         {
-            $emails .= $email;
-            $emails .= ", ";
+            if ( !empty( $email[1] ) )
+            {
+                $mail->addAddress( $email[0], $email[1] );
+            }
+            else
+            {
+                $mail->addAddress( $email[0] );
+            }
         }
         
-        if ( file_exists( "../templates/email/" . $body ) )
-		{
-			$body = file_get_contents( "../templates/email/" . $body );
-		}
+        $mail->Subject = $subject;
+        $mail->msgHTML( $body );
         
-        mail( $emails, $subject, $body, $headersString );
-        
-        if ( empty( $this->_errors ) )
+        if ( !$mail->send( ) )
         {
-            $this->_passed = true;
+            return false;
+        }
+        else
+        {
+            return true;
         }
         
-        return $this;
-    }
-    
-    private function addError( $error )
-    {
-        $this->_errors[] = $error;
-    }
-    
-    public function errors( )
-    {
-        return $this->_errors;
-    }
-    
-    public function passed( )
-    {
-        return $this->_passed;
     }
 }
 

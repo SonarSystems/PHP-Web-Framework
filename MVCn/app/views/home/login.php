@@ -1,5 +1,7 @@
 <?php
 
+Misc::changeWebsiteTitle( "Login" );
+
 $user = new User( );
 
 if ( $user->isLoggedIn( ) )
@@ -38,7 +40,10 @@ if ( Input::exists( "post" ) )
 			}
 			else
 			{
-				echo "Sorry, login failed.";
+                foreach( $user->errors( ) as $error )
+                {
+                    echo $error, "<br />";
+                }
 			}
 		}
 		else
@@ -56,7 +61,7 @@ if ( Input::exists( "post" ) )
 <form action="" method="POST">
 	<div class="field">
 		<label for="username">Username</label>
-		<input type="text" name="username" id="username" value="<?php echo Input::get( "username", $_POST ); ?>" autocomplete="off" />
+		<input type="text" name="username" id="username" value="<?php echo Input::get( "username", $_POST ); ?>" />
 	</div>
 
 	<div class="field">
@@ -66,12 +71,16 @@ if ( Input::exists( "post" ) )
 
 	<div class="field">
 		<label for="remember">
-			<input type="checkbox" name="remember" id="remember" />Remember Me
+			<input type="checkbox" name="remember" id="remember" checked />Remember Me
 		</label>
 	</div>
 
 	<input type="hidden" name="token" value="<?php echo Token::generate( ); ?>" />
 	<input type="submit" value="Login" />
+    
+    <br />
+    
+    <a href="<?= Path::to( "home/forgotpassword" ); ?>">Forgot Password</a>
 </form>
 
 

@@ -22,6 +22,13 @@ class Misc
         
         return $location;
     }
+    
+    public static function changeWebsiteTitle( $title )
+    {
+        echo "  <script type='text/javascript'>
+                    document.title = '$title';
+                </script>";
+    }
 }
 
 ?>

@@ -1,19 +1,18 @@
 <?php
 
 require_once( "DB.php" );
+require_once( "Error.php" );
 
-class Validate
+class Validate extends __Error
 {
-    private $_passed = false,
-            $_errors = array( ),
-            $_db = null;
+    private $_db = null;
     
     public function __construct( )
     {
         if ( Config::get( "mysql/enabled" ) )
         {
             $this->_db = DB::getInstance( );
-        }
+        }        
     }
     
     public function check( $source, $items = array( ), $errorNames = array( ) )
@@ -80,10 +79,30 @@ class Validate
                             
                             break;
                             
-                        case "email":
-                            if ( !filter_var( $value, FILTER_VALIDATE_EMAIL ) )
+                        case "exists":
+                            $check = $this->_db->get( $ruleValue, array( $item, "=", $value ) );
+                            
+                            if ( !$check->count( ) )
                             {
-                                $this->addError( "{$errorName} must be a valid email address" );
+                                $this->addError( "{$errorName} does not exist" );
+                            }
+                            
+                            break;
+                            
+                        case "email":
+                            if ( $ruleValue )
+                            {
+                                if ( !filter_var( $value, FILTER_VALIDATE_EMAIL ) )
+                                {
+                                    $this->addError( "{$errorName} must be a valid email address" );
+                                }
+                            }
+                            else
+                            {
+                                if ( filter_var( $value, FILTER_VALIDATE_EMAIL ) )
+                                {
+                                    $this->addError( "{$errorName} must not be an email address" );
+                                }
                             }
                             
                             break;
@@ -126,21 +145,6 @@ class Validate
         }
         
         return $this;
-    }
-    
-    private function addError( $error )
-    {
-        $this->_errors[] = $error;
-    }
-    
-    public function errors( )
-    {
-        return $this->_errors;
-    }
-    
-    public function passed( )
-    {
-        return $this->_passed;
     }
 }
 

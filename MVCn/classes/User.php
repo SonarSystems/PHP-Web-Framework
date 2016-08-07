@@ -2,14 +2,17 @@
 
 require_once( "Config.php" );
 require_once( "Cookie.php" );
+require_once( "Error.php" );
 
-class User
+class User extends __Error
 {
     private $_db,
     		$_data,
     		$_sessionName,
     		$_cookieName,
-    		$_isLoggedIn;
+    		$_isLoggedIn,
+            $_usersTable,
+            $_usersResetPasswordTableName;
     
     public function __construct( $user = null )
 	{
@@ -19,7 +22,10 @@ class User
 
             $this->_sessionName = Config::get( "session/sessionName" );
             $this->_cookieName = Config::get( "remember/cookieName" );
-
+            
+            $this->_usersTable = Config::get( "mysql/usersTableName" );
+            $this->_usersResetPasswordTableName = Config::get( "mysql/usersResetPasswordTableName" );
+            
             if ( !$user )
             {
                 if ( Session::exists( $this->_sessionName ) )
@@ -51,15 +57,19 @@ class User
 			$id = $this->data( )->id;
 		}
 
-		if ( !$this->_db->update( "users", $id, $fields ) )
+		if ( !$this->_db->update( $this->_usersTable, $id, $fields ) )
 		{
-			throw new Exception( "There was a problem updating" );
+			return false;
 		}
+        else
+        {
+            return true;
+        }
 	}
 
     public function create( $fields = array( ) )
     {
-        if ( !$this->_db->insert( "users", $fields ) )
+        if ( !$this->_db->insert( $this->_usersTable, $fields ) )
         {
             throw new Exception( "There was a problem creating an account." );
         }
@@ -69,8 +79,37 @@ class User
     {
     	if ( $user )
     	{
-    		$field = ( is_numeric( $user ) ) ? "id" : "username";
-    		$data = $this->_db->get( "users", array( $field, "=", $user ) );
+            if ( is_numeric( $user ) )
+            {
+                $field = "id";
+            }
+            else if ( filter_var( $user, FILTER_VALIDATE_EMAIL ) )
+            {
+                $field = "email_address";
+            }
+            else
+            {
+                $field = "username";
+            }
+            
+    		$data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
+
+    		if ( $data->count( ) )
+    		{
+    			$this->_data = $data->first( );
+
+    			return true;
+    		}
+    	}
+
+    	return false;
+    }
+    
+    public function findUsingEmail( $email = null )
+    {
+        if ( $email )
+    	{
+    		$data = $this->_db->get( $this->_usersTable, array( "email_address", "=", $email ) );
 
     		if ( $data->count( ) )
     		{
@@ -125,22 +164,93 @@ class User
 
                             Cookie::put( $this->_cookieName, $hash, Config::get( "remember/cookieExpiry" ) );
                         }
+                        
+                        if ( empty( $this->_errors ) )
+                        {
+                            $this->_passed = true;
+                        }
 
                         return true;
                     }
+                    else
+                    {
+                        $this->addError( "Your account needs to be activated, please check your email for an activation email." );
+                    }
 	    		}
+                
+                $this->addError( "Password is incorrect." );
 	    	}
+            else
+            {
+                $this->addError( "User does not exist." );
+            }
     	}
 
     	return false;
+    }
+    
+    public function verifyActivationCode( $user, $code )
+    {
+        if ( is_numeric( $user ) )
+        {
+            $field = "id";
+        }
+        else if ( filter_var( $user, FILTER_VALIDATE_EMAIL ) )
+        {
+            $field = "email_address";
+        }
+        else
+        {
+            $field = "username";
+        }
+        
+        $data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
+        
+        if ( $data->first( )->salt === $code )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public function verifyResetCode( $user, $code )
+    {
+        $data = $this->_db->get( $this->_usersResetPasswordTableName, array( "username", "=", $user ) );
+        
+        if ( $data->count( ) )
+        {
+            if ( $data->first( )->salt === $code )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
     
     public function isActivated( $user = null )
     {
         if ( $user )
     	{
-    		$field = ( is_numeric( $user ) ) ? "id" : "username";
-    		$data = $this->_db->get( "users", array( $field, "=", $user ) );
+    		if ( is_numeric( $user ) )
+            {
+                $field = "id";
+            }
+            else if ( filter_var( $user, FILTER_VALIDATE_EMAIL ) )
+            {
+                $field = "email_address";
+            }
+            else
+            {
+                $field = "username";
+            }
+            
+    		$data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
 
     		if ( $data->count( ) )
     		{
@@ -152,6 +262,36 @@ class User
     	}
 
     	return false;
+    }
+    
+    public function activateUser( $user )
+    {
+        if ( is_numeric( $user ) )
+        {
+            $field = "id";
+        }
+        else if ( filter_var( $user, FILTER_VALIDATE_EMAIL ) )
+        {
+            $field = "email_address";
+        }
+        else
+        {
+            $field = "username";
+        }
+        
+        $data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
+        $id = $data->first( )->id;
+        
+        $result = $this->_db->update( $this->_usersTable, $id, array( "activated" => "1" ) );
+        
+        if ( $result )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function exists( )
@@ -175,6 +315,45 @@ class User
     public function isLoggedIn( )
     {
     	return $this->_isLoggedIn;
+    }
+    
+    public function checkPasswordSaltExists( $username )
+    {
+        $data = $this->_db->get( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
+                
+        if ( count( $data ) )
+        {
+            return $data->first( );
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public function createPasswordResetSalt( $username, $salt )
+    {
+        $this->_db->delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
+        
+        $fields = array(
+            "username" => $username,
+            "salt" => $salt,
+            "starttime" => time( )
+        );
+        
+        if ( !$this->_db->insert( $this->_usersResetPasswordTableName, $fields ) )
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    public function clearPasswordResetTable( $username )
+    {
+        $this->_db->delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
     }
 }
 
