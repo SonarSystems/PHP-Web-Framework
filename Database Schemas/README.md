@@ -1,0 +1,1 @@
+All of the files provide the same database schema but in different formats.
