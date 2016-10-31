@@ -216,5 +216,3 @@ class DB
         return $this->_count;
     }
 }
-
-?>

@@ -19,5 +19,3 @@ class Extra extends Controller
 		$this->view( "extra/changelog" );
 	}
 }
-
-?>

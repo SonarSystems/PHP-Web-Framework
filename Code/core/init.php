@@ -42,5 +42,3 @@ if ( Sonar\Cookie::exists( Sonar\Config::get( "remember/cookieName" ) ) && !Sona
         }
     }
 }
-
-?>

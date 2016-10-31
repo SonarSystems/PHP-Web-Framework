@@ -4,8 +4,8 @@ namespace Sonar;
 
 class __Error
 {
-    protected $_passed = false,
-            $_errors = array( );
+    protected   $_passed = false,
+                $_errors = array( );
     
     public function __construct( )
     {
@@ -27,5 +27,3 @@ class __Error
         return $this->_passed;
     }
 }
-
-?>

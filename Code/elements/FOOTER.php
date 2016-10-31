@@ -35,16 +35,28 @@ foreach ( $JS_INTERNAL_FILES as $file )
         $version = $file[1];
     }
     
-    $path = Sonar\Misc::prependRoot( "js/$file[0].js?v=$version" );
+    $path = Sonar\Path::To( "js/$file[0].js?v=$version" );
     
     echo "<script src='$path'></script>";
 }
         
 ?>
     <script src='https://www.google.com/recaptcha/api.js'></script>
+
+<?php
+        
+if ( Sonar\Config::get( "website/debug" ) )
+{
+    $version = "?v=" . time( );
+}
+else
+{
+    $version = "";
+}
+        
+?>
+        <script src="<?= Sonar\Path::PrependRoot( "../elements/SUB/JavaScript/END_OF_BODY.js$version" ); ?>"></script>
     </body>
 </html>
 
-
-
-<?php ob_end_flush( ); ?>
+<?php ob_end_flush( );

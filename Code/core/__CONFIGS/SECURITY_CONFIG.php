@@ -8,5 +8,3 @@ $array = array(
         'secretkey' => ''
     )
 );
-
-?>

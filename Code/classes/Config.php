@@ -34,5 +34,3 @@ class Config
 		return false;
 	}
 }
-
-?>

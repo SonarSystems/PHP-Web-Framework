@@ -39,5 +39,3 @@ class Input
         return "";
     }
 }
-
-?>

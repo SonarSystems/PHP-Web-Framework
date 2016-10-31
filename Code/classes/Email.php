@@ -93,5 +93,3 @@ class Email extends __Error
         
     }
 }
-
-?>

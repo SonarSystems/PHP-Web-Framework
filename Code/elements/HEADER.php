@@ -75,7 +75,7 @@ if ( Sonar\Config::get( "mysql/enabled" ) )
                 $version = $file[1];
             }
             
-            $path = Sonar\Misc::prependRoot( "css/$file[0].css?v=$version" );
+            $path = Sonar\Path::PrependRoot( "css/$file[0].css?v=$version" );
             
             echo "<link rel='stylesheet' type='text/css' href='$path' />";
         }
@@ -84,3 +84,16 @@ if ( Sonar\Config::get( "mysql/enabled" ) )
     </head>
     
     <body>
+        <?php
+        
+        if ( Sonar\Config::get( "website/debug" ) )
+        {
+            $version = "?v=" . time( );
+        }
+        else
+        {
+            $version = "";
+        }
+        
+        ?>
+        <script src="<?= Sonar\Path::PrependRoot( "../elements/SUB/JavaScript/START_OF_BODY.js$version" ); ?>"></script>

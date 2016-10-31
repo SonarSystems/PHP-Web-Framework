@@ -26,5 +26,3 @@ class Token
         return false;
     }
 }
-
-?>

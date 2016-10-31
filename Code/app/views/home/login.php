@@ -17,45 +17,50 @@ if ( Sonar\Input::exists( "post" ) )
         {
             if ( Sonar\Input::get( "remember", $_POST ) )
             {
-                $validate = new Sonar\Validate( );
-                $validation = $validate->check( $_POST, array(
-                    "username" => array(
-                        "required" => true
-                    ),
-                    "password" => array(
-                        "required" => true
-                    )
-                ), array(
-                    "Usernamed",
-                    "Password8"
-                ) );
+                $remember = true;
+            }
+            else
+            {
+                $remember = false;
+            }
+            
+            $validate = new Sonar\Validate( );
+            $validation = $validate->check( $_POST, array(
+                "username" => array(
+                    "required" => true
+                ),
+                "password" => array(
+                    "required" => true
+                )
+            ), array(
+                "Username",
+                "Password"
+            ) );
 
-                if ( $validation->passed( ) )
+            if ( $validation->passed( ) )
+            {
+                // log user in
+                $user = new Sonar\User( );
+
+                $login = $user->login( Sonar\Input::get( "username", $_POST ), Sonar\Input::get( "password", $_POST ), $remember );
+
+                if ( $login )
                 {
-                    // log user in
-                    $user = new Sonar\User( );
-
-                    $remember = ( Sonar\Input::get( "remember", $_POST ) === "on" ) ? true : false;
-                    $login = $user->login( Sonar\Input::get( "username", $_POST ), Sonar\Input::get( "password", $_POST ), $remember );
-
-                    if ( $login )
-                    {
-                        Sonar\Redirect::to( "home/index" );
-                    }
-                    else
-                    {
-                        foreach( $user->errors( ) as $error )
-                        {
-                            echo $error, "<br />";
-                        }
-                    }
+                    Sonar\Redirect::to( "home/index" );
                 }
                 else
                 {
-                    foreach( $validation->errors( ) as $error )
+                    foreach( $user->errors( ) as $error )
                     {
                         echo $error, "<br />";
                     }
+                }
+            }
+            else
+            {
+                foreach( $validation->errors( ) as $error )
+                {
+                    echo $error, "<br />";
                 }
             }
         }

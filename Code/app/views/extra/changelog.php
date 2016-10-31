@@ -15,7 +15,8 @@ $changeLogArray = array(
         "versionNumber" => 2, // should be a simple integer digit
         "date" => "6th October 2018", // use a consistent dating method
         "NEW" => array(
-            "New Feature 1"
+            "New Feature 23231",
+            "New Feature 222"
         ),
         "UPDATED" => array(
             "NEW UPDATE"

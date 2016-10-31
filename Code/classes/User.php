@@ -472,5 +472,3 @@ class User extends __Error
         return $this->_hybridAuth;
     }
 }
-
-?>

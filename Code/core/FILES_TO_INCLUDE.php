@@ -19,5 +19,3 @@ $JS_INTERNAL_FILES = array
 (
     array( "index", "1" )
 );
-
-?>

@@ -106,4 +106,3 @@ if ( $resetCodeValid )
 </form>
 <?php
 }
-?>

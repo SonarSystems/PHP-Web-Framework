@@ -44,5 +44,3 @@ else
         echo "User does not exist.";
     }
 }
-
-?>

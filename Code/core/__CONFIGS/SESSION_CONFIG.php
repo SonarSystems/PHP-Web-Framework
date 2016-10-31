@@ -6,5 +6,3 @@ $array = array(
     'sessionName' => 'user',
     'tokenName' => 'token'
 );
-
-?>

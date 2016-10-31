@@ -149,5 +149,3 @@ class Validate extends __Error
         return $this;
     }
 }
-
-?>

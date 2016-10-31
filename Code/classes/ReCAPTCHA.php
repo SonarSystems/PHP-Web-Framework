@@ -40,5 +40,3 @@ class ReCAPTCHA extends __Error
         }
     }
 }
-
-?>

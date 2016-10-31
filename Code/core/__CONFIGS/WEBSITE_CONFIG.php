@@ -11,5 +11,3 @@ $array = array(
     'root' => dirname( $_SERVER["SCRIPT_NAME"] ),
     'domainName' => $_SERVER['HTTP_HOST']
 );
-
-?>

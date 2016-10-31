@@ -2,7 +2,7 @@
 
 namespace Sonar;
 
-require_once( "Misc.php" );
+require_once( "Path.php" );
 
 class Redirect
 {
@@ -23,11 +23,9 @@ class Redirect
                 }
             }
             
-			header( "Location: " . Misc::prependRoot( $location ) );
+			header( "Location: " . Sonar\Path::To( $location ) );
 
 			exit( );
 		}
 	}
 }
-
-?>

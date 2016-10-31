@@ -60,5 +60,3 @@ $LIBS_BUILT_IN = array
 );
 
 require_once( "misc/BUILT_IN_LIBS.php" );
-
-?>

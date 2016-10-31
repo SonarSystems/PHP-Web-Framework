@@ -29,5 +29,3 @@ class Cookie
 		self::put( $name, "", time( ) - 1 );
 	}
 }
-
-?>

@@ -14,16 +14,14 @@ if ( $user->isLoggedIn( ) )
 ?>
 
 <ul>
-    <li><a href="<?= Sonar\Path::to( "home/logout" ); ?>">Logout</a></li>
-    <li><a href="<?= Sonar\Path::to( "home/update" ); ?>">Update details</a></li>
-    <li><a href="<?= Sonar\Path::to( "home/changepassword" ); ?>">Change password</a></li>
+    <li><a href="<?= Sonar\Path::To( "home/logout" ); ?>">Logout</a></li>
+    <li><a href="<?= Sonar\Path::To( "home/update" ); ?>">Update details</a></li>
+    <li><a href="<?= Sonar\Path::To( "home/changepassword" ); ?>">Change password</a></li>
 </ul>
 
 <?php
 }
 else
 {
-    echo "You need to <a href='" . Sonar\Path::to( "home/login" ) . "'>login</a> or <a href='" . Sonar\Path::to( "home/register" ) . "'>register</a>";
+    echo "You need to <a href='" . Sonar\Path::To( "home/login" ) . "'>login</a> or <a href='" . Sonar\Path::To( "home/register" ) . "'>register</a>";
 }
-
-?>
