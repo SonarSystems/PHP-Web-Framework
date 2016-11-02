@@ -76,4 +76,9 @@ class Home extends Controller
 	{	
 		$this->view( "home/adduserdetails" );
 	}
+    
+    public function commenting( )
+    {
+        $this->view( "home/commenting" );
+    }
 }

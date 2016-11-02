@@ -18,7 +18,7 @@ class Time
     *   minute          =   41
     *   second          =   50
     */
-    public static function epochToDateTime( $epoch, $type = "fulldatetime" )
+    public static function EpochToDateTime( $epoch, $type = "fulldatetime" )
     {
         $time = "";
         
@@ -121,7 +121,7 @@ class Time
     *   convertToSeconds( 10, "months" ); => 10 * 30 * 24 * 60 * 60 => 25920000
     *   convertToSeconds( 10, "years" ); => 10 * 365 * 24 * 60 * 60 => 315360000
     */
-    public static function convertToSeconds( $unit, $type )
+    public static function ConvertToSeconds( $unit, $type )
     {
         $time = null;
         
@@ -176,7 +176,7 @@ class Time
     *   convertToMilliseconds( 10, "months" ); => 10 * 30 * 24 * 60 * 60 * 1000 => 25920000000
     *   convertToMilliseconds( 10, "years" ); => 10 * 365 * 24 * 60 * 60 * 1000 => 315360000000
     */
-    public static function convertToMilliseconds( $unit, $type )
+    public static function ConvertToMilliseconds( $unit, $type )
     {
         $time = Time::convertToSeconds( $unit, $type ) * 1000;
         
@@ -184,7 +184,7 @@ class Time
     }
     
     // Convert a value below 10 such as 9 to 09
-    private static function addZero( $number )
+    private static function AddZero( $number )
     {
         if ( $number < 10 )
         {

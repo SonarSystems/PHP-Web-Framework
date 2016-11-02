@@ -95,7 +95,7 @@ class User extends __Error
         }
 	}
 
-	public function update( $fields = array( ), $id = null )
+	public function Update( $fields = array( ), $id = null )
 	{
 		if ( !$id && $this->isLoggedIn( ) )
 		{
@@ -112,7 +112,7 @@ class User extends __Error
         }
 	}
 
-    public function create( $fields = array( ) )
+    public function Create( $fields = array( ) )
     {
         if ( !$this->_db->insert( $this->_usersTable, $fields ) )
         {
@@ -120,7 +120,7 @@ class User extends __Error
         }
     }
 
-    public function find( $user = null )
+    public function Find( $user = null )
     {
     	if ( $user )
     	{
@@ -150,7 +150,7 @@ class User extends __Error
     	return false;
     }
 
-    public function findUsingEmail( $email = null )
+    public function FindUsingEmail( $email = null )
     {
         if ( $email )
     	{
@@ -167,12 +167,12 @@ class User extends __Error
     	return false;
     }
 
-    public function verifyPassword( $passwordToVerify )
+    public function VerifyPassword( $passwordToVerify )
     {
         return password_verify( $passwordToVerify, $this->data( )->password );
     }
 
-    public function login( $username = null, $password = null, $remember = false )
+    public function Login( $username = null, $password = null, $remember = false )
     {
     	if ( !$username && !$password && $this->exists( ) )
     	{
@@ -207,7 +207,7 @@ class User extends __Error
     	return false;
     }
     
-    private function loginWithOutChecks( $remember = true )
+    private function LoginWithOutChecks( $remember = true )
     {
         Session::put( $this->_sessionName, $this->data( )->id );
 
@@ -239,7 +239,7 @@ class User extends __Error
         return true;
     }
 
-    public function verifyActivationCode( $user, $code )
+    public function VerifyActivationCode( $user, $code )
     {
         if ( is_numeric( $user ) )
         {
@@ -266,7 +266,7 @@ class User extends __Error
         }
     }
 
-    public function verifyResetCode( $user, $code )
+    public function VerifyResetCode( $user, $code )
     {
         $data = $this->_db->get( $this->_usersResetPasswordTableName, array( "username", "=", $user ) );
 
@@ -283,7 +283,7 @@ class User extends __Error
         }
     }
 
-    public function isActivated( $user = null )
+    public function IsActivated( $user = null )
     {
         if ( $user )
     	{
@@ -314,7 +314,7 @@ class User extends __Error
     	return false;
     }
 
-    public function activateUser( $user )
+    public function ActivateUser( $user )
     {
         if ( is_numeric( $user ) )
         {
@@ -344,12 +344,12 @@ class User extends __Error
         }
     }
 
-    public function exists( )
+    public function Exists( )
     {
     	return ( !empty( $this->_data ) ) ? true : false;
     }
 
-    public function logout( )
+    public function Logout( )
     {
         $this->_hybridAuth->logoutAllProviders( );
 
@@ -359,12 +359,12 @@ class User extends __Error
         Cookie::delete( $this->_cookieName );
     }
 
-    public function data( )
+    public function Data( )
     {
     	return $this->_data;
     }
 
-    public function isLoggedIn( )
+    public function IsLoggedIn( )
     {
         if ( $this->_isLoggedIn )
         {
@@ -377,7 +377,7 @@ class User extends __Error
     	return $this->_isLoggedIn;
     }
     
-    public function isOnlySociallyLoggedIn( )
+    public function IsOnlySociallyLoggedIn( )
     {
         if ( $this->_isLoggedIn )
         {
@@ -390,7 +390,7 @@ class User extends __Error
         return false;
     }
 
-    public function checkPasswordSaltExists( $username )
+    public function CheckPasswordSaltExists( $username )
     {
         $data = $this->_db->get( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
 
@@ -404,7 +404,7 @@ class User extends __Error
         }
     }
 
-    public function createPasswordResetSalt( $username, $salt )
+    public function CreatePasswordResetSalt( $username, $salt )
     {
         $this->_db->delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
 
@@ -424,12 +424,12 @@ class User extends __Error
         }
     }
 
-    public function clearPasswordResetTable( $username )
+    public function ClearPasswordResetTable( $username )
     {
         $this->_db->delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
     }
 
-    public function socialLogin( $id, $emailAddress, $serviceName )
+    public function SocialLogin( $id, $emailAddress, $serviceName )
     {
         $serviceName = strtolower( $serviceName );
         
@@ -467,7 +467,7 @@ class User extends __Error
         //Redirect::to( "home/index" );
     }
     
-    public function hybridAuth( )
+    public function HybridAuth( )
     {
         return $this->_hybridAuth;
     }

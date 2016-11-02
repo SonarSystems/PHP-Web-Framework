@@ -6,7 +6,7 @@ require_once( "Path.php" );
 
 class Redirect
 {
-	public static function to( $location = null )
+	public static function To( $location = null )
 	{
 		if ( $location )
 		{
@@ -23,7 +23,7 @@ class Redirect
                 }
             }
             
-			header( "Location: " . Sonar\Path::To( $location ) );
+			header( "Location: " . \Sonar\Path::To( $location ) );
 
 			exit( );
 		}

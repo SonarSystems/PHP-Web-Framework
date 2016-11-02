@@ -28,5 +28,3 @@ class Path
         return self::PrependRoot( $location );
     }
 }
-
-?>

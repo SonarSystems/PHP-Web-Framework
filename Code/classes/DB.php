@@ -31,7 +31,7 @@ class DB
         }
     }
     
-    public static function getInstance( )
+    public static function GetInstance( )
     {
         if ( !isset( self::$_instance ) )
         {
@@ -45,7 +45,7 @@ class DB
     *   Example Call
     *   DB::getInstance( )->query( "SELECT * From TableName WHERE id = ?", array( '18' ) );
     */
-    public function query( $sql, $params = array( ) )
+    public function Query( $sql, $params = array( ) )
     {
         $this->_error = false;
         
@@ -80,7 +80,7 @@ class DB
     *   Example Call
     *   DB::getInstance( )->query( "SELECT *", "TableName", array( "id", "=", "3" ) );
     */
-    public function action( $action, $table, $where = array( ) )
+    public function Action( $action, $table, $where = array( ) )
     {
         if ( 3 === count( $where ) )
         {
@@ -108,7 +108,7 @@ class DB
     *   Example Call
     *   DB::getInstance( )->get( "TableName", array( "id", "=", "3" ) );
     */
-    public function get( $table, $where )
+    public function Get( $table, $where )
     {
         return $this->action( 'SELECT *', $table, $where );
     }
@@ -117,7 +117,7 @@ class DB
     *   Example Call
     *   DB::getInstance( )->delete( "TableName", array( "id", "=", "3" ) );
     */
-    public function delete( $table, $where )
+    public function Delete( $table, $where )
     {
         return $this->action( 'DELETE', $table, $where );
     }
@@ -129,7 +129,7 @@ class DB
     *   "password" => "newpassword"
     *   ) );
     */
-    public function insert( $table, $fields = array( ) )
+    public function Insert( $table, $fields = array( ) )
     {
         if ( count( $fields ) )
         {
@@ -169,7 +169,7 @@ class DB
     *
     *   ASSUMES the tables PRIMARY key is called 'id'
     */
-    public function update( $table, $id, $fields )
+    public function Update( $table, $id, $fields )
     {
         $set = '';
         $x = 1;
@@ -196,22 +196,22 @@ class DB
         return false;
     }
     
-    public function results( )
+    public function Results( )
     {
         return $this->_results;
     }
     
-    public function first( )
+    public function First( )
     {
         return $this->results( )[0];
     }
     
-    public function error( )
+    public function Error( )
     {
         return $this->_error;
     }
     
-    public function count( )
+    public function Count( )
     {
         return $this->_count;
     }

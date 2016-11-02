@@ -88,7 +88,7 @@ if ( Sonar\Input::exists( "post" ) )
                             ) );
                             
                             Sonar\Session::flash( "home", "You have been registered, please check your email for an activation email." );
-                            Sonar\Redirect::to( "home" );
+                            Sonar\Redirect::To( "home" );
                         }
                         else
                         {
