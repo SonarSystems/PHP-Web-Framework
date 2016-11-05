@@ -56,11 +56,11 @@ class Commenting extends __Error
         // force loads/retrieves the comments from the database
         if ( $forceLoad )
         {
-            self::LoadComments( $column, $id );
+            $this->LoadComments( $column, $id );
         }
         
         // check if comments exist for the requested id
-        if ( self::Count( ) )
+        if ( $this->Count( ) )
     	{
     		return $this->_comments;
     	}
@@ -72,17 +72,22 @@ class Commenting extends __Error
     
     public function GetCommentsForPostID( $postID, $forceLoad = true )
     {
-        return self::GetComments( "postid", $postID, $forceLoad );
+        return $this->GetComments( "postid", $postID, $forceLoad );
     }
     
     public function GetCommentsForUserID( $userID, $forceLoad = true )
     {
-        return self::GetComments( "userid", $userID, $forceLoad );
+        return $this->GetComments( "userid", $userID, $forceLoad );
     }
     
     public function GetCommentsForParentID( $parentID, $forceLoad = true )
     {
-        return self::GetComments( "parentid", $parentID, $forceLoad );
+        return $this->GetComments( "parentid", $parentID, $forceLoad );
+    }
+    
+    public function GetCommentsForID( $id, $forceLoad = true )
+    {
+        return $this->GetComments( "id", $id, $forceLoad );
     }
     
     // get number of comments for post
