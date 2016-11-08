@@ -3,12 +3,40 @@
 % http://www.phpmyadmin.net
 %
 % Host: localhost
-% Generation Time: Oct 30, 2016 at 10:05 PM
+% Generation Time: Nov 08, 2016 at 07:55 PM
 % Server version: 10.1.16-MariaDB
 % PHP Version: 7.0.9
 % 
 % Database: 'PHPWebFramework'
 % 
+
+%
+% Structure: comments
+%
+ \begin{longtable}{|l|c|c|c|l|l|l|} 
+ \caption{Structure of table comments} \label{tab:comments-structure} \\
+ \hline \multicolumn{1}{|c|}{\textbf{Column}} & \multicolumn{1}{|c|}{\textbf{Type}} & \multicolumn{1}{|c|}{\textbf{Null}} & \multicolumn{1}{|c|}{\textbf{Default}} & \multicolumn{1}{|c|}{\textbf{Links to}} & \multicolumn{1}{|c|}{\textbf{Comments}} & \multicolumn{1}{|c|}{\textbf{MIME}} \\ \hline \hline
+\endfirsthead
+ \caption{Structure of table comments (continued)} \\ 
+ \hline \multicolumn{1}{|c|}{\textbf{Column}} & \multicolumn{1}{|c|}{\textbf{Type}} & \multicolumn{1}{|c|}{\textbf{Null}} & \multicolumn{1}{|c|}{\textbf{Default}} & \multicolumn{1}{|c|}{\textbf{Links to}} & \multicolumn{1}{|c|}{\textbf{Comments}} & \multicolumn{1}{|c|}{\textbf{MIME}} \\ \hline \hline \endhead \endfoot 
+\textbf{\textit{id}} & int(11) & No &  &  &  &  \\ \hline 
+postid & int(11) & No &  &  &  &  \\ \hline 
+parentid & int(11) & Yes & NULL &  &  &  \\ \hline 
+userid & int(11) & No &  &  &  &  \\ \hline 
+timeposted & int(32) & No &  &  &  &  \\ \hline 
+timeedited & int(32) & No & 0 &  &  &  \\ \hline 
+description & text & No &  &  &  &  \\ \hline 
+currentnestedlevel & int(11) & No &  &  &  &  \\ \hline 
+ \end{longtable}
+
+%
+% Data: comments
+%
+ \begin{longtable}{|l|l|l|l|l|l|l|l|} 
+ \hline \endhead \hline \endfoot \hline 
+ \caption{Content of table comments} \label{tab:comments-data} \\\hline \multicolumn{1}{|c|}{\textbf{id}} & \multicolumn{1}{|c|}{\textbf{postid}} & \multicolumn{1}{|c|}{\textbf{parentid}} & \multicolumn{1}{|c|}{\textbf{userid}} & \multicolumn{1}{|c|}{\textbf{timeposted}} & \multicolumn{1}{|c|}{\textbf{timeedited}} & \multicolumn{1}{|c|}{\textbf{description}} & \multicolumn{1}{|c|}{\textbf{currentnestedlevel}} \\ \hline \hline  \endfirsthead 
+\caption{Content of table comments (continued)} \\ \hline \multicolumn{1}{|c|}{\textbf{id}} & \multicolumn{1}{|c|}{\textbf{postid}} & \multicolumn{1}{|c|}{\textbf{parentid}} & \multicolumn{1}{|c|}{\textbf{userid}} & \multicolumn{1}{|c|}{\textbf{timeposted}} & \multicolumn{1}{|c|}{\textbf{timeedited}} & \multicolumn{1}{|c|}{\textbf{description}} & \multicolumn{1}{|c|}{\textbf{currentnestedlevel}} \\ \hline \hline \endhead \endfoot
+ \end{longtable}
 
 %
 % Structure: facebook_users

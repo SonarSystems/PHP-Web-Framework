@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 30, 2016 at 10:04 PM
+-- Generation Time: Nov 08, 2016 at 07:57 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -19,6 +19,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `PHPWebFramework`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `postid` int(11) NOT NULL,
+  `parentid` int(11) DEFAULT NULL,
+  `userid` int(11) NOT NULL,
+  `timeposted` int(32) NOT NULL,
+  `timeedited` int(32) NOT NULL DEFAULT '0',
+  `description` text NOT NULL,
+  `currentnestedlevel` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -92,6 +109,12 @@ CREATE TABLE `users_sessions` (
 --
 
 --
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `facebook_users`
 --
 ALTER TABLE `facebook_users`
@@ -131,6 +154,11 @@ ALTER TABLE `users_sessions`
 --
 
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `facebook_users`
 --
 ALTER TABLE `facebook_users`
@@ -144,7 +172,7 @@ ALTER TABLE `google_users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `users_password_reset`
 --
@@ -154,7 +182,7 @@ ALTER TABLE `users_password_reset`
 -- AUTO_INCREMENT for table `users_sessions`
 --
 ALTER TABLE `users_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

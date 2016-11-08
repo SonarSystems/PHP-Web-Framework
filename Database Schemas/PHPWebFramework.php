@@ -8,6 +8,10 @@
 // Database `PHPWebFramework`
 //
 
+// `PHPWebFramework`.`comments`
+$comments = array(
+);
+
 // `PHPWebFramework`.`facebook_users`
 $facebook_users = array(
 );

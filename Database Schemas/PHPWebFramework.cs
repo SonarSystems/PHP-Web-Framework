@@ -4,6 +4,82 @@ using System.Collections.Generic;
 using System.Text;
 namespace PHPWebFramework
 {
+    #region Comments
+    public class Comments
+    {
+        #region Member Variables
+        protected int _id;
+        protected int _postid;
+        protected int _parentid;
+        protected int _userid;
+        protected int _timeposted;
+        protected int _timeedited;
+        protected string _description;
+        protected int _currentnestedlevel;
+        #endregion
+        #region Constructors
+        public Comments() { }
+        public Comments(int postid, int parentid, int userid, int timeposted, int timeedited, string description, int currentnestedlevel)
+        {
+            this._postid=postid;
+            this._parentid=parentid;
+            this._userid=userid;
+            this._timeposted=timeposted;
+            this._timeedited=timeedited;
+            this._description=description;
+            this._currentnestedlevel=currentnestedlevel;
+        }
+        #endregion
+        #region Public Properties
+        public virtual int Id
+        {
+            get {return _id;}
+            set {_id=value;}
+        }
+        public virtual int Postid
+        {
+            get {return _postid;}
+            set {_postid=value;}
+        }
+        public virtual int Parentid
+        {
+            get {return _parentid;}
+            set {_parentid=value;}
+        }
+        public virtual int Userid
+        {
+            get {return _userid;}
+            set {_userid=value;}
+        }
+        public virtual int Timeposted
+        {
+            get {return _timeposted;}
+            set {_timeposted=value;}
+        }
+        public virtual int Timeedited
+        {
+            get {return _timeedited;}
+            set {_timeedited=value;}
+        }
+        public virtual string Description
+        {
+            get {return _description;}
+            set {_description=value;}
+        }
+        public virtual int Currentnestedlevel
+        {
+            get {return _currentnestedlevel;}
+            set {_currentnestedlevel=value;}
+        }
+        #endregion
+    }
+    #endregion
+}using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+namespace PHPWebFramework
+{
     #region Facebook_users
     public class Facebook_users
     {

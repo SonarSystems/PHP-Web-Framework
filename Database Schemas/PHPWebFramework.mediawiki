@@ -1,5 +1,23 @@
 
 <!--
+Table data for `comments`
+-->
+
+{| class="wikitable sortable" style="text-align:center;"
+|+'''comments'''
+|-
+ ! id
+ ! postid
+ ! parentid
+ ! userid
+ ! timeposted
+ ! timeedited
+ ! description
+ ! currentnestedlevel
+|}
+
+
+<!--
 Table data for `facebook_users`
 -->
 

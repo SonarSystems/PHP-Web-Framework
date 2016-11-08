@@ -5,7 +5,7 @@
 - https://www.phpmyadmin.net
 -
 - Host: localhost
-- Generation Time: Oct 30, 2016 at 10:05 PM
+- Generation Time: Nov 08, 2016 at 07:56 PM
 - Server version: 10.1.16-MariaDB
 - PHP Version: 7.0.9
 -->
@@ -16,6 +16,19 @@
     -->
     <pma:structure_schemas>
         <pma:database name="PHPWebFramework" collation="latin1_swedish_ci" charset="latin1">
+            <pma:table name="comments">
+                CREATE TABLE `comments` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `postid` int(11) NOT NULL,
+                  `parentid` int(11) DEFAULT NULL,
+                  `userid` int(11) NOT NULL,
+                  `timeposted` int(32) NOT NULL,
+                  `timeedited` int(32) NOT NULL DEFAULT '0',
+                  `description` text NOT NULL,
+                  `currentnestedlevel` int(11) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+            </pma:table>
             <pma:table name="facebook_users">
                 CREATE TABLE `facebook_users` (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -49,7 +62,7 @@
                   `activated` tinyint(1) NOT NULL DEFAULT '0',
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `email_address` (`email_address`)
-                ) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=latin1;
+                ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
             </pma:table>
             <pma:table name="users_password_reset">
                 CREATE TABLE `users_password_reset` (
@@ -66,7 +79,7 @@
                   `user_id` int(11) NOT NULL,
                   `hash` varchar(1024) NOT NULL,
                   PRIMARY KEY (`id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+                ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
             </pma:table>
         </pma:database>
     </pma:structure_schemas>
@@ -75,6 +88,7 @@
     - Database: 'PHPWebFramework'
     -->
     <database name="PHPWebFramework">
+        <!-- Table comments -->
         <!-- Table facebook_users -->
         <!-- Table google_users -->
         <!-- Table users -->

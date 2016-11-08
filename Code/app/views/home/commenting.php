@@ -4,12 +4,6 @@ $comments = new Sonar\Commenting( "comments", 3 );
 $comments->SetMaxNestingLevel( 3 );
 $user = new Sonar\User( );
 
-$data = $comments->GetCommentsForPostID( 3 );
-
-echo $comments->InsertComment( "weewew" );
-
-echo "<br />";
-
 if ( Sonar\Input::exists( "post" ) )
 {
     if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
@@ -31,31 +25,60 @@ if ( Sonar\Input::exists( "post" ) )
             {
                 try
                 {
-                    $username = Sonar\Input::get( "CommentTextArea", $_POST );
-
-                    if ( $email )
+                    $comment = Sonar\Input::get( "CommentTextArea", $_POST );
+                    
+                    if ( !$comments->InsertComment( $comment ) )
                     {
-                        echo "Account created, please check your emails for an activation email.";
-
-                        $user->create( array(
-                            "username" => $username,
-                            "password" => password_hash( Sonar\Input::get( "password", $_POST ), PASSWORD_DEFAULT ),
-                            "email_address" => $emailAddress,
-                            "salt" => $salt,
-                            "joined" => time( )
-                        ) );
-
-                        Sonar\Session::flash( "home", "You have been registered, please check your email for an activation email." );
-                        Sonar\Redirect::To( "home" );
-                    }
-                    else
-                    {
-                        echo "Error creating account please try again later.";
+                        foreach( $comments->errors( ) as $error )
+                        {
+                            echo $error."<br />";
+                        }
                     }
                 }
                 catch ( Exception $error )
                 {
-                    echo "Error has occured creating your account, please try again later.";
+                    echo "Unable to post comment at this time, please try again later.";
+                }
+            }
+            else
+            {
+                foreach( $validation->errors( ) as $error )
+                {
+                    echo $error."<br />";
+                }
+            }
+        }
+        else if ( Sonar\Input::get( "replyComment", $_POST ) )
+        {
+            $validate = new Sonar\Validate( );
+            $validation = $validate->check( $_POST, array(
+                'replyTextArea' => array(
+                    'required' => true,
+                    'min' => 1,
+                    'max' => 65535
+                )
+            ), array(
+                "Response"
+            ) );
+
+            if ( $validation->passed( ) )
+            {
+                try
+                {
+                    $comment = Sonar\Input::get( "replyTextArea", $_POST );
+                    $id = Sonar\Input::get( "id", $_POST );
+                    
+                    if ( !$comments->InsertComment( $comment, $id ) )
+                    {
+                        foreach( $comments->errors( ) as $error )
+                        {
+                            echo $error."<br />";
+                        }
+                    }
+                }
+                catch ( Exception $error )
+                {
+                    echo "Unable to post response at this time, please try again later.";
                 }
             }
             else
@@ -69,6 +92,12 @@ if ( Sonar\Input::exists( "post" ) )
     }
 }
 
+$data = $comments->GetCommentsForPostID( 3 );
+$commentsCount = $comments->Count( );
+$token = Sonar\Token::generate( );
+
+if ( $user->IsLoggedIn( ) )
+{
 
 ?>
 
@@ -80,23 +109,53 @@ if ( Sonar\Input::exists( "post" ) )
         </div>
     </div>
     
-    <input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+    <input type="hidden" name="token" value="<?= $token; ?>" />
     <input type="submit" name="PostComment" id="PostComment" value="Post Comment" />
 </form>
+
 <?php
+}
+else
+{
+    echo "Please login to comment.<br />";
+}
 
 // Front end code for beginning of a comment
-function CommentingStart( $data, $user, $comments )
+function CommentingStart( $data, $user, $comments, $token )
 {
     $user->Find( $data->userid );  
-    $username = $user->Data( )->username;;
-    $description = $data->description;
+    $username = $user->Data( )->username;
+    $description = nl2br( htmlspecialchars( base64_decode( $data->description ) ) );
     $timePosted = Sonar\Time::EpochToDateTime( $data->timeposted );
     $button = "";
+    $edited = "";
     
     if ( $data->currentnestedlevel < $comments->GetMaxNestingLevel( ) )
     {
-        $button = "<input type='button' value='Reply' />";
+        if ( $user->IsLoggedIn( ) )
+        {
+            $postID = $data->id;
+            
+            $button = "
+            <form action='' method='POST'>
+                <div class='field'>
+                    <label for='replyTextArea'>Comment</label>
+                    <div>
+                        <textarea name='replyTextArea' class='replyTextArea'></textarea>
+                    </div>
+                </div>
+
+                <input type='hidden' name='id' value='$postID' />
+                <input type='hidden' name='token' value='$token' />
+                <input type='submit' name='replyComment' class='replyComment' value='Reply' />
+            </form>
+            ";
+        }
+    }
+    
+    if ( $data->timeedited > 0 )
+    {
+        $edited = "Edited: " . Sonar\Time::EpochToDateTime( $data->timeedited );
     }
     
     echo "
@@ -108,7 +167,7 @@ function CommentingStart( $data, $user, $comments )
             $description
         </div>
         
-        $button
+        $button $edited
     ";
 }
 
@@ -118,9 +177,9 @@ function CommentingEnd( $data, $user, $comments )
     echo "</div>";
 }
 
-function ProcessPosts( $data, $user, $comments )
+function ProcessPosts( $data, $user, $comments, $token )
 {
-    CommentingStart( $data, $user, $comments );
+    CommentingStart( $data, $user, $comments, $token );
     
     if ( $data->currentnestedlevel < $comments->GetMaxNestingLevel( ) )
     {
@@ -130,7 +189,7 @@ function ProcessPosts( $data, $user, $comments )
         {
             foreach ( $data as $row )
             {
-                ProcessPosts( $row, $user, $comments );
+                ProcessPosts( $row, $user, $comments, $token );
             }
         }
     }
@@ -138,10 +197,17 @@ function ProcessPosts( $data, $user, $comments )
     CommentingEnd( $data, $user, $comments );
 }
 
-foreach ( $data as $row )
+if ( $commentsCount )
 {
-    if ( $row->currentnestedlevel == 1 )
+    foreach ( $data as $row )
     {
-        ProcessPosts( $row, $user, $comments );
+        if ( $row->currentnestedlevel == 1 )
+        {
+            ProcessPosts( $row, $user, $comments, $token );
+        }
     }
+}
+else
+{
+    echo "No comments.";
 }
