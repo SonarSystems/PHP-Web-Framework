@@ -11,13 +11,13 @@ class Validate extends __Error
     
     public function __construct( )
     {
-        if ( Config::get( "mysql/enabled" ) )
+        if ( Config::Get( "mysql/enabled" ) )
         {
-            $this->_db = DB::getInstance( );
+            $this->_db = DB::GetInstance( );
         }        
     }
     
-    public function check( $source, $items = array( ), $errorNames = array( ) )
+    public function Check( $source, $items = array( ), $errorNames = array( ) )
     {
         $i = 0;
         
@@ -40,53 +40,51 @@ class Validate extends __Error
                 
                 if ( 'required' === $rule && empty( $value ) )
                 {
-                    $this->addError( "{$errorName} is required" );
+                    $this->AddError( "{$errorName} is required" );
                 }
                 else if ( !empty( $value ) )
                 {
                     switch ( $rule )
                     {
                         case "min":
-                            if ( strlen( $value ) < $ruleValue )
+                            if ( self::Min( $value, $ruleValue ) )
                             {
-                                $this->addError( "{$errorName} must be a minimum of {$ruleValue} characters" );
+                                $this->AddError( "{$errorName} must be a minimum of {$ruleValue} characters" );
                             }
                             
                             break;
                             
                         case "max":
-                            if ( strlen( $value ) > $ruleValue )
+                            if ( self::Max( $value, $ruleValue ) )
                             {
-                                $this->addError( "{$errorName} must be a maximum of {$ruleValue} characters" );
+                                $this->AddError( "{$errorName} must be a maximum of {$ruleValue} characters" );
                             }
                             
                             break;
                             
                         case "matches":
-                            if ( $value !== $source[$ruleValue] )
+                            if ( !self::Matches( $value, $source[$ruleValue] ) )
                             {
-                                $this->addError( "{$errorName}'s must match" );
+                                $this->AddError( "{$errorName}'s must match" );
                             }
                             
                             break;
                             
                         // make sure the post name is the same as the name in the database
-                        case "unique":
-                            $check = $this->_db->get( $ruleValue, array( $item, "=", $value ) );
-                            
-                            if ( $check->count( ) )
+                        case "unique":                            
+                            if ( !$this->Unique( $item, $value, $ruleValue ) )
                             {
-                                $this->addError( "{$errorName} already exists" );
+                                $this->AddError( "{$errorName} already exists" );
                             }
                             
                             break;
                             
                         case "exists":
-                            $check = $this->_db->get( $ruleValue, array( $item, "=", $value ) );
+                            $check = $this->_db->Get( $ruleValue, array( $item, "=", $value ) );
                             
-                            if ( !$check->count( ) )
+                            if ( !$this->Exists( $item, $value, $ruleValue ) )
                             {
-                                $this->addError( "{$errorName} does not exist" );
+                                $this->AddError( "{$errorName} does not exist" );
                             }
                             
                             break;
@@ -94,42 +92,53 @@ class Validate extends __Error
                         case "email":
                             if ( $ruleValue )
                             {
-                                if ( !filter_var( $value, FILTER_VALIDATE_EMAIL ) )
+                                if ( !$this->Email( $value ) )
                                 {
-                                    $this->addError( "{$errorName} must be a valid email address" );
+                                    $this->AddError( "{$errorName} must be a valid email address" );
                                 }
                             }
                             else
                             {
-                                if ( filter_var( $value, FILTER_VALIDATE_EMAIL ) )
+                                if ( $this->Email( $value ) )
                                 {
-                                    $this->addError( "{$errorName} must not be an email address" );
+                                    $this->AddError( "{$errorName} must not be an email address" );
                                 }
                             }
                             
                             break;
                             
                         case "url":
-                            if ( !filter_var( $value, FILTER_VALIDATE_URL ) )
+                            if ( $ruleValue )
                             {
-                                $this->addError( "{$errorName} must be a valid url" );
+                                if ( !$this->URL( $value ) )
+                                {
+                                    $this->AddError( "{$errorName} must be a valid url" );
+                                }
                             }
+                            else
+                            {
+                                if ( $this->URL( $value ) )
+                                {
+                                    $this->AddError( "{$errorName} must not be a url" );
+                                }
+                            }
+                            
                             
                             break;
                             
                         case "numeric":
                             if ( $ruleValue )
                             {
-                                if ( !is_numeric( $value ) )
+                                if ( !$this->Numeric( $value ) )
                                 {
-                                    $this->addError( "{$errorName} must be a number" );
+                                    $this->AddError( "{$errorName} must be a number" );
                                 }
                             }
                             else
                             {
-                                if ( is_numeric( $value ) )
+                                if ( $this->Numeric( $value ) )
                                 {
-                                    $this->addError( "{$errorName} must not be a number" );
+                                    $this->AddError( "{$errorName} must not be a number" );
                                 }
                             }
                             
@@ -147,5 +156,63 @@ class Validate extends __Error
         }
         
         return $this;
+    }
+    
+    public static function Min( $value1, $value2 )
+    {
+        return ( strlen( $value1 ) < $value2 );
+    }
+    
+    public static function Max( $value1, $value2 )
+    {
+        return ( strlen( $value1 ) > $value2 );
+    }
+    
+    public static function Matches( $value1, $value2 )
+    {
+        return ( $value1 === $value2 );
+    }
+    
+    public function Unique( $id, $value, $tablename )
+    {
+        $check = $this->_db->Get( $tablename, array( $id, "=", $value ) );
+                            
+        if ( $check->count( ) )
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    public function Exists( $id, $value, $tablename )
+    {
+        $check = $this->_db->Get( $tablename, array( $id, "=", $value ) );
+                            
+        if ( $check->count( ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public function Email( $value )
+    {
+        return filter_var( $value, FILTER_VALIDATE_EMAIL );
+    }
+    
+    public function URL( $value )
+    {
+        return filter_var( $value, FILTER_VALIDATE_URL );
+    }
+    
+    public function Numeric( $value )
+    {
+        return is_numeric( $value );
     }
 }

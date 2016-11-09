@@ -4,7 +4,7 @@ namespace Sonar;
 
 class Input
 {
-    public static function exists( $type )
+    public static function Exists( $type )
     {
         switch ( strtolower( trim ( $type ) ) )
         {
@@ -25,7 +25,7 @@ class Input
         }
     }
     
-    public static function get( $item, $type )
+    public static function Get( $item, $type )
     {
         if ( isset( $type[$item] ) )
         {

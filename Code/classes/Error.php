@@ -12,12 +12,12 @@ class __Error
         
     }
     
-    public function addError( $error )
+    public function AddError( $error )
     {
         $this->_errors[] = $error;
     }
     
-    public function errors( )
+    public function Errors( )
     {
         return $this->_errors;
     }

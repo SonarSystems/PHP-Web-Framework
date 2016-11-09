@@ -10,7 +10,7 @@ class Path
     public static function PrependRoot( $location = null )
     {
         // get the root directory to modify
-        $path = Config::get( 'website/root' );
+        $path = Config::Get( 'website/root' );
 
         // check if the root has a / at the end of the script name
         if ( "/" !== substr( $path, strlen( $path ) - 1, 1 ) )

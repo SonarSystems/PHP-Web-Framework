@@ -4,17 +4,17 @@ namespace Sonar;
 
 class Cookie
 {
-	public static function exists( $name )
+	public static function Exists( $name )
 	{
 		return ( isset( $_COOKIE[$name] ) ) ? true : false;
 	}
 
-	public static function get( $name )
+	public static function Get( $name )
 	{
 		return $_COOKIE[$name];
 	}
 
-	public static function put( $name, $value, $expiry )
+	public static function Put( $name, $value, $expiry )
 	{
 		if ( setcookie( $name, $value, time( ) + $expiry, "/", null, null, true ) )
 		{
@@ -24,8 +24,8 @@ class Cookie
 		return false;
 	}
 
-	public static function delete( $name )
+	public static function Delete( $name )
 	{
-		self::put( $name, "", time( ) - 1 );
+		self::Put( $name, "", time( ) - 1 );
 	}
 }

@@ -7,18 +7,18 @@ require_once( "Session.php" );
 
 class Token
 {
-    public static function generate( )
+    public static function Generate( )
     {
-        return Session::put( Config::get( "session/tokenName" ), md5( uniqid( ) ) );
+        return Session::Put( Config::Get( "session/tokenName" ), md5( uniqid( ) ) );
     }
     
-    public static function check( $token )
+    public static function Check( $token )
     {
-        $tokenName = Config::get( "session/tokenName" );
+        $tokenName = Config::Get( "session/tokenName" );
         
-        if ( Session::exists( $tokenName ) && $token === Session::get( $tokenName ) )
+        if ( Session::Exists( $tokenName ) && Session::Get( $tokenName ) === $token )
         {
-            Session::delete( $tokenName );
+            Session::Delete( $tokenName );
             
             return true;
         }

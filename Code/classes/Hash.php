@@ -4,18 +4,18 @@ namespace Sonar;
 
 class Hash
 {
-	public static function make( $string, $salt = "" )
+	public static function Make( $string, $salt = "" )
 	{
 		return hash( "sha256", $string . $salt );
 	}
 
-	public static function salt( $length )
+	public static function Salt( $length )
 	{
 		return bin2hex( random_bytes( $length ) );
 	}
 
-	public static function unique( )
+	public static function Unique( )
 	{
-		return self::make( uniqid( ) );
+		return self::Make( uniqid( ) );
 	}
 }

@@ -14,7 +14,7 @@ class Email extends __Error
 
     }
     
-    public function send( $to = array( ), $from = array( ), $replyTo = array( ), $subject, $body, $isTemplate = false, $variables = false )
+    public function Send( $to = array( ), $from = array( ), $replyTo = array( ), $subject, $body, $isTemplate = false, $variables = false )
     {
         $mail = new \PHPMailer;
         

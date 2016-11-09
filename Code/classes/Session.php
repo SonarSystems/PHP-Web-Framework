@@ -4,42 +4,42 @@ namespace Sonar;
 
 class Session
 {
-    public static function exists( $name )
+    public static function Exists( $name )
     {
-        return ( isset($_SESSION[$name] ) ) ? true : false;
+        return ( isset( $_SESSION[$name] ) ) ? true : false;
     }
     
-    public static function put( $name, $value )
+    public static function Put( $name, $value )
     {
         return $_SESSION[$name] = $value;
     }
     
-    public static function get( $name )
+    public static function Get( $name )
     {
         return $_SESSION[$name];
     }
     
-    public static function delete( $name )
+    public static function Delete( $name )
     {
-        if ( self::exists( $name ) )
+        if ( self::Exists( $name ) )
         {
             unset( $_SESSION[$name] );
         }
     }
     
-    public static function flash( $name, $string = '' )
+    public static function Flash( $name, $string = '' )
     {
-        if ( self::exists( $name ) )
+        if ( self::Exists( $name ) )
         {
-            $session = self::get( $name );
+            $session = self::Get( $name );
 
-            self::delete( $name );
+            self::Delete( $name );
 
             return $session;
         }
         else
         {
-            self::put( $name, $string );
+            self::Put( $name, $string );
         }
         
         return "";

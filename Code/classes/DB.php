@@ -17,9 +17,9 @@ class DB
     {
         try
         {
-            if ( Config::get( "mysql/enabled" ) )
+            if ( Config::Get( "mysql/enabled" ) )
             {
-                $this->_pdo = new \PDO( "mysql:host=".Config::get( 'mysql/host' ).";dbname=".Config::get( 'mysql/dbName' )."", Config::get( 'mysql/username' ), Config::get( 'mysql/password' ) );
+                $this->_pdo = new \PDO( "mysql:host=".Config::Get( 'mysql/host' ).";dbname=".Config::Get( 'mysql/dbName' )."", Config::Get( 'mysql/username' ), Config::Get( 'mysql/password' ) );
             }
             
             // set the PDO error mode to exception
@@ -27,7 +27,7 @@ class DB
         }
         catch( PDOException $error )
         {
-            die( "Connection failed: " . $error->getMessage( ) );
+            die( "Connection failed: " . $error->GetMessage( ) );
         }
     }
     
@@ -94,7 +94,7 @@ class DB
             {
                 $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
                 
-                if ( !$this->query( $sql, array( $value ) )->error( ) )
+                if ( !$this->Query( $sql, array( $value ) )->Error( ) )
                 {
                     return $this;
                 }
@@ -110,7 +110,7 @@ class DB
     */
     public function Get( $table, $where )
     {
-        return $this->action( 'SELECT *', $table, $where );
+        return $this->Action( 'SELECT *', $table, $where );
     }
     
     /*
@@ -119,7 +119,7 @@ class DB
     */
     public function Delete( $table, $where )
     {
-        return $this->action( 'DELETE', $table, $where );
+        return $this->Action( 'DELETE', $table, $where );
     }
     
     /*
@@ -151,7 +151,7 @@ class DB
             
             $sql = "INSERT INTO {$table} (`" . implode( '`, `', $keys ) . "`) VALUES ({$values})";
             
-            if ( !$this->query( $sql, $fields )->error( ) )
+            if ( !$this->Query( $sql, $fields )->Error( ) )
             {
                 return true;
             }
@@ -188,7 +188,7 @@ class DB
                 
         $sql = "UPDATE {$table} SET {$set} WHERE id = {$id}";
         
-        if ( !$this->query( $sql, $fields )->error( ) )
+        if ( !$this->Query( $sql, $fields )->Error( ) )
         {
             return true;
         }
@@ -203,7 +203,7 @@ class DB
     
     public function First( )
     {
-        return $this->results( )[0];
+        return $this->Results( )[0];
     }
     
     public function Error( )

@@ -178,7 +178,7 @@ class Time
     */
     public static function ConvertToMilliseconds( $unit, $type )
     {
-        $time = Time::convertToSeconds( $unit, $type ) * 1000;
+        $time = self::ConvertToSeconds( $unit, $type ) * 1000;
         
         return $time;
     }

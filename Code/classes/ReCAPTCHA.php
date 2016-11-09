@@ -15,11 +15,11 @@ class ReCAPTCHA extends __Error
     public function __construct( )
 	{
         $this->_recaptcha = new \ReCaptcha\ReCaptcha( Config::get( "security/GooglereCAPTCHA" )["secretkey"] );
-        $this->_response = Input::get( "g-recaptcha-response", $_POST );
+        $this->_response = Input::Get( "g-recaptcha-response", $_POST );
         $this->_remoteIP = $_SERVER['REMOTE_ADDR'];
     }
     
-    public function check( )
+    public function Check( )
     {
         $resp = $this->_recaptcha->verify( $this->_response, $this->_remoteIP );
         
@@ -34,7 +34,7 @@ class ReCAPTCHA extends __Error
         }
         else
         {            
-            $this->addError( "Error occured with reCAPTCHA, please try again later." );
+            $this->AddError( "Error occured with reCAPTCHA, please try again later." );
             
             return false;
         }

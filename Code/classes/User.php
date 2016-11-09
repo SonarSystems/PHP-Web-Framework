@@ -15,31 +15,33 @@ class User extends __Error
     		$_isLoggedIn,
             $_usersTable,
             $_usersResetPasswordTableName,
+            $_usersSessionsTableName,
             $_socialConfig,
             $_hybridAuth;
 
     public function __construct( $user = null )
 	{
-        if ( Config::get( "mysql/enabled" ) )
+        if ( Config::Get( "mysql/enabled" ) )
         {
-            $this->_db = DB::getInstance( );
+            $this->_db = DB::GetInstance( );
 
-            $this->_sessionName = Config::get( "session/sessionName" );
-            $this->_cookieName = Config::get( "remember/cookieName" );
+            $this->_sessionName = Config::Get( "session/sessionName" );
+            $this->_cookieName = Config::Get( "remember/cookieName" );
 
-            $this->_usersTable = Config::get( "mysql/usersTableName" );
-            $this->_usersResetPasswordTableName = Config::get( "mysql/usersResetPasswordTableName" );
+            $this->_usersTable = Config::Get( "mysql/usersTableName" );
+            $this->_usersResetPasswordTableName = Config::Get( "mysql/usersResetPasswordTableName" );
+            $this->_usersSessionsTableName = Config::Get( "mysql/usersSessionsTableName" );
             
             $this->_socialConfig = array(
-                "base_url" => "http://".Config::get( "website/domainName" ).substr( Config::get( "website/root" ), 0, -6 )."libs/hybridauth/hybridauth/index.php",
+                "base_url" => "http://".Config::Get( "website/domainName" ).substr( Config::Get( "website/root" ), 0, -6 )."libs/hybridauth/hybridauth/index.php",
                 "providers" => array (
                     "Google" => array (
-                        "enabled" => Config::get( "social/isEnabled/google" ),
-                        "keys"    => array ( "id" => Config::get( "social/keys/google/id" ), "secret" => Config::get( "social/keys/google/secret" ) ),
+                        "enabled" => Config::Get( "social/isEnabled/google" ),
+                        "keys"    => array ( "id" => Config::Get( "social/keys/google/id" ), "secret" => Config::Get( "social/keys/google/secret" ) ),
                     ),
                     "Facebook" => array (
-                        "enabled" => Config::get( "social/isEnabled/facebook" ),
-                        "keys" => array ( "id" => Config::get( "social/keys/facebook/id" ), "secret" => Config::get( "social/keys/facebook/secret" ) )
+                        "enabled" => Config::Get( "social/isEnabled/facebook" ),
+                        "keys" => array ( "id" => Config::Get( "social/keys/facebook/id" ), "secret" => Config::Get( "social/keys/facebook/secret" ) )
                     )
                 )
             );
@@ -47,7 +49,7 @@ class User extends __Error
 
             $this->_hybridAuth = new \Hybrid_Auth( $this->_socialConfig );
             
-            foreach ( Config::get( "social/isEnabled" ) as $provider => $value )
+            foreach ( Config::Get( "social/isEnabled" ) as $provider => $value )
             {
                 // check if social login for a particular provider is enabled
                 if ( $value )
@@ -61,7 +63,7 @@ class User extends __Error
                         {
                             $user_profile = $adapter->getUserProfile( );
 
-                            $this->socialLogin( $user_profile->identifier, $user_profile->email, $provider );
+                            $this->SocialLogin( $user_profile->identifier, $user_profile->email, $provider );
                         }
                         catch( Exception $e )
                         {
@@ -73,36 +75,36 @@ class User extends __Error
 
             if ( !$user )
             {
-                if ( Session::exists( $this->_sessionName ) )
+                if ( Session::Exists( $this->_sessionName ) )
                 {
-                    $user = Session::get( $this->_sessionName );
+                    $user = Session::Get( $this->_sessionName );
 
-                    if ( $this->find( $user ) )
+                    if ( $this->Find( $user ) )
                     {
                         $this->_isLoggedIn = true;
                     }
                     else
                     {
                         // process logout
-                        $this->logout( );
+                        $this->Logout( );
                     }
                 }
             }
             else
             {
-                $this->find( $user );
+                $this->Find( $user );
             }
         }
 	}
 
 	public function Update( $fields = array( ), $id = null )
 	{
-		if ( !$id && $this->isLoggedIn( ) )
+		if ( !$id && $this->IsLoggedIn( ) )
 		{
-			$id = $this->data( )->id;
+			$id = $this->Data( )->id;
 		}
 
-		if ( !$this->_db->update( $this->_usersTable, $id, $fields ) )
+		if ( !$this->_db->Update( $this->_usersTable, $id, $fields ) )
 		{
 			return false;
 		}
@@ -114,7 +116,7 @@ class User extends __Error
 
     public function Create( $fields = array( ) )
     {
-        if ( !$this->_db->insert( $this->_usersTable, $fields ) )
+        if ( !$this->_db->Insert( $this->_usersTable, $fields ) )
         {
             throw new Exception( "There was a problem creating an account." );
         }
@@ -137,11 +139,11 @@ class User extends __Error
                 $field = "username";
             }
 
-    		$data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
+    		$data = $this->_db->Get( $this->_usersTable, array( $field, "=", $user ) );
 
     		if ( $data->count( ) )
     		{
-    			$this->_data = $data->first( );
+    			$this->_data = $data->First( );
 
     			return true;
     		}
@@ -154,11 +156,11 @@ class User extends __Error
     {
         if ( $email )
     	{
-    		$data = $this->_db->get( $this->_usersTable, array( "email_address", "=", $email ) );
+    		$data = $this->_db->Get( $this->_usersTable, array( "email_address", "=", $email ) );
 
     		if ( $data->count( ) )
     		{
-    			$this->_data = $data->first( );
+    			$this->_data = $data->First( );
 
     			return true;
     		}
@@ -169,38 +171,38 @@ class User extends __Error
 
     public function VerifyPassword( $passwordToVerify )
     {
-        return password_verify( $passwordToVerify, $this->data( )->password );
+        return password_verify( $passwordToVerify, $this->Data( )->password );
     }
 
     public function Login( $username = null, $password = null, $remember = false )
     {
-    	if ( !$username && !$password && $this->exists( ) )
+    	if ( !$username && !$password && $this->Exists( ) )
     	{
-    		Session::put( $this->_sessionName, $this->data( )->id );
+    		Session::Put( $this->_sessionName, $this->Data( )->id );
     	}
     	else
     	{
-    		$user = $this->find( $username );
+    		$user = $this->Find( $username );
 
 	    	if ( $user )
 	    	{
-	    		if ( password_verify( $password, $this->data( )->password ) )
+	    		if ( password_verify( $password, $this->Data( )->password ) )
 	    		{
-                    if ( $this->isActivated( $username ) )
+                    if ( $this->IsActivated( $username ) )
                     {
-                        return $this->loginWithOutChecks( $remember );
+                        return $this->LoginWithOutChecks( $remember );
                     }
                     else
                     {
-                        $this->addError( "Your account needs to be activated, please check your email for an activation email." );
+                        $this->AddError( "Your account needs to be activated, please check your email for an activation email." );
                     }
 	    		}
 
-                $this->addError( "Password is incorrect." );
+                $this->AddError( "Password is incorrect." );
 	    	}
             else
             {
-                $this->addError( "User does not exist." );
+                $this->AddError( "User does not exist." );
             }
     	}
 
@@ -209,26 +211,26 @@ class User extends __Error
     
     private function LoginWithOutChecks( $remember = true )
     {
-        Session::put( $this->_sessionName, $this->data( )->id );
+        Session::Put( $this->_sessionName, $this->Data( )->id );
 
         if ( $remember )
         {
-            $hash = Hash::unique( );
-            $hashCheck = $this->_db->get( "users_sessions", array( "user_id", "=", $this->data( )->id ) );
+            $hash = Hash::Unique( );
+            $hashCheck = $this->_db->Get( $this->_usersSessionsTableName, array( "user_id", "=", $this->Data( )->id ) );
 
             if ( !$hashCheck->count( ) )
             {
-                $this->_db->insert( "users_sessions", array(
-                    "user_id" => $this->data( )->id,
+                $this->_db->Insert( $this->_usersSessionsTableName, array(
+                    "user_id" => $this->Data( )->id,
                     "hash" => $hash
                 ) );
             }
             else
             {
-                $hash = $hashCheck->first( )->hash;
+                $hash = $hashCheck->First( )->hash;
             }
 
-            Cookie::put( $this->_cookieName, $hash, Config::get( "remember/cookieExpiry" ) );
+            Cookie::Put( $this->_cookieName, $hash, Config::Get( "remember/cookieExpiry" ) );
         }
 
         if ( empty( $this->_errors ) )
@@ -254,9 +256,9 @@ class User extends __Error
             $field = "username";
         }
 
-        $data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
+        $data = $this->_db->Get( $this->_usersTable, array( $field, "=", $user ) );
 
-        if ( $data->first( )->salt === $code )
+        if ( $data->First( )->salt === $code )
         {
             return true;
         }
@@ -268,11 +270,11 @@ class User extends __Error
 
     public function VerifyResetCode( $user, $code )
     {
-        $data = $this->_db->get( $this->_usersResetPasswordTableName, array( "username", "=", $user ) );
+        $data = $this->_db->Get( $this->_usersResetPasswordTableName, array( "username", "=", $user ) );
 
         if ( $data->count( ) )
         {
-            if ( $data->first( )->salt === $code )
+            if ( $data->First( )->salt === $code )
             {
                 return true;
             }
@@ -300,11 +302,11 @@ class User extends __Error
                 $field = "username";
             }
 
-    		$data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
+    		$data = $this->_db->Get( $this->_usersTable, array( $field, "=", $user ) );
 
     		if ( $data->count( ) )
     		{
-    			if ( $data->first( )->activated )
+    			if ( $data->First( )->activated )
                 {
                     return true;
                 }
@@ -329,10 +331,10 @@ class User extends __Error
             $field = "username";
         }
 
-        $data = $this->_db->get( $this->_usersTable, array( $field, "=", $user ) );
-        $id = $data->first( )->id;
+        $data = $this->_db->Get( $this->_usersTable, array( $field, "=", $user ) );
+        $id = $data->First( )->id;
 
-        $result = $this->_db->update( $this->_usersTable, $id, array( "activated" => "1" ) );
+        $result = $this->_db->Update( $this->_usersTable, $id, array( "activated" => "1" ) );
 
         if ( $result )
         {
@@ -353,10 +355,10 @@ class User extends __Error
     {
         $this->_hybridAuth->logoutAllProviders( );
 
-        $this->_db->delete( "users_sessions", array( "user_id", "=", $this->data( )->id ) );
+        $this->_db->Delete( "users_sessions", array( "user_id", "=", $this->Data( )->id ) );
 
-        Session::delete( $this->_sessionName );
-        Cookie::delete( $this->_cookieName );
+        Session::Delete( $this->_sessionName );
+        Cookie::Delete( $this->_cookieName );
     }
 
     public function Data( )
@@ -368,9 +370,9 @@ class User extends __Error
     {
         if ( $this->_isLoggedIn )
         {
-            if ( $this->isOnlySociallyLoggedIn( ) )
+            if ( $this->IsOnlySociallyLoggedIn( ) )
             {
-                Redirect::to( "home/adduserdetails" );
+                Redirect::To( "home/adduserdetails" );
             }
         }
         
@@ -392,11 +394,11 @@ class User extends __Error
 
     public function CheckPasswordSaltExists( $username )
     {
-        $data = $this->_db->get( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
+        $data = $this->_db->Get( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
 
         if ( count( $data ) )
         {
-            return $data->first( );
+            return $data->First( );
         }
         else
         {
@@ -406,7 +408,7 @@ class User extends __Error
 
     public function CreatePasswordResetSalt( $username, $salt )
     {
-        $this->_db->delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
+        $this->_db->Delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
 
         $fields = array(
             "username" => $username,
@@ -414,7 +416,7 @@ class User extends __Error
             "starttime" => time( )
         );
 
-        if ( !$this->_db->insert( $this->_usersResetPasswordTableName, $fields ) )
+        if ( !$this->_db->Insert( $this->_usersResetPasswordTableName, $fields ) )
         {
             return false;
         }
@@ -426,7 +428,7 @@ class User extends __Error
 
     public function ClearPasswordResetTable( $username )
     {
-        $this->_db->delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
+        $this->_db->Delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
     }
 
     public function SocialLogin( $id, $emailAddress, $serviceName )
@@ -434,11 +436,11 @@ class User extends __Error
         $serviceName = strtolower( $serviceName );
         
         // check if user exists in social database (if not add)
-        $socialResult = $this->_db->get( Config::get( "social/tableNames/".$serviceName ), array( "email_address", "=", $emailAddress ) );
+        $socialResult = $this->_db->Get( Config::Get( "social/tableNames/".$serviceName ), array( "email_address", "=", $emailAddress ) );
         
         if ( !$socialResult->count( ) )
         {
-            $this->_db->insert( Config::get( "social/tableNames/".$serviceName ), array(
+            $this->_db->Insert( Config::Get( "social/tableNames/".$serviceName ), array(
                 "auth_id" => $id,
                 "email_address" => $emailAddress,
                 "joined" => time( )
@@ -446,11 +448,11 @@ class User extends __Error
         }
         
         // check if user exists in regular database (if not add)
-        if ( !$this->find( $emailAddress ) )
+        if ( !$this->Find( $emailAddress ) )
         {
-            $salt = Hash::salt( 128 );
+            $salt = Hash::Salt( 128 );
 
-            $this->create( array(
+            $this->Create( array(
                 "username" => '',
                 "password" => '',
                 "email_address" => $emailAddress,
@@ -461,10 +463,10 @@ class User extends __Error
         }
         
         // log user in (if username and password do not exist then show user submission detail page)
-        $this->find( $emailAddress );
-        $this->loginWithOutChecks( true );
+        $this->Find( $emailAddress );
+        $this->LoginWithOutChecks( true );
         
-        //Redirect::to( "home/index" );
+        Redirect::To( "home/index" );
     }
     
     public function HybridAuth( )
