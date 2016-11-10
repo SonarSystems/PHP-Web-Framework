@@ -28,9 +28,9 @@ class User extends __Error
             $this->_sessionName = Config::Get( "session/sessionName" );
             $this->_cookieName = Config::Get( "remember/cookieName" );
 
-            $this->_usersTable = Config::Get( "mysql/usersTableName" );
-            $this->_usersResetPasswordTableName = Config::Get( "mysql/usersResetPasswordTableName" );
-            $this->_usersSessionsTableName = Config::Get( "mysql/usersSessionsTableName" );
+            $this->_usersTable = Config::Get( "users/usersTableName" );
+            $this->_usersResetPasswordTableName = Config::Get( "users/usersResetPasswordTableName" );
+            $this->_usersSessionsTableName = Config::Get( "users/usersSessionsTableName" );
             
             $this->_socialConfig = array(
                 "base_url" => "http://".Config::Get( "website/domainName" ).substr( Config::Get( "website/root" ), 0, -6 )."libs/hybridauth/hybridauth/index.php",

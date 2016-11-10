@@ -2,7 +2,7 @@
 
 namespace Sonar;
 
-class Extra extends Controller
+class CONTROLLER_Extra extends Controller
 {
 	public function index( )
 	{

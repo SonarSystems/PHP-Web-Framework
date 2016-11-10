@@ -16,7 +16,7 @@ class App
 		if ( file_exists( "../app/controllers/" . $url[0] . ".php" ) )
 		{
 			$this->controller = $url[0];
-			$this->controllerWithNamespace = "Sonar\\".$url[0];
+			$this->controllerWithNamespace = "Sonar\\CONTROLLER_".$url[0];
 			unset( $url[0] );
 		}
 

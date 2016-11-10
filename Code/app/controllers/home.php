@@ -2,7 +2,7 @@
 
 namespace Sonar;
 
-class Home extends Controller
+class CONTROLLER_Home extends Controller
 {
 	public function index( )
 	{

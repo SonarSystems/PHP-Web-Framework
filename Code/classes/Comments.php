@@ -6,7 +6,7 @@ require_once( "Config.php" );
 require_once( "Error.php" );
 require_once( "User.php" );
 
-class Commenting extends __Error
+class Comments extends __Error
 {
     private $_db,
             $_commentsTableName,

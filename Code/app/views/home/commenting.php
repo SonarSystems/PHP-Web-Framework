@@ -1,6 +1,6 @@
 <?php
 
-$comments = new Sonar\Commenting( "comments", 3 );
+$comments = new Sonar\Comments( "comments", 3 );
 $comments->SetMaxNestingLevel( 3 );
 $user = new Sonar\User( );
 

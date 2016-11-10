@@ -79,9 +79,7 @@ class Validate extends __Error
                             
                             break;
                             
-                        case "exists":
-                            $check = $this->_db->Get( $ruleValue, array( $item, "=", $value ) );
-                            
+                        case "exists":                            
                             if ( !$this->Exists( $item, $value, $ruleValue ) )
                             {
                                 $this->AddError( "{$errorName} does not exist" );
@@ -92,14 +90,14 @@ class Validate extends __Error
                         case "email":
                             if ( $ruleValue )
                             {
-                                if ( !$this->Email( $value ) )
+                                if ( !self::Email( $value ) )
                                 {
                                     $this->AddError( "{$errorName} must be a valid email address" );
                                 }
                             }
                             else
                             {
-                                if ( $this->Email( $value ) )
+                                if ( self::Email( $value ) )
                                 {
                                     $this->AddError( "{$errorName} must not be an email address" );
                                 }
@@ -110,14 +108,14 @@ class Validate extends __Error
                         case "url":
                             if ( $ruleValue )
                             {
-                                if ( !$this->URL( $value ) )
+                                if ( !self::URL( $value ) )
                                 {
                                     $this->AddError( "{$errorName} must be a valid url" );
                                 }
                             }
                             else
                             {
-                                if ( $this->URL( $value ) )
+                                if ( self::URL( $value ) )
                                 {
                                     $this->AddError( "{$errorName} must not be a url" );
                                 }
@@ -129,14 +127,14 @@ class Validate extends __Error
                         case "numeric":
                             if ( $ruleValue )
                             {
-                                if ( !$this->Numeric( $value ) )
+                                if ( !self::Numeric( $value ) )
                                 {
                                     $this->AddError( "{$errorName} must be a number" );
                                 }
                             }
                             else
                             {
-                                if ( $this->Numeric( $value ) )
+                                if ( self::Numeric( $value ) )
                                 {
                                     $this->AddError( "{$errorName} must not be a number" );
                                 }
@@ -201,17 +199,17 @@ class Validate extends __Error
         }
     }
     
-    public function Email( $value )
+    public static function Email( $value )
     {
         return filter_var( $value, FILTER_VALIDATE_EMAIL );
     }
     
-    public function URL( $value )
+    public static function URL( $value )
     {
         return filter_var( $value, FILTER_VALIDATE_URL );
     }
     
-    public function Numeric( $value )
+    public static function Numeric( $value )
     {
         return is_numeric( $value );
     }
