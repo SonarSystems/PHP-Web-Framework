@@ -2,7 +2,7 @@
 
 namespace Sonar;
 
-class Activate
+class MODELS_Activate
 {
 	public $activationCode = null;
 	public $username = null;

@@ -13,7 +13,8 @@ class Forum extends __Error
             $_sectionsTableName,
             $_categoriesTableName,
             $_questionsTableName,
-            $_sections;
+            $_sections,
+            $_categories;
     
     public function __construct( )
     {
@@ -27,9 +28,10 @@ class Forum extends __Error
         }
     }
     
+    // load all the sections
     private function LoadSections( )
     {
-        $sectionResults = $this->_db->Query( "SELECT * From $this->_sectionsTableName" );
+        $this->_db->Query( "SELECT * From $this->_sectionsTableName" );
         
         if ( $this->_db->Count( ) )
         {
@@ -43,18 +45,86 @@ class Forum extends __Error
         }
     }
     
+    // get all the sections
     public function GetSections( $forceLoad = true )
     {
-        // force loads/retrieves the comments from the database
+        // force loads/retrieves the forum sections from the database
         if ( $forceLoad )
         {
             $this->LoadSections( );
         }
         
-        // check if comments exist for the requested id
+        // check if any sections
         if ( $this->Count( ) )
     	{
     		return $this->_sections;
+    	}
+        else
+        {
+            return false;
+        }
+    }
+    
+    // load all the categories for a section
+    private function LoadCategories( $id )
+    {   
+        $this->_db->Get( $this->_categoriesTableName, array( "sectionid", "=", $id ) );
+        
+        if ( $this->_db->Count( ) )
+        {
+            $this->_categories = $this->_db->Results( );
+                
+    		return true;
+    	}
+        else
+        {
+            return false;
+        }
+    }
+    
+    // get all the categories for a section
+    public function GetCategories( $id, $forceLoad = true )
+    {
+        // force loads/retrieves the forum categories from the database
+        if ( $forceLoad )
+        {
+            $this->LoadCategories( $id );
+        }
+        
+        // check if any categories exist
+        if ( $this->Count( ) )
+    	{
+    		return $this->_categories;
+    	}
+        else
+        {
+            return false;
+        }
+    }
+    
+    // get the table row for a section
+    public function GetSection( $id )
+    {
+        $this->_db->Get( $this->_sectionsTableName, array( "sectionid", "=", $id ) );
+        
+        if ( $this->_db->Count( ) )
+        {
+            return $this->_db->First( ); 
+    	}
+        else
+        {
+            return false;
+        }
+    }
+    
+    // get the table row for a category
+    public function GetCategory( $id )
+    {
+        $this->_db->Get( $this->_categoriesTableName, array( "categoryid", "=", $id ) );
+        
+        if ( $this->_db->Count( ) )
+        {
+            return $this->_db->First( ); 
     	}
         else
         {

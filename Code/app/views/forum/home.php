@@ -1,4 +1,6 @@
-Home<br /><br />
+<h1>
+    Home
+</h1>
 
 <?php
 
@@ -10,7 +12,7 @@ if ( $forumSections )
 {   
     foreach ( $forumSections as $row )
     {
-        echo $row->title;
+        echo "<a href='" . Sonar\Path::To( "forum/categories/" . $row->sectionid ) . "'>" . $row->title . "</a>";
         echo "<br />";
     }
 }

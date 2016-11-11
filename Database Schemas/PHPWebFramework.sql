@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 10, 2016 at 05:43 PM
+-- Generation Time: Nov 11, 2016 at 07:28 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -51,7 +51,11 @@ INSERT INTO `comments` (`id`, `postid`, `parentid`, `userid`, `timeposted`, `tim
 (7, 3, 1, 5, 1478708525, 0, 'YXNkYXNk', 2),
 (8, 3, 0, 5, 1478795072, 0, 'c2Rkc2Zkc2Zkc2Y=', 1),
 (9, 3, 8, 5, 1478795075, 0, 'c2Rm', 2),
-(10, 3, 9, 5, 1478795082, 0, 'c2RmZHNmZHMNCnNkDQoNCmRzZg0KDQoNCmRzZg0KZHMNCg0KDQo6RA==', 3);
+(10, 3, 9, 5, 1478795082, 0, 'c2RmZHNmZHMNCnNkDQoNCmRzZg0KDQoNCmRzZg0KZHMNCg0KDQo6RA==', 3),
+(11, 3, 0, 5, 1478798914, 0, 'QXJ1dG9zaA==', 1),
+(12, 3, 11, 5, 1478798926, 0, 'SGUgaXMgc21hbGw=', 2),
+(13, 3, 11, 5, 1478798936, 0, 'aGVsbG8=', 2),
+(14, 3, 12, 5, 1478798948, 0, 'bGllcyBsaWVzIGxpZXM=', 3);
 
 -- --------------------------------------------------------
 
@@ -74,10 +78,28 @@ CREATE TABLE `facebook_users` (
 
 CREATE TABLE `forumcategories` (
   `id` int(11) NOT NULL,
-  `sectionid` int(11) NOT NULL,
+  `categoryid` varchar(32) NOT NULL,
+  `sectionid` varchar(32) NOT NULL,
   `title` varchar(32) NOT NULL,
   `description` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `forumcategories`
+--
+
+INSERT INTO `forumcategories` (`id`, `categoryid`, `sectionid`, `title`, `description`) VALUES
+(1, 'generaldiscussion', 'general', 'General Discussion', 'For everything that isn''t a help request.'),
+(2, 'askforfeatures', 'general', 'Ask For Features', 'If there is a feature that you desire then come on in and ask.'),
+(3, 'bugs', 'general', 'Bugs', 'Found any problems whilst using Sonar Learning, then let us know.'),
+(4, 'showcase', 'general', 'Showcase', 'Want to showcase something epic, this is the right place.'),
+(5, 'competitions', 'general', 'Competitions/Giveaways', 'Stay tuned for new competitions and giveaways.'),
+(6, 'generalhelp', 'help', 'General', 'If you have any general help requests but there isn''t a specific section then ask it here.'),
+(7, 'programming', 'help', 'Programming', 'Help with programming/coding.'),
+(8, 'science', 'help', 'Science', 'Help with science.'),
+(9, 'computerscience', 'help', 'Computer Science', 'Help with computer science.'),
+(10, 'maths', 'help', 'Maths', 'Help with mathematics.'),
+(11, 'history', 'help', 'History', 'Help with history.');
 
 -- --------------------------------------------------------
 
@@ -87,7 +109,7 @@ CREATE TABLE `forumcategories` (
 
 CREATE TABLE `forumquestions` (
   `id` int(11) NOT NULL,
-  `categoryid` int(11) NOT NULL,
+  `categoryid` varchar(32) NOT NULL,
   `userid` int(11) NOT NULL,
   `timeposted` int(32) NOT NULL,
   `timeedited` int(32) NOT NULL,
@@ -103,6 +125,7 @@ CREATE TABLE `forumquestions` (
 
 CREATE TABLE `forumsections` (
   `id` int(11) NOT NULL,
+  `sectionid` varchar(32) NOT NULL,
   `title` varchar(32) NOT NULL,
   `description` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -111,9 +134,9 @@ CREATE TABLE `forumsections` (
 -- Dumping data for table `forumsections`
 --
 
-INSERT INTO `forumsections` (`id`, `title`, `description`) VALUES
-(1, 'General', 'This is for general requests/posts.'),
-(2, 'Help', 'For all help requests and questions.');
+INSERT INTO `forumsections` (`id`, `sectionid`, `title`, `description`) VALUES
+(1, 'general', 'General', 'This is for general requests/posts.'),
+(2, 'help', 'Help', 'For all help requests and questions.');
 
 -- --------------------------------------------------------
 
@@ -205,19 +228,22 @@ ALTER TABLE `facebook_users`
 -- Indexes for table `forumcategories`
 --
 ALTER TABLE `forumcategories`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `categoryid` (`categoryid`);
 
 --
 -- Indexes for table `forumquestions`
 --
 ALTER TABLE `forumquestions`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `categoryid` (`categoryid`);
 
 --
 -- Indexes for table `forumsections`
 --
 ALTER TABLE `forumsections`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `sectionid` (`sectionid`);
 
 --
 -- Indexes for table `google_users`
@@ -254,7 +280,7 @@ ALTER TABLE `users_sessions`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `facebook_users`
 --
@@ -264,7 +290,7 @@ ALTER TABLE `facebook_users`
 -- AUTO_INCREMENT for table `forumcategories`
 --
 ALTER TABLE `forumcategories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `forumquestions`
 --

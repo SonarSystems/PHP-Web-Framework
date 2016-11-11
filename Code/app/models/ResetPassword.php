@@ -2,7 +2,7 @@
 
 namespace Sonar;
 
-class ResetPassword
+class MODELS_ResetPassword
 {
 	public $resetCode = null;
 	public $username = null;

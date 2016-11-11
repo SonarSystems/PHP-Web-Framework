@@ -14,33 +14,24 @@ class CONTROLLER_Forum extends Controller
         $this->index( );
     }
     
-    public function sections( )
-    {
-        $this->index( );
-    }
-    
-    public function section( )
-    {
-        $this->index( );
-    }
-    
-    public function category( )
+    public function categories( $id = "" )
 	{
-		$this->view( "forum/category" );
+        $model = $this->model( "ForumCategories" );
+		$model->id = $id;
+                		
+		$this->view( "forum/categories", ["id" => $model->id] );        
 	}
     
-    public function topic( )
-    {
-        $this->category( );
-    }
+    public function category( $id = "" )
+	{
+        $model = $this->model( "ForumCategory" );
+		$model->id = $id;
+                		
+		$this->view( "forum/category", ["id" => $model->id] );        
+	}
     
     public function question( )
 	{
 		$this->view( "forum/question" );
 	}
-    
-    public function post( )
-    {
-        $this->question( );
-    }
 }

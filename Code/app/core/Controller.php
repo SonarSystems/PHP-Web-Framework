@@ -8,7 +8,7 @@ class Controller
 	{
 		require_once( "../app/models/" . $model . ".php" );
 
-		$model = "Sonar\\".$model;
+		$model = "Sonar\\MODEL_".$model;
 		
 		return new $model( );
 	}
