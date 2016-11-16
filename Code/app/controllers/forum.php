@@ -30,8 +30,11 @@ class CONTROLLER_Forum extends Controller
 		$this->view( "forum/category", ["id" => $model->id] );        
 	}
     
-    public function question( )
+    public function question( $id = "" )
 	{
-		$this->view( "forum/question" );
+        $model = $this->model( "ForumQuestion" );
+		$model->id = $id;
+        
+		$this->view( "forum/question", ["id" => $model->id] );
 	}
 }

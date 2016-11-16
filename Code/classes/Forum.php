@@ -14,7 +14,8 @@ class Forum extends __Error
             $_categoriesTableName,
             $_questionsTableName,
             $_sections,
-            $_categories;
+            $_categories,
+            $_questions;
     
     public function __construct( )
     {
@@ -102,6 +103,27 @@ class Forum extends __Error
         }
     }
     
+    // get all the questions for a category
+    public function GetQuestions( $id, $forceLoad = true )
+    {
+        // force loads/retrieves the forum questions from the database
+        if ( $forceLoad )
+        {
+            $this->_db->Get( $this->_questionsTableName, array( "categoryid", "=", $id ) );
+        
+            if ( $this->_db->Count( ) )
+            {
+                $this->_questions = $this->_db->Results( );
+            }
+            else
+            {
+                return false;
+            }            
+        }
+        
+        return $this->_questions;
+    }
+    
     // get the table row for a section
     public function GetSection( $id )
     {
@@ -126,6 +148,59 @@ class Forum extends __Error
         {
             return $this->_db->First( ); 
     	}
+        else
+        {
+            return false;
+        }
+    }
+    
+    // get the table row for a question
+    public function GetQuestion( $id )
+    {
+        $this->_db->Get( $this->_questionsTableName, array( "id", "=", $id ) );
+        
+        if ( $this->_db->Count( ) )
+        {
+            return $this->_db->First( ); 
+    	}
+        else
+        {
+            return false;
+        }
+    }
+    
+    // insert the question into the database
+    public function InsertQuestion( $title, $description, $categoryID )
+    {
+        $user = new User( );
+        
+        if ( !$user->isLoggedIn( ) )
+        {
+            $this->addError( "Unable to post comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        if ( !self::GetCategory( $categoryID ) )
+        {
+            $this->addError( "Unable to post comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        $fields = array(
+            "categoryid" => $categoryID,
+            "userid" => $user->Data( )->id,
+            "timeposted" => time( ),
+            "timeedited" => 0,
+            "title" => base64_encode( $title ),
+            "description" => base64_encode( $description )
+        );
+
+        if ( $this->_db->insert( $this->_questionsTableName, $fields ) )
+        {
+            return $this->_db->GetLastInsertedID( );
+        }
         else
         {
             return false;

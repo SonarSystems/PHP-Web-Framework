@@ -23,21 +23,14 @@ if ( Sonar\Input::exists( "post" ) )
 
             if ( $validation->passed( ) )
             {
-                try
+                $comment = Sonar\Input::get( "CommentTextArea", $_POST );
+
+                if ( !$comments->InsertComment( $comment ) )
                 {
-                    $comment = Sonar\Input::get( "CommentTextArea", $_POST );
-                    
-                    if ( !$comments->InsertComment( $comment ) )
+                    foreach( $comments->errors( ) as $error )
                     {
-                        foreach( $comments->errors( ) as $error )
-                        {
-                            echo $error."<br />";
-                        }
+                        echo $error."<br />";
                     }
-                }
-                catch ( Exception $error )
-                {
-                    echo "Unable to post comment at this time, please try again later.";
                 }
             }
             else
@@ -63,22 +56,15 @@ if ( Sonar\Input::exists( "post" ) )
 
             if ( $validation->passed( ) )
             {
-                try
+                $comment = Sonar\Input::get( "replyTextArea", $_POST );
+                $id = Sonar\Input::get( "id", $_POST );
+
+                if ( !$comments->InsertComment( $comment, $id ) )
                 {
-                    $comment = Sonar\Input::get( "replyTextArea", $_POST );
-                    $id = Sonar\Input::get( "id", $_POST );
-                    
-                    if ( !$comments->InsertComment( $comment, $id ) )
+                    foreach( $comments->errors( ) as $error )
                     {
-                        foreach( $comments->errors( ) as $error )
-                        {
-                            echo $error."<br />";
-                        }
+                        echo $error."<br />";
                     }
-                }
-                catch ( Exception $error )
-                {
-                    echo "Unable to post response at this time, please try again later.";
                 }
             }
             else

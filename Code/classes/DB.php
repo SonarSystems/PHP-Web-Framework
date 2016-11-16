@@ -11,7 +11,8 @@ class DB
             $_query,
             $_error = false,
             $_results,
-            $_count = 0;
+            $_count = 0,
+            $_lastInsertedId;
     
     private function __construct( )
     {
@@ -113,6 +114,11 @@ class DB
         return $this->Action( 'SELECT *', $table, $where );
     }
     
+    public function GetLastInsertedID( )
+    {
+        return $this->_lastInsertedId;
+    }
+    
     /*
     *   Example Call
     *   DB::getInstance( )->delete( "TableName", array( "id", "=", "3" ) );
@@ -153,6 +159,8 @@ class DB
             
             if ( !$this->Query( $sql, $fields )->Error( ) )
             {
+                $this->_lastInsertedId = $this->_pdo->lastInsertId();
+                
                 return true;
             }
         }

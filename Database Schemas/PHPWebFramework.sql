@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 11, 2016 at 07:28 PM
+-- Generation Time: Nov 16, 2016 at 04:03 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -113,9 +113,22 @@ CREATE TABLE `forumquestions` (
   `userid` int(11) NOT NULL,
   `timeposted` int(32) NOT NULL,
   `timeedited` int(32) NOT NULL,
-  `title` varchar(128) NOT NULL,
+  `title` text NOT NULL,
   `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `forumquestions`
+--
+
+INSERT INTO `forumquestions` (`id`, `categoryid`, `userid`, `timeposted`, `timeedited`, `title`, `description`) VALUES
+(1, 'generaldiscussion', 5, 1479305454, 0, 'SGVsbG8gV29ybGQ=', 'Rmlyc3QgUG9zdA=='),
+(3, 'generaldiscussion', 5, 1479305749, 0, 'c2Rmc2Rmc2RmIC4gIGZz', 'ZGZzZCAuICAgICAgICAgICAgICAgICAgICAgZHNmc2RmZHNmc2Rmc2Rmc2Rmc2QNCg0KDQpzZGYNCg0KDQpzZGZkc2ZkZnNkZnMNCg0KZHNmZHNm'),
+(4, 'generaldiscussion', 5, 1479305816, 0, 'ZHNmc2RmZHNmZHM=', 'ZmRzZmRzZnNkZnNkZnNkZmRz'),
+(5, 'generaldiscussion', 5, 1479306284, 0, 'c2Rmc2RmZHNmc2Q=', 'ZmRzZnNmc2ZzZnNmc2Zkc2Y='),
+(6, 'generaldiscussion', 5, 1479306318, 0, 'ZHNmZHNmZHNmZGZz', 'c2RmZHNmZHNmc2Rmc2RmZHNm'),
+(7, 'generaldiscussion', 5, 1479306336, 0, 'ZHNmb3Bkc2Zwb2twc2Rwb2ZrcA==', 'ZG9wc2trc2Zwb2twb2Rza3Bva3BvZHNrcG9ma3Bvc2RrZm9w'),
+(8, 'generaldiscussion', 5, 1479306714, 0, 'Y2Rzb2lqampv', 'am9pamlvampvam9qam9qaW9qb2k=');
 
 -- --------------------------------------------------------
 
@@ -235,8 +248,7 @@ ALTER TABLE `forumcategories`
 -- Indexes for table `forumquestions`
 --
 ALTER TABLE `forumquestions`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `categoryid` (`categoryid`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `forumsections`
@@ -295,7 +307,7 @@ ALTER TABLE `forumcategories`
 -- AUTO_INCREMENT for table `forumquestions`
 --
 ALTER TABLE `forumquestions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `forumsections`
 --
