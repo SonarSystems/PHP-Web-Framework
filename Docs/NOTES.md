@@ -3,7 +3,6 @@
 <p>Forum</p>
 
 <ul>
-	<li>Format question like sonarlearning/bootstrap alert.</li>
 	<li>Commenting System On The Post Page After retrieval</li>
 	<li>Latest Activity (similar to thenewboston forum)</li>
 	<li>Liking</li>
