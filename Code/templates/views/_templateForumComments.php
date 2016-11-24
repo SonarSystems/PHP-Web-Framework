@@ -1,6 +1,12 @@
 <?php
 
-$comments = new Sonar\Comments( "comments", "commentlikes", 3 );
+/*
+
+COMMENTING SYSTEM
+
+*/
+
+$comments = new Sonar\Comments( $templateCommentsTableName, $templateCommentsPostID );
 $comments->SetMaxNestingLevel( 3 );
 $user = new Sonar\User( );
 
@@ -75,23 +81,10 @@ if ( Sonar\Input::exists( "post" ) )
                 }
             }
         }
-        else if ( Sonar\Input::get( "likeComment", $_POST ) )
-        {
-            $id = Sonar\Input::get( "id", $_POST );
-            
-            if ( $comments->LikeComment( $id ) )
-            {
-                echo "Remove like";
-            }
-            else
-            {
-                echo "Add like";
-            }
-        }
     }
 }
 
-$data = $comments->GetCommentsForPostID( 3 );
+$data = $comments->GetCommentsForPostID( $templateCommentsPostID );
 $commentsCount = $comments->Count( );
 $token = Sonar\Token::generate( );
 
@@ -129,18 +122,12 @@ function CommentingStart( $data, $user, $comments, $token )
     $button = "";
     $edited = "";
     
-    if ( $user->IsLoggedIn( ) )
-    { 
-        $postID = $data->id;
-        $likedButtonText = "Like";
-
-        if ( $comments->IsCommentLiked( $postID ) )
+    if ( $data->currentnestedlevel < $comments->GetMaxNestingLevel( ) )
+    {
+        if ( $user->IsLoggedIn( ) )
         {
-            $likedButtonText = "Liked";
-        }
-        
-        if ( $data->currentnestedlevel < $comments->GetMaxNestingLevel( ) )
-        {
+            $postID = $data->id;
+            
             $button = "
             <form action='' method='POST'>
                 <div class='field'>
@@ -153,17 +140,6 @@ function CommentingStart( $data, $user, $comments, $token )
                 <input type='hidden' name='id' value='$postID' />
                 <input type='hidden' name='token' value='$token' />
                 <input type='submit' name='replyComment' class='replyComment' value='Reply' />
-                <input type='submit' name='likeComment' class='likeComment' value='$likedButtonText' />
-            </form>
-            ";
-        }
-        else
-        {
-            $button = "
-            <form action='' method='POST'>
-                <input type='hidden' name='id' value='$postID' />
-                <input type='hidden' name='token' value='$token' />
-                <input type='submit' name='likeComment' class='likeComment' value='$likedButtonText' />
             </form>
             ";
         }
@@ -174,8 +150,6 @@ function CommentingStart( $data, $user, $comments, $token )
         $edited = "Edited: " . Sonar\Time::EpochToDateTime( $data->timeedited );
     }
     
-    $commentLikes = $comments->CountCommentLikes( $postID );
-    
     echo "
     
     <div class='alert alert-success' role='alert'>
@@ -185,8 +159,7 @@ function CommentingStart( $data, $user, $comments, $token )
             $description
         </div>
         
-        $button ($commentLikes Likes)
-        <br />$edited
+        $button $edited
     ";
 }
 

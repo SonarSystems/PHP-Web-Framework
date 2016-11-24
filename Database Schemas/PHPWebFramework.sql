@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 16, 2016 at 04:03 PM
+-- Generation Time: Nov 24, 2016 at 06:35 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -19,6 +19,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `PHPWebFramework`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `commentlikes`
+--
+
+CREATE TABLE `commentlikes` (
+  `id` int(11) NOT NULL,
+  `commentid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `timestamp` int(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `commentlikes`
+--
+
+INSERT INTO `commentlikes` (`id`, `commentid`, `userid`, `timestamp`) VALUES
+(11, 1, 5, 1480007974),
+(12, 2, 5, 1480007983),
+(14, 13, 5, 1480008540),
+(15, 1, 44, 0);
 
 -- --------------------------------------------------------
 
@@ -55,7 +78,8 @@ INSERT INTO `comments` (`id`, `postid`, `parentid`, `userid`, `timeposted`, `tim
 (11, 3, 0, 5, 1478798914, 0, 'QXJ1dG9zaA==', 1),
 (12, 3, 11, 5, 1478798926, 0, 'SGUgaXMgc21hbGw=', 2),
 (13, 3, 11, 5, 1478798936, 0, 'aGVsbG8=', 2),
-(14, 3, 12, 5, 1478798948, 0, 'bGllcyBsaWVzIGxpZXM=', 3);
+(14, 3, 12, 5, 1478798948, 0, 'bGllcyBsaWVzIGxpZXM=', 3),
+(15, 3, 1, 5, 1480005568, 0, 'aGVsbG8gd29ybGQ=', 2);
 
 -- --------------------------------------------------------
 
@@ -104,6 +128,38 @@ INSERT INTO `forumcategories` (`id`, `categoryid`, `sectionid`, `title`, `descri
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `forumcomments`
+--
+
+CREATE TABLE `forumcomments` (
+  `id` int(11) NOT NULL,
+  `postid` int(11) NOT NULL,
+  `parentid` int(11) DEFAULT NULL,
+  `userid` int(11) NOT NULL,
+  `timeposted` int(32) NOT NULL,
+  `timeedited` int(32) NOT NULL DEFAULT '0',
+  `description` text NOT NULL,
+  `currentnestedlevel` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `forumcomments`
+--
+
+INSERT INTO `forumcomments` (`id`, `postid`, `parentid`, `userid`, `timeposted`, `timeedited`, `description`, `currentnestedlevel`) VALUES
+(1, 10, 0, 5, 1479404614, 0, 'VGhpcyBpcyBhbiBhd2Vzb21lIHF1ZXN0aW9ucw==', 1),
+(2, 10, 1, 5, 1479404654, 0, 'ZHNmc2RmZHNm', 2),
+(3, 10, 2, 5, 1479404656, 0, 'ZGZzZHNmZHNm', 3),
+(4, 10, 1, 5, 1479404659, 0, 'c2Rmc2Rmc2Rm', 2),
+(5, 10, 0, 5, 1479404667, 0, 'ZHNmZHNmZHNmIHNkZiBkc2YgZA0KDQoNCnNkZg0KDQpkc2Y=', 1),
+(6, 11, 0, 5, 1479405298, 0, 'ZHM=', 1),
+(7, 12, 0, 5, 1480005000, 0, 'ZXdycnc=', 1),
+(8, 12, 7, 5, 1480005002, 0, 'd2Vy', 2),
+(9, 12, 0, 5, 1480005004, 0, 'cndld2VyZXc=', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `forumquestions`
 --
 
@@ -128,7 +184,11 @@ INSERT INTO `forumquestions` (`id`, `categoryid`, `userid`, `timeposted`, `timee
 (5, 'generaldiscussion', 5, 1479306284, 0, 'c2Rmc2RmZHNmc2Q=', 'ZmRzZnNmc2ZzZnNmc2Zkc2Y='),
 (6, 'generaldiscussion', 5, 1479306318, 0, 'ZHNmZHNmZHNmZGZz', 'c2RmZHNmZHNmc2Rmc2RmZHNm'),
 (7, 'generaldiscussion', 5, 1479306336, 0, 'ZHNmb3Bkc2Zwb2twc2Rwb2ZrcA==', 'ZG9wc2trc2Zwb2twb2Rza3Bva3BvZHNrcG9ma3Bvc2RrZm9w'),
-(8, 'generaldiscussion', 5, 1479306714, 0, 'Y2Rzb2lqampv', 'am9pamlvampvam9qam9qaW9qb2k=');
+(8, 'generaldiscussion', 5, 1479306714, 0, 'Y2Rzb2lqampv', 'am9pamlvampvam9qam9qaW9qb2k='),
+(9, 'generaldiscussion', 5, 1479403982, 0, 'SGVsbG8=', 'SGVsbG8gV29ybGQNCg0KZA0Kcw0KZHMNCmQNCnMNCg0KDQoNCmRzZHM='),
+(10, 'generaldiscussion', 5, 1479404013, 1479402013, 'SGVsbG8=', 'PHN0cm9uZz5IZWxsbyBXb3JsZDwvc3Ryb25nPg0KDQpkDQpzDQpkcw0KZA0Kcw0KDQoNCg0KZHNkcw=='),
+(11, 'programming', 5, 1479404645, 0, 'QysrIEhlbHA=', 'U0ZNTCBpcyBub3Qgd29ya2luZyBwbGVhc2UgaGVscC4='),
+(12, 'science', 5, 1480004997, 0, 'OTc5MzI5Nzk0ODkyMw==', 'c2Rmc2RmDQpzZGYNCmRzDQpm');
 
 -- --------------------------------------------------------
 
@@ -224,6 +284,12 @@ INSERT INTO `users_sessions` (`id`, `user_id`, `hash`) VALUES
 --
 
 --
+-- Indexes for table `commentlikes`
+--
+ALTER TABLE `commentlikes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `comments`
 --
 ALTER TABLE `comments`
@@ -243,6 +309,12 @@ ALTER TABLE `facebook_users`
 ALTER TABLE `forumcategories`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `categoryid` (`categoryid`);
+
+--
+-- Indexes for table `forumcomments`
+--
+ALTER TABLE `forumcomments`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `forumquestions`
@@ -289,10 +361,15 @@ ALTER TABLE `users_sessions`
 --
 
 --
+-- AUTO_INCREMENT for table `commentlikes`
+--
+ALTER TABLE `commentlikes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+--
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `facebook_users`
 --
@@ -304,10 +381,15 @@ ALTER TABLE `facebook_users`
 ALTER TABLE `forumcategories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
+-- AUTO_INCREMENT for table `forumcomments`
+--
+ALTER TABLE `forumcomments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
 -- AUTO_INCREMENT for table `forumquestions`
 --
 ALTER TABLE `forumquestions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `forumsections`
 --

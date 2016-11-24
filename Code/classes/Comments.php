@@ -10,17 +10,19 @@ class Comments extends __Error
 {
     private $_db,
             $_commentsTableName,
+            $_likesTableName,
             $_maxLevel,
             $_comments,
             $_postID;
     
-    public function __construct( $tableName, $postID )
+    public function __construct( $commentsTableName, $likesTableName, $postID )
     {
         if ( Config::get( "mysql/enabled" ) )
         {
             $this->_db = DB::getInstance( );
             
-            $this->_commentsTableName = $tableName;
+            $this->_commentsTableName = $commentsTableName;
+            $this->_likesTableName = $likesTableName;
         }
         
         $this->_postID = $postID;
@@ -40,7 +42,7 @@ class Comments extends __Error
     
     private function LoadComments( $column, $id )
     {
-        $this->_db->get( $this->_commentsTableName, array( $column, "=", $id ) );
+        $this->_db->Get( $this->_commentsTableName, array( $column, "=", $id ) );
         
         // check if comments exist for the requested id
         if ( $this->_db->Count( ) )
@@ -146,5 +148,69 @@ class Comments extends __Error
             "timeedited" => time( ),
             "description" => base64_encode( $comment )
         ) );   
+    }
+    
+    public function IsCommentLiked( $id )
+    {
+        $user = new User( );
+        
+        $likeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ?", array( $id, $user->Data( )->id ) );
+        
+        // checks if the comments has been liked
+        if ( $likeResult->Count( ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public function LikeComment( $id )
+    {
+        $user = new User( );
+        
+        if ( !$user->isLoggedIn( ) )
+        {
+            $this->addError( "Unable to like comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        if ( !$this->GetCommentsForID( $id ) )
+        {
+            $this->addError( "Unable to like comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        $likeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ?", array( $id, $user->Data( )->id ) );
+        
+        if ( $likeResult->Count( ) ) // remove comment like
+        {
+            $id = $likeResult->First( )->id;
+            
+            $this->_db->Delete( $this->_likesTableName, array( "id", "=", $id ) );
+        }
+        else // like comment
+        {
+            $fields = array(
+                "commentid" => $id,
+                "userid" => $user->Data( )->id,
+                "timestamp" => time( )
+            );
+            
+            $this->_db->insert( $this->_likesTableName, $fields );
+        }
+    }
+    
+    // counts how many times a comment has been liked
+    public function CountCommentLikes( $id )
+    {
+        
+        $likesResult = $this->_db->Get( $this->_likesTableName, array( "commentid", "=", $id ) );
+        
+        return $likesResult->Count( );
     }
 }

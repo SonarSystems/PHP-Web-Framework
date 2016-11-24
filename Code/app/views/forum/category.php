@@ -117,7 +117,7 @@ else
     for ( $i = count( $questions ) - 1; $i >= 0; $i-- )
     {
         $questionID = $questions[$i]->id;
-        $title = nl2br( htmlspecialchars( base64_decode( $questions[$i]->title ) ) );
+        $title = htmlspecialchars( base64_decode( $questions[$i]->title ) );
         $timePosted = Sonar\Time::EpochToDateTime( $questions[$i]->timeposted );
 ?>
 

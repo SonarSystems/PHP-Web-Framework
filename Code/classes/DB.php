@@ -44,7 +44,7 @@ class DB
     
     /*
     *   Example Call
-    *   DB::getInstance( )->query( "SELECT * From TableName WHERE id = ?", array( '18' ) );
+    *   DB::getInstance( )->Query( "SELECT * From TableName WHERE id = ?", array( '18' ) );
     */
     public function Query( $sql, $params = array( ) )
     {
@@ -79,7 +79,7 @@ class DB
     
     /*
     *   Example Call
-    *   DB::getInstance( )->query( "SELECT *", "TableName", array( "id", "=", "3" ) );
+    *   DB::getInstance( )->Action( "SELECT *", "TableName", array( "id", "=", "3" ) );
     */
     public function Action( $action, $table, $where = array( ) )
     {
@@ -107,7 +107,7 @@ class DB
     
     /*
     *   Example Call
-    *   DB::getInstance( )->get( "TableName", array( "id", "=", "3" ) );
+    *   DB::getInstance( )->Get( "TableName", array( "id", "=", "3" ) );
     */
     public function Get( $table, $where )
     {
@@ -121,7 +121,7 @@ class DB
     
     /*
     *   Example Call
-    *   DB::getInstance( )->delete( "TableName", array( "id", "=", "3" ) );
+    *   DB::getInstance( )->Delete( "TableName", array( "id", "=", "3" ) );
     */
     public function Delete( $table, $where )
     {
@@ -130,7 +130,7 @@ class DB
     
     /*
     *   Example Call
-    *   DB::getInstance( )->insert( "TableName", array(
+    *   DB::getInstance( )->Insert( "TableName", array(
     *   "username" => "newusername",
     *   "password" => "newpassword"
     *   ) );
@@ -170,7 +170,7 @@ class DB
     
     /*
     *   Example Call
-    *   DB::getInstance( )->update( "TableName", 3, array(
+    *   DB::getInstance( )->Update( "TableName", 3, array(
     *   "username" => "newusername",
     *   "password" => "newpassword"
     *   ) );
