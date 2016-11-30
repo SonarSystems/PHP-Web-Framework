@@ -1,11 +1,5 @@
 # Notes
 
-<p>Comments</p>
-
-<ul>
-	<li>Disliking</li>
-</ul>
-
 <p>Forum</p>
 
 <ul>
