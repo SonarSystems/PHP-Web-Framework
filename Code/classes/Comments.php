@@ -150,14 +150,33 @@ class Comments extends __Error
         ) );   
     }
     
+    // check if the comment has been liked
     public function IsCommentLiked( $id )
     {
         $user = new User( );
         
-        $likeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ?", array( $id, $user->Data( )->id ) );
+        $likeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "like" ) );
         
         // checks if the comments has been liked
         if ( $likeResult->Count( ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    // check if the comment has been disliked
+    public function IsCommentDisliked( $id )
+    {
+        $user = new User( );
+        
+        $dislikeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "dislike" ) );
+        
+        // checks if the comments has been liked
+        if ( $dislikeResult->Count( ) )
         {
             return true;
         }
@@ -185,32 +204,111 @@ class Comments extends __Error
             return false;
         }
         
-        $likeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ?", array( $id, $user->Data( )->id ) );
+        $dislikeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "dislike" ) );
+        
+        $fields = array(
+            "commentid" => $id,
+            "userid" => $user->Data( )->id,
+            "timestamp" => time( ),
+            "type" => "like"
+        );
+        
+        if ( $dislikeResult->Count( ) ) // remove comment dislike
+        {
+            $id = $dislikeResult->First( )->id;
+            
+            $this->_db->Delete( $this->_likesTableName, array( "id", "=", $id ) );
+            
+            $this->_db->insert( $this->_likesTableName, $fields );
+        }
+        else // like comment
+        {
+            $likeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "like" ) );
+            
+            if ( $likeResult->Count( ) ) // remove comment like
+            {
+                $id = $likeResult->First( )->id;
+            
+                $this->_db->Delete( $this->_likesTableName, array( "id", "=", $id ) );
+            }
+            else
+            {
+                $this->_db->insert( $this->_likesTableName, $fields );
+            }
+        }
+    }
+    
+    public function DislikeComment( $id )
+    {
+        $user = new User( );
+        
+        if ( !$user->isLoggedIn( ) )
+        {
+            $this->addError( "Unable to dislike comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        if ( !$this->GetCommentsForID( $id ) )
+        {
+            $this->addError( "Unable to dislike comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        $likeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "like" ) );
+        
+        $fields = array(
+            "commentid" => $id,
+            "userid" => $user->Data( )->id,
+            "timestamp" => time( ),
+            "type" => "dislike"
+        );
         
         if ( $likeResult->Count( ) ) // remove comment like
         {
             $id = $likeResult->First( )->id;
             
             $this->_db->Delete( $this->_likesTableName, array( "id", "=", $id ) );
+            
+            $this->_db->insert( $this->_likesTableName, $fields );
         }
         else // like comment
         {
-            $fields = array(
-                "commentid" => $id,
-                "userid" => $user->Data( )->id,
-                "timestamp" => time( )
-            );
+            $disLikeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "dislike" ) );
             
-            $this->_db->insert( $this->_likesTableName, $fields );
+            if ( $disLikeResult->Count( ) ) // remove comment dislike
+            {
+                $id = $disLikeResult->First( )->id;
+            
+                $this->_db->Delete( $this->_likesTableName, array( "id", "=", $id ) );
+            }
+            else
+            {
+                $this->_db->insert( $this->_likesTableName, $fields );
+            }
         }
     }
     
     // counts how many times a comment has been liked
     public function CountCommentLikes( $id )
     {
-        
-        $likesResult = $this->_db->Get( $this->_likesTableName, array( "commentid", "=", $id ) );
+        $likesResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND type = ?", array( $id, "like" ) );
         
         return $likesResult->Count( );
+    }
+    
+    // counts how many times a comment has been disliked
+    public function CountCommentDislikes( $id )
+    {
+        $dislikeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND type = ?", array( $id, "dislike" ) );
+        
+        return $dislikeResult->Count( );
+    }
+    
+    // count how many times a comment has been liked minus the dislikes
+    public function CountCommentOverallLikes( $id )
+    {
+        return $this->CountCommentLikes( $id ) - $this->CountCommentDislikes( $id );
     }
 }

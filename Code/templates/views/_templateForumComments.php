@@ -1,18 +1,12 @@
 <?php
 
-/*
-
-COMMENTING SYSTEM
-
-*/
-
-$comments = new Sonar\Comments( $templateCommentsTableName, $templateCommentsPostID );
+$comments = new Sonar\Comments( $templateCommentsTableName, $templateCommentLikesTableName, $templateCommentsPostID );
 $comments->SetMaxNestingLevel( 3 );
 $user = new Sonar\User( );
 
 if ( Sonar\Input::exists( "post" ) )
 {
-    if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+    if ( Sonar\Input::get( "token", $_POST ) === $sessionToken )
     {       
         if ( Sonar\Input::get( "PostComment", $_POST ) )
         {
@@ -81,12 +75,24 @@ if ( Sonar\Input::exists( "post" ) )
                 }
             }
         }
+        else if ( Sonar\Input::get( "likeComment", $_POST ) )
+        {
+            $id = Sonar\Input::get( "id", $_POST );
+            
+            $comments->LikeComment( $id );  
+        }
+        else if ( Sonar\Input::get( "dislikeComment", $_POST ) )
+        {
+            $id = Sonar\Input::get( "id", $_POST );
+            
+            $comments->DislikeComment( $id );
+        }
     }
 }
 
 $data = $comments->GetCommentsForPostID( $templateCommentsPostID );
 $commentsCount = $comments->Count( );
-$token = Sonar\Token::generate( );
+
 
 if ( $user->IsLoggedIn( ) )
 {
@@ -122,12 +128,24 @@ function CommentingStart( $data, $user, $comments, $token )
     $button = "";
     $edited = "";
     
-    if ( $data->currentnestedlevel < $comments->GetMaxNestingLevel( ) )
-    {
-        if ( $user->IsLoggedIn( ) )
+    if ( $user->IsLoggedIn( ) )
+    { 
+        $postID = $data->id;
+        $likedButtonText = "Like";
+        $dislikedButtonText = "Dislike";
+
+        if ( $comments->IsCommentLiked( $postID ) )
         {
-            $postID = $data->id;
-            
+            $likedButtonText = "Liked";
+        }
+        
+        if ( $comments->IsCommentDisliked( $postID ) )
+        {
+            $dislikedButtonText = "Disliked";
+        }
+        
+        if ( $data->currentnestedlevel < $comments->GetMaxNestingLevel( ) )
+        {
             $button = "
             <form action='' method='POST'>
                 <div class='field'>
@@ -140,6 +158,19 @@ function CommentingStart( $data, $user, $comments, $token )
                 <input type='hidden' name='id' value='$postID' />
                 <input type='hidden' name='token' value='$token' />
                 <input type='submit' name='replyComment' class='replyComment' value='Reply' />
+                <input type='submit' name='likeComment' class='likeComment' value='$likedButtonText' />
+                <input type='submit' name='dislikeComment' class='dislikeComment' value='$dislikedButtonText' />
+            </form>
+            ";
+        }
+        else
+        {
+            $button = "
+            <form action='' method='POST'>
+                <input type='hidden' name='id' value='$postID' />
+                <input type='hidden' name='token' value='$token' />
+                <input type='submit' name='likeComment' class='likeComment' value='$likedButtonText' />
+                <input type='submit' name='dislikeComment' class='dislikeComment' value='$dislikedButtonText' />
             </form>
             ";
         }
@@ -150,6 +181,8 @@ function CommentingStart( $data, $user, $comments, $token )
         $edited = "Edited: " . Sonar\Time::EpochToDateTime( $data->timeedited );
     }
     
+    $commentLikes = $comments->CountCommentOverallLikes( $postID );
+    
     echo "
     
     <div class='alert alert-success' role='alert'>
@@ -159,7 +192,8 @@ function CommentingStart( $data, $user, $comments, $token )
             $description
         </div>
         
-        $button $edited
+        $button ($commentLikes Likes)
+        <br />$edited
     ";
 }
 

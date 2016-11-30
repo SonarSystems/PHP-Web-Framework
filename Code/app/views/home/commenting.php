@@ -79,14 +79,13 @@ if ( Sonar\Input::exists( "post" ) )
         {
             $id = Sonar\Input::get( "id", $_POST );
             
-            if ( $comments->LikeComment( $id ) )
-            {
-                echo "Remove like";
-            }
-            else
-            {
-                echo "Add like";
-            }
+            $comments->LikeComment( $id );
+        }
+        else if ( Sonar\Input::get( "dislikeComment", $_POST ) )
+        {
+            $id = Sonar\Input::get( "id", $_POST );
+            
+            $comments->DislikeComment( $id );
         }
     }
 }
@@ -133,10 +132,16 @@ function CommentingStart( $data, $user, $comments, $token )
     { 
         $postID = $data->id;
         $likedButtonText = "Like";
+        $dislikedButtonText = "Dislike";
 
         if ( $comments->IsCommentLiked( $postID ) )
         {
             $likedButtonText = "Liked";
+        }
+        
+        if ( $comments->IsCommentDisliked( $postID ) )
+        {
+            $dislikedButtonText = "Disliked";
         }
         
         if ( $data->currentnestedlevel < $comments->GetMaxNestingLevel( ) )
@@ -154,6 +159,7 @@ function CommentingStart( $data, $user, $comments, $token )
                 <input type='hidden' name='token' value='$token' />
                 <input type='submit' name='replyComment' class='replyComment' value='Reply' />
                 <input type='submit' name='likeComment' class='likeComment' value='$likedButtonText' />
+                <input type='submit' name='dislikeComment' class='dislikeComment' value='$dislikedButtonText' />
             </form>
             ";
         }
@@ -164,6 +170,7 @@ function CommentingStart( $data, $user, $comments, $token )
                 <input type='hidden' name='id' value='$postID' />
                 <input type='hidden' name='token' value='$token' />
                 <input type='submit' name='likeComment' class='likeComment' value='$likedButtonText' />
+                <input type='submit' name='dislikeComment' class='dislikeComment' value='$dislikedButtonText' />
             </form>
             ";
         }
@@ -174,7 +181,7 @@ function CommentingStart( $data, $user, $comments, $token )
         $edited = "Edited: " . Sonar\Time::EpochToDateTime( $data->timeedited );
     }
     
-    $commentLikes = $comments->CountCommentLikes( $postID );
+    $commentLikes = $comments->CountCommentOverallLikes( $postID );
     
     echo "
     

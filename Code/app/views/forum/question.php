@@ -12,6 +12,31 @@ if ( !$questionResult )
     Sonar\Redirect::To( "forum" );
 }
 
+$sessionToken = "33";
+
+if ( Sonar\Input::exists( "post" ) )
+{
+    $sessionToken = Sonar\Input::get( "token", $_POST );
+
+    if ( Sonar\Token::check( $sessionToken ) )
+    {
+        if ( Sonar\Input::get( "likeQuestion", $_POST ) )
+        {
+            $id = Sonar\Input::get( "id", $_POST );
+            
+            $forum->LikeQuestion( $id );
+        }
+        else if ( Sonar\Input::get( "dislikeQuestion", $_POST ) )
+        {
+            $id = Sonar\Input::get( "id", $_POST );
+            
+            $forum->DislikeQuestion( $id );
+        }
+    }
+}
+
+$questionArray["id"] = $questionResult->id;
+
 $questionArray["userid"] = $questionResult->userid;
 $user->Find( $questionArray["userid"] );
 $questionArray["username"] = $user->Data( )->username;
@@ -21,7 +46,22 @@ $questionArray["timeedited"] = $questionResult->timeedited;
 $questionArray["title"] = htmlspecialchars( base64_decode( $questionResult->title ) );
 $questionArray["description"] = nl2br( htmlspecialchars( base64_decode( $questionResult->description ) ) );
 
+$token = Sonar\Token::generate( );
 
+$likedButtonText = "Like";
+$dislikedButtonText = "Dislike";
+
+if ( $forum->IsQuestionLiked( $questionArray["id"] ) )
+{
+    $likedButtonText = "Liked";
+}
+
+if ( $forum->IsQuestionDisliked( $questionArray["id"] ) )
+{
+    $dislikedButtonText = "Disliked";
+}
+
+$questionLikes = $forum->CountQuestionOverallLikes( $questionArray["id"] );
     
 ?>
 
@@ -34,6 +74,15 @@ $questionArray["description"] = nl2br( htmlspecialchars( base64_decode( $questio
     <hr />
     
     <?= $questionArray["description"]; ?>
+    
+    <form action='' method='POST'>
+        <input type='hidden' name='id' value='<?= $questionArray["id"]; ?>' />
+        <input type='hidden' name='token' value='<?= $token; ?>' />
+        <input type='submit' name='likeQuestion' class='likeQuestion' value='<?= $likedButtonText; ?>' />
+        <input type='submit' name='dislikeQuestion' class='dislikeQuestion' value='<?= $dislikedButtonText; ?>' />
+    </form>
+    
+    (<?= $questionLikes; ?> likes)
     
     <?php
     
@@ -48,7 +97,9 @@ $questionArray["description"] = nl2br( htmlspecialchars( base64_decode( $questio
 
 <?php
 
-$templateCommentsTableName = "forumcomments";
+$templateCommentsTableName = Sonar\Config::Get( "forum/forumQuestionCommentsTableName" );
+$templateCommentLikesTableName = Sonar\Config::Get( "forum/forumQuestionCommentLikesTableName" );
 $templateCommentsPostID = $questionID;
+
 
 require_once( "../templates/views/_templateForumComments.php" );

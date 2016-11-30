@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 24, 2016 at 06:35 PM
+-- Generation Time: Nov 30, 2016 at 07:08 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -30,18 +30,18 @@ CREATE TABLE `commentlikes` (
   `id` int(11) NOT NULL,
   `commentid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
-  `timestamp` int(32) NOT NULL
+  `timestamp` int(32) NOT NULL,
+  `type` varchar(8) DEFAULT 'like'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `commentlikes`
 --
 
-INSERT INTO `commentlikes` (`id`, `commentid`, `userid`, `timestamp`) VALUES
-(11, 1, 5, 1480007974),
-(12, 2, 5, 1480007983),
-(14, 13, 5, 1480008540),
-(15, 1, 44, 0);
+INSERT INTO `commentlikes` (`id`, `commentid`, `userid`, `timestamp`, `type`) VALUES
+(24, 2, 6, 1480525757, 'like'),
+(35, 2, 5, 1480526101, 'dislike'),
+(37, 1, 5, 1480528118, 'dislike');
 
 -- --------------------------------------------------------
 
@@ -79,7 +79,8 @@ INSERT INTO `comments` (`id`, `postid`, `parentid`, `userid`, `timeposted`, `tim
 (12, 3, 11, 5, 1478798926, 0, 'SGUgaXMgc21hbGw=', 2),
 (13, 3, 11, 5, 1478798936, 0, 'aGVsbG8=', 2),
 (14, 3, 12, 5, 1478798948, 0, 'bGllcyBsaWVzIGxpZXM=', 3),
-(15, 3, 1, 5, 1480005568, 0, 'aGVsbG8gd29ybGQ=', 2);
+(15, 3, 1, 5, 1480005568, 0, 'aGVsbG8gd29ybGQ=', 2),
+(16, 3, 0, 5, 1480528123, 0, 'ZGZzZnNmc2RmZHNmIGhlbGxv', 1);
 
 -- --------------------------------------------------------
 
@@ -128,6 +129,31 @@ INSERT INTO `forumcategories` (`id`, `categoryid`, `sectionid`, `title`, `descri
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `forumcommentlikes`
+--
+
+CREATE TABLE `forumcommentlikes` (
+  `id` int(11) NOT NULL,
+  `commentid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `timestamp` int(32) NOT NULL,
+  `type` varchar(8) DEFAULT 'like'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `forumcommentlikes`
+--
+
+INSERT INTO `forumcommentlikes` (`id`, `commentid`, `userid`, `timestamp`, `type`) VALUES
+(38, 1, 5, 1480526545, 'like'),
+(39, 2, 5, 1480526549, 'dislike'),
+(43, 10, 5, 1480529141, 'like'),
+(47, 12, 5, 1480529161, 'like'),
+(48, 6, 5, 1480529190, 'dislike');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `forumcomments`
 --
 
@@ -155,7 +181,32 @@ INSERT INTO `forumcomments` (`id`, `postid`, `parentid`, `userid`, `timeposted`,
 (6, 11, 0, 5, 1479405298, 0, 'ZHM=', 1),
 (7, 12, 0, 5, 1480005000, 0, 'ZXdycnc=', 1),
 (8, 12, 7, 5, 1480005002, 0, 'd2Vy', 2),
-(9, 12, 0, 5, 1480005004, 0, 'cndld2VyZXc=', 1);
+(9, 12, 0, 5, 1480005004, 0, 'cndld2VyZXc=', 1),
+(10, 11, 0, 5, 1480529139, 0, 'ZHNmc2Rm', 1),
+(11, 11, 6, 5, 1480529156, 0, 'c2RmZHNm', 2),
+(12, 11, 11, 5, 1480529158, 0, 'c2Rmc2Rm', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `forumquestionlikes`
+--
+
+CREATE TABLE `forumquestionlikes` (
+  `id` int(11) NOT NULL,
+  `questionid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `timestamp` int(32) NOT NULL,
+  `type` varchar(8) DEFAULT 'like'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `forumquestionlikes`
+--
+
+INSERT INTO `forumquestionlikes` (`id`, `questionid`, `userid`, `timestamp`, `type`) VALUES
+(41, 10, 5, 1480527886, 'like'),
+(45, 11, 5, 1480529149, 'dislike');
 
 -- --------------------------------------------------------
 
@@ -311,9 +362,21 @@ ALTER TABLE `forumcategories`
   ADD UNIQUE KEY `categoryid` (`categoryid`);
 
 --
+-- Indexes for table `forumcommentlikes`
+--
+ALTER TABLE `forumcommentlikes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `forumcomments`
 --
 ALTER TABLE `forumcomments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `forumquestionlikes`
+--
+ALTER TABLE `forumquestionlikes`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -364,12 +427,12 @@ ALTER TABLE `users_sessions`
 -- AUTO_INCREMENT for table `commentlikes`
 --
 ALTER TABLE `commentlikes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `facebook_users`
 --
@@ -381,10 +444,20 @@ ALTER TABLE `facebook_users`
 ALTER TABLE `forumcategories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
+-- AUTO_INCREMENT for table `forumcommentlikes`
+--
+ALTER TABLE `forumcommentlikes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+--
 -- AUTO_INCREMENT for table `forumcomments`
 --
 ALTER TABLE `forumcomments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `forumquestionlikes`
+--
+ALTER TABLE `forumquestionlikes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 --
 -- AUTO_INCREMENT for table `forumquestions`
 --

@@ -13,6 +13,9 @@ class Forum extends __Error
             $_sectionsTableName,
             $_categoriesTableName,
             $_questionsTableName,
+            $_questionLikesTableName,
+            $_questionCommentsTableName,
+            $_questionCommentLikesTableName,
             $_sections,
             $_categories,
             $_questions;
@@ -26,6 +29,9 @@ class Forum extends __Error
             $this->_sectionsTableName = Config::Get( "forum/forumSectionsTableName" );
             $this->_categoriesTableName = Config::Get( "forum/forumCategoriesTableName" );
             $this->_questionsTableName = Config::Get( "forum/forumQuestionsTableName" );
+            $this->_questionLikesTableName = Config::Get( "forum/forumQuestionLikesTableName" );
+            $this->_questionCommentsTableName = Config::Get( "forum/forumQuestionCommentsTableName" );
+            $this->_questionCommentLikesTableName = Config::Get( "forum/forumQuestionCommentLikesTableName" );
         }
     }
     
@@ -211,5 +217,167 @@ class Forum extends __Error
     public function Count( )
     {
         return $this->_db->Count( );
+    }
+    
+    // check if the question has been liked
+    public function IsQuestionLiked( $id )
+    {
+        $user = new User( );
+        
+        $likeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "like" ) );
+        
+        // checks if the comments has been liked
+        if ( $likeResult->Count( ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    // check if the question has been disliked
+    public function IsQuestionDisliked( $id )
+    {
+        $user = new User( );
+        
+        $dislikeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "dislike" ) );
+        
+        // checks if the comments has been liked
+        if ( $dislikeResult->Count( ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public function LikeQuestion( $id )
+    {
+        $user = new User( );
+        
+        if ( !$user->isLoggedIn( ) )
+        {
+            $this->addError( "Unable to like comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        if ( !$this->GetQuestion( $id ) )
+        {
+            $this->addError( "Unable to like comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        $dislikeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "dislike" ) );
+        
+        $fields = array(
+            "questionid" => $id,
+            "userid" => $user->Data( )->id,
+            "timestamp" => time( ),
+            "type" => "like"
+        );
+        
+        if ( $dislikeResult->Count( ) ) // remove question dislike
+        {
+            $id = $dislikeResult->First( )->id;
+            
+            $this->_db->Delete( $this->_questionLikesTableName, array( "id", "=", $id ) );
+            
+            $this->_db->insert( $this->_questionLikesTableName, $fields );
+        }
+        else // like comment
+        {
+            $likeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "like" ) );
+            
+            if ( $likeResult->Count( ) ) // remove question like
+            {
+                $id = $likeResult->First( )->id;
+            
+                $this->_db->Delete( $this->_questionLikesTableName, array( "id", "=", $id ) );
+            }
+            else
+            {
+                $this->_db->insert( $this->_questionLikesTableName, $fields );
+            }
+        }
+    }
+    
+    public function DislikeQuestion( $id )
+    {
+        $user = new User( );
+        
+        if ( !$user->isLoggedIn( ) )
+        {
+            $this->addError( "Unable to dislike comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        if ( !$this->GetQuestion( $id ) )
+        {
+            $this->addError( "Unable to dislike comment at this time, please try again later." );
+
+            return false;
+        }
+        
+        $likeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "like" ) );
+        
+        $fields = array(
+            "questionid" => $id,
+            "userid" => $user->Data( )->id,
+            "timestamp" => time( ),
+            "type" => "dislike"
+        );
+        
+        if ( $likeResult->Count( ) ) // remove comment like
+        {
+            $id = $likeResult->First( )->id;
+            
+            $this->_db->Delete( $this->_questionLikesTableName, array( "id", "=", $id ) );
+            
+            $this->_db->insert( $this->_questionLikesTableName, $fields );
+        }
+        else // like comment
+        {
+            $disLikeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "dislike" ) );
+            
+            if ( $disLikeResult->Count( ) ) // remove comment dislike
+            {
+                $id = $disLikeResult->First( )->id;
+            
+                $this->_db->Delete( $this->_questionLikesTableName, array( "id", "=", $id ) );
+            }
+            else
+            {
+                $this->_db->insert( $this->_questionLikesTableName, $fields );
+            }
+        }
+    }
+    
+    // counts how many times a question has been liked
+    public function CountQuestionLikes( $id )
+    {
+        $likesResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND type = ?", array( $id, "like" ) );
+        
+        return $likesResult->Count( );
+    }
+    
+    // counts how many times a question has been disliked
+    public function CountQuestionDislikes( $id )
+    {
+        $dislikeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND type = ?", array( $id, "dislike" ) );
+        
+        return $dislikeResult->Count( );
+    }
+    
+    // count how many times a question has been liked minus the dislikes
+    public function CountQuestionOverallLikes( $id )
+    {
+        return $this->CountQuestionLikes( $id ) - $this->CountQuestionDislikes( $id );
     }
 }
