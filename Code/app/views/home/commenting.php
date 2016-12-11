@@ -127,10 +127,10 @@ function CommentingStart( $data, $user, $comments, $token )
     $timePosted = Sonar\Time::EpochToDateTime( $data->timeposted );
     $button = "";
     $edited = "";
+    $postID = $data->id;
     
     if ( $user->IsLoggedIn( ) )
     { 
-        $postID = $data->id;
         $likedButtonText = "Like";
         $dislikedButtonText = "Dislike";
 

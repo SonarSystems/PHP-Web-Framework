@@ -8,5 +8,6 @@ $array = array(
     'forumQuestionsTableName' => 'forumquestions',
     'forumQuestionCommentsTableName' => 'forumcomments',
     'forumQuestionCommentLikesTableName' => 'forumcommentlikes',
-    'forumQuestionLikesTableName' => 'forumquestionlikes'
+    'forumQuestionLikesTableName' => 'forumquestionlikes',
+    'forumFavouriteQuestionsTableName' => 'forumfavourites'
 );

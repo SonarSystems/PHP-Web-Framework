@@ -37,4 +37,9 @@ class CONTROLLER_Forum extends Controller
         
 		$this->view( "forum/question", ["id" => $model->id] );
 	}
+    
+    public function favourites( )
+    {
+        $this->view( "forum/favourites" );
+    }
 }

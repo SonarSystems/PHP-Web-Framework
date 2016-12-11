@@ -16,6 +16,7 @@ class Forum extends __Error
             $_questionLikesTableName,
             $_questionCommentsTableName,
             $_questionCommentLikesTableName,
+            $_favouriteQuestionsTableName,
             $_sections,
             $_categories,
             $_questions;
@@ -32,6 +33,7 @@ class Forum extends __Error
             $this->_questionLikesTableName = Config::Get( "forum/forumQuestionLikesTableName" );
             $this->_questionCommentsTableName = Config::Get( "forum/forumQuestionCommentsTableName" );
             $this->_questionCommentLikesTableName = Config::Get( "forum/forumQuestionCommentLikesTableName" );
+            $this->_favouriteQuestionsTableName = Config::Get( "forum/forumFavouriteQuestionsTableName" );
         }
     }
     
@@ -290,7 +292,7 @@ class Forum extends __Error
             
             $this->_db->insert( $this->_questionLikesTableName, $fields );
         }
-        else // like comment
+        else // like question
         {
             $likeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "like" ) );
             
@@ -334,7 +336,7 @@ class Forum extends __Error
             "type" => "dislike"
         );
         
-        if ( $likeResult->Count( ) ) // remove comment like
+        if ( $likeResult->Count( ) ) // remove question like
         {
             $id = $likeResult->First( )->id;
             
@@ -342,11 +344,11 @@ class Forum extends __Error
             
             $this->_db->insert( $this->_questionLikesTableName, $fields );
         }
-        else // like comment
+        else // like question
         {
             $disLikeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND userid = ? AND type = ?", array( $id, $user->Data( )->id, "dislike" ) );
             
-            if ( $disLikeResult->Count( ) ) // remove comment dislike
+            if ( $disLikeResult->Count( ) ) // remove question dislike
             {
                 $id = $disLikeResult->First( )->id;
             
@@ -379,5 +381,87 @@ class Forum extends __Error
     public function CountQuestionOverallLikes( $id )
     {
         return $this->CountQuestionLikes( $id ) - $this->CountQuestionDislikes( $id );
+    }
+    
+    // favourites a question for the user, for later use
+    public function FavouriteQuestion( $id )
+    {
+        $user = new User( );
+        
+        if ( !$user->isLoggedIn( ) )
+        {
+            $this->addError( "Unable to like favourite at this time, please try again later." );
+
+            return false;
+        }
+        
+        if ( !$this->GetQuestion( $id ) )
+        {
+            $this->addError( "Unable to like favourite at this time, please try again later." );
+
+            return false;
+        }
+        
+        $favouriteResult = $this->_db->Query( "SELECT * From $this->_favouriteQuestionsTableName WHERE questionid = ? AND userid = ?", array( $id, $user->Data( )->id ) );
+        
+        $fields = array(
+            "userid" => $user->Data( )->id,
+            "questionid" => $id,
+            "timestamp" => time( ),
+            "timeedited" => 0
+        );
+        
+        if ( $favouriteResult->Count( ) ) // remove favourite
+        {
+            $id = $favouriteResult->First( )->id;
+            
+            $this->_db->Delete( $this->_favouriteQuestionsTableName, array( "id", "=", $id ) );            
+        }
+        else // favourite question
+        {   
+            $this->_db->insert( $this->_favouriteQuestionsTableName, $fields );
+        }
+    }
+    
+    // check if the question has been favourited
+    public function IsQuestionFavourited( $id )
+    {
+        $user = new User( );
+        
+        $favouriteResult = $this->_db->Query( "SELECT * From $this->_favouriteQuestionsTableName WHERE questionid = ? AND userid = ?", array( $id, $user->Data( )->id ) );
+        
+        if ( $favouriteResult->Count( ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    // get all the favourites for a question
+    public function GetFavourites( $userid )
+    {
+        $this->_db->Get( $this->_favouriteQuestionsTableName, array( "userid", "=", $userid ) );
+
+        if ( $this->_db->Count( ) )
+        {
+            return $this->_db->Results( );
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    // edit/update question
+    public function EditQuestion( $id, $title, $description )
+    {
+        return $this->_db->Update( $this->_questionsTableName, $id, array(
+            "timeedited" => time( ),
+            "title" => base64_encode( $title ),
+            "description" => base64_encode( $description )
+        ) );   
     }
 }

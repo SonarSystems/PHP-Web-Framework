@@ -12,8 +12,6 @@ if ( !$questionResult )
     Sonar\Redirect::To( "forum" );
 }
 
-$sessionToken = "33";
-
 if ( Sonar\Input::exists( "post" ) )
 {
     $sessionToken = Sonar\Input::get( "token", $_POST );
@@ -32,6 +30,12 @@ if ( Sonar\Input::exists( "post" ) )
             
             $forum->DislikeQuestion( $id );
         }
+        else if ( Sonar\Input::get( "favouriteQuestion", $_POST ) )
+        {
+            $id = Sonar\Input::get( "id", $_POST );
+            
+            $forum->FavouriteQuestion( $id );
+        }
     }
 }
 
@@ -48,17 +52,26 @@ $questionArray["description"] = nl2br( htmlspecialchars( base64_decode( $questio
 
 $token = Sonar\Token::generate( );
 
-$likedButtonText = "Like";
-$dislikedButtonText = "Dislike";
-
-if ( $forum->IsQuestionLiked( $questionArray["id"] ) )
+if ( $user->isLoggedIn( ) )
 {
-    $likedButtonText = "Liked";
-}
+    $likedButtonText = "Like";
+    $dislikedButtonText = "Dislike";
+    $favouriteButtonText = "Favourite";
 
-if ( $forum->IsQuestionDisliked( $questionArray["id"] ) )
-{
-    $dislikedButtonText = "Disliked";
+    if ( $forum->IsQuestionLiked( $questionArray["id"] ) )
+    {
+        $likedButtonText = "Liked";
+    }
+
+    if ( $forum->IsQuestionDisliked( $questionArray["id"] ) )
+    {
+        $dislikedButtonText = "Disliked";
+    }
+    
+    if ( $forum->IsQuestionFavourited( $questionArray["id"] ) )
+    {
+        $favouriteButtonText = "Favourited";
+    }
 }
 
 $questionLikes = $forum->CountQuestionOverallLikes( $questionArray["id"] );
@@ -78,8 +91,23 @@ $questionLikes = $forum->CountQuestionOverallLikes( $questionArray["id"] );
     <form action='' method='POST'>
         <input type='hidden' name='id' value='<?= $questionArray["id"]; ?>' />
         <input type='hidden' name='token' value='<?= $token; ?>' />
-        <input type='submit' name='likeQuestion' class='likeQuestion' value='<?= $likedButtonText; ?>' />
-        <input type='submit' name='dislikeQuestion' class='dislikeQuestion' value='<?= $dislikedButtonText; ?>' />
+        <?php
+        
+        if ( $user->isLoggedIn( ) )
+        
+        {
+        
+        ?>
+        
+            <input type='submit' name='likeQuestion' class='likeQuestion' value='<?= $likedButtonText; ?>' />
+            <input type='submit' name='dislikeQuestion' class='dislikeQuestion' value='<?= $dislikedButtonText; ?>' />
+            <input type='submit' name='favouriteQuestion' class='favouriteQuestion' value='<?= $favouriteButtonText; ?>' />
+        
+        <?php
+            
+        }
+        
+        ?>
     </form>
     
     (<?= $questionLikes; ?> likes)

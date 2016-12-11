@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 30, 2016 at 07:08 PM
+-- Generation Time: Dec 11, 2016 at 07:42 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -146,10 +146,10 @@ CREATE TABLE `forumcommentlikes` (
 
 INSERT INTO `forumcommentlikes` (`id`, `commentid`, `userid`, `timestamp`, `type`) VALUES
 (38, 1, 5, 1480526545, 'like'),
-(39, 2, 5, 1480526549, 'dislike'),
 (43, 10, 5, 1480529141, 'like'),
 (47, 12, 5, 1480529161, 'like'),
-(48, 6, 5, 1480529190, 'dislike');
+(48, 6, 5, 1480529190, 'dislike'),
+(50, 2, 5, 1481479193, 'dislike');
 
 -- --------------------------------------------------------
 
@@ -185,6 +185,28 @@ INSERT INTO `forumcomments` (`id`, `postid`, `parentid`, `userid`, `timeposted`,
 (10, 11, 0, 5, 1480529139, 0, 'ZHNmc2Rm', 1),
 (11, 11, 6, 5, 1480529156, 0, 'c2RmZHNm', 2),
 (12, 11, 11, 5, 1480529158, 0, 'c2Rmc2Rm', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `forumfavourites`
+--
+
+CREATE TABLE `forumfavourites` (
+  `id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `questionid` int(11) NOT NULL,
+  `timestamp` int(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `forumfavourites`
+--
+
+INSERT INTO `forumfavourites` (`id`, `userid`, `questionid`, `timestamp`) VALUES
+(4, 5, 8, 1481480039),
+(5, 5, 13, 1481480605),
+(6, 5, 14, 1481480726);
 
 -- --------------------------------------------------------
 
@@ -239,7 +261,9 @@ INSERT INTO `forumquestions` (`id`, `categoryid`, `userid`, `timeposted`, `timee
 (9, 'generaldiscussion', 5, 1479403982, 0, 'SGVsbG8=', 'SGVsbG8gV29ybGQNCg0KZA0Kcw0KZHMNCmQNCnMNCg0KDQoNCmRzZHM='),
 (10, 'generaldiscussion', 5, 1479404013, 1479402013, 'SGVsbG8=', 'PHN0cm9uZz5IZWxsbyBXb3JsZDwvc3Ryb25nPg0KDQpkDQpzDQpkcw0KZA0Kcw0KDQoNCg0KZHNkcw=='),
 (11, 'programming', 5, 1479404645, 0, 'QysrIEhlbHA=', 'U0ZNTCBpcyBub3Qgd29ya2luZyBwbGVhc2UgaGVscC4='),
-(12, 'science', 5, 1480004997, 0, 'OTc5MzI5Nzk0ODkyMw==', 'c2Rmc2RmDQpzZGYNCmRzDQpm');
+(12, 'science', 5, 1480004997, 0, 'OTc5MzI5Nzk0ODkyMw==', 'c2Rmc2RmDQpzZGYNCmRzDQpm'),
+(13, 'showcase', 5, 1481480604, 0, 'ZGZmc2Zkcw==', 'ZnNkZnNkZnNmc2ZzZA0Kc2QNCmYNCnNkZg0K'),
+(14, 'askforfeatures', 5, 1481480725, 1481481251, 'VXBkYXRlZA==', 'SGVsbG8gV29ybGQ=');
 
 -- --------------------------------------------------------
 
@@ -374,6 +398,12 @@ ALTER TABLE `forumcomments`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `forumfavourites`
+--
+ALTER TABLE `forumfavourites`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `forumquestionlikes`
 --
 ALTER TABLE `forumquestionlikes`
@@ -447,12 +477,17 @@ ALTER TABLE `forumcategories`
 -- AUTO_INCREMENT for table `forumcommentlikes`
 --
 ALTER TABLE `forumcommentlikes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 --
 -- AUTO_INCREMENT for table `forumcomments`
 --
 ALTER TABLE `forumcomments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `forumfavourites`
+--
+ALTER TABLE `forumfavourites`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `forumquestionlikes`
 --
@@ -462,7 +497,7 @@ ALTER TABLE `forumquestionlikes`
 -- AUTO_INCREMENT for table `forumquestions`
 --
 ALTER TABLE `forumquestions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `forumsections`
 --
