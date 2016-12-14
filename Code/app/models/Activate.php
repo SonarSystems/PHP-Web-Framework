@@ -1,8 +1,8 @@
 <?php
 
-namespace Sonar;
+namespace SonarApp;
 
-class MODELS_Activate
+class Activate
 {
 	public $activationCode = null;
 	public $username = null;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Sonar;
+namespace SonarApp;
 
-class MODEL_ForumQuestion
+class ForumQuestion
 {
     public $id = null;
 }

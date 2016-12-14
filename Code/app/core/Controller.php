@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonar;
+namespace SonarApp;
 
 class Controller
 {
@@ -8,7 +8,7 @@ class Controller
 	{
 		require_once( "../app/models/" . $model . ".php" );
 
-		$model = "Sonar\\MODEL_".$model;
+		$model = "SonarApp\\".$model;
 		
 		return new $model( );
 	}

@@ -1,11 +1,11 @@
 <?php
 
-namespace Sonar;
+namespace SonarApp;
 
 class App
 {
 	protected $controller = "home";
-	protected $controllerWithNamespace = "Sonar\home";
+	protected $controllerWithNamespace = "SonarApp\home";
 	protected $method = "index";
 	protected $params = [];
 
@@ -16,7 +16,7 @@ class App
 		if ( file_exists( "../app/controllers/" . $url[0] . ".php" ) )
 		{
 			$this->controller = $url[0];
-			$this->controllerWithNamespace = "Sonar\\CONTROLLER_".$url[0];
+			$this->controllerWithNamespace = "SonarApp\\".$url[0];
 			unset( $url[0] );
 		}
 

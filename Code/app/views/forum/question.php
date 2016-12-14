@@ -33,7 +33,7 @@ if ( Sonar\Input::exists( "post" ) )
         else if ( Sonar\Input::get( "favouriteQuestion", $_POST ) )
         {
             $id = Sonar\Input::get( "id", $_POST );
-            
+
             $forum->FavouriteQuestion( $id );
         }
     }

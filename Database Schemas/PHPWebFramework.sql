@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 11, 2016 at 07:42 PM
+-- Generation Time: Dec 14, 2016 at 05:55 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -19,6 +19,37 @@ SET time_zone = "+00:00";
 --
 -- Database: `PHPWebFramework`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blogcomments`
+--
+
+CREATE TABLE `blogcomments` (
+  `id` int(11) NOT NULL,
+  `postid` int(11) NOT NULL,
+  `parentid` int(11) DEFAULT NULL,
+  `userid` int(11) NOT NULL,
+  `timeposted` int(32) NOT NULL,
+  `timeedited` int(32) NOT NULL DEFAULT '0',
+  `description` text NOT NULL,
+  `currentnestedlevel` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blogposts`
+--
+
+CREATE TABLE `blogposts` (
+  `id` int(11) NOT NULL,
+  `title` varchar(64) NOT NULL,
+  `highlight` text NOT NULL,
+  `body` text NOT NULL,
+  `timestamp` int(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -149,7 +180,11 @@ INSERT INTO `forumcommentlikes` (`id`, `commentid`, `userid`, `timestamp`, `type
 (43, 10, 5, 1480529141, 'like'),
 (47, 12, 5, 1480529161, 'like'),
 (48, 6, 5, 1480529190, 'dislike'),
-(50, 2, 5, 1481479193, 'dislike');
+(50, 2, 5, 1481479193, 'dislike'),
+(52, 13, 5, 1481731841, 'like'),
+(53, 15, 5, 1481731849, 'like'),
+(54, 17, 6, 1481733131, 'like'),
+(56, 18, 6, 1481733137, 'dislike');
 
 -- --------------------------------------------------------
 
@@ -184,7 +219,13 @@ INSERT INTO `forumcomments` (`id`, `postid`, `parentid`, `userid`, `timeposted`,
 (9, 12, 0, 5, 1480005004, 0, 'cndld2VyZXc=', 1),
 (10, 11, 0, 5, 1480529139, 0, 'ZHNmc2Rm', 1),
 (11, 11, 6, 5, 1480529156, 0, 'c2RmZHNm', 2),
-(12, 11, 11, 5, 1480529158, 0, 'c2Rmc2Rm', 3);
+(12, 11, 11, 5, 1480529158, 0, 'c2Rmc2Rm', 3),
+(13, 8, 0, 5, 1481731831, 0, 'aGhqZ2hnamdoamdo', 1),
+(14, 8, 13, 5, 1481731846, 0, 'ZnNkZHNm', 2),
+(15, 8, 14, 5, 1481731847, 0, 'ZGZzZHNm', 3),
+(16, 15, 0, 6, 1481733128, 0, 'ZHNkYXM=', 1),
+(17, 15, 16, 6, 1481733130, 0, 'YWRzYXNk', 2),
+(18, 15, 17, 6, 1481733133, 0, 'YXNkYXNk', 3);
 
 -- --------------------------------------------------------
 
@@ -204,9 +245,8 @@ CREATE TABLE `forumfavourites` (
 --
 
 INSERT INTO `forumfavourites` (`id`, `userid`, `questionid`, `timestamp`) VALUES
-(4, 5, 8, 1481480039),
 (5, 5, 13, 1481480605),
-(6, 5, 14, 1481480726);
+(8, 6, 8, 1481732913);
 
 -- --------------------------------------------------------
 
@@ -228,7 +268,10 @@ CREATE TABLE `forumquestionlikes` (
 
 INSERT INTO `forumquestionlikes` (`id`, `questionid`, `userid`, `timestamp`, `type`) VALUES
 (41, 10, 5, 1480527886, 'like'),
-(45, 11, 5, 1480529149, 'dislike');
+(45, 11, 5, 1480529149, 'dislike'),
+(47, 8, 5, 1481731867, 'like'),
+(49, 14, 5, 1481732049, 'like'),
+(51, 15, 6, 1481733112, 'dislike');
 
 -- --------------------------------------------------------
 
@@ -263,7 +306,8 @@ INSERT INTO `forumquestions` (`id`, `categoryid`, `userid`, `timeposted`, `timee
 (11, 'programming', 5, 1479404645, 0, 'QysrIEhlbHA=', 'U0ZNTCBpcyBub3Qgd29ya2luZyBwbGVhc2UgaGVscC4='),
 (12, 'science', 5, 1480004997, 0, 'OTc5MzI5Nzk0ODkyMw==', 'c2Rmc2RmDQpzZGYNCmRzDQpm'),
 (13, 'showcase', 5, 1481480604, 0, 'ZGZmc2Zkcw==', 'ZnNkZnNkZnNmc2ZzZA0Kc2QNCmYNCnNkZg0K'),
-(14, 'askforfeatures', 5, 1481480725, 1481481251, 'VXBkYXRlZA==', 'SGVsbG8gV29ybGQ=');
+(14, 'askforfeatures', 5, 1481480725, 1481731917, 'VXBkYXRlZA==', 'SGVsbG8gV29ybGQ='),
+(15, 'generaldiscussion', 6, 1481733109, 0, 'ZGFzZGFzZGFzZGFz', 'DQphZHMNCmFkcw0KDQphZHMNCmFzZA==');
 
 -- --------------------------------------------------------
 
@@ -320,7 +364,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `email_address`, `salt`, `joined`, `activated`) VALUES
-(5, 'Frajaam', '$2y$10$Rwe0BJyCB3wL/e7IAZaFM.lkl3ggLitoOcPMYZliIOy4/U6YZ6tPC', 'contact@contact.com', '2b38ac1f5814ab5f3899cce8442302a775ca2cb27b7aee10d6c801b82bb3c23da323c5377ad87b3f08e69b5189901a552ae343d6eccf91e71fa96b47bba3b0cc696b3b60ce45a65185570f21b47772679c9998f189f8f1d068737da7e019953083a152a14e8387d47b5d5941991629d0cb640bdc34b25bdba1149c20b434ba2c', 1478708441, 1);
+(5, 'Frajaamd', '$2y$10$Rwe0BJyCB3wL/e7IAZaFM.lkl3ggLitoOcPMYZliIOy4/U6YZ6tPC', 'contact@contact.com', '2b38ac1f5814ab5f3899cce8442302a775ca2cb27b7aee10d6c801b82bb3c23da323c5377ad87b3f08e69b5189901a552ae343d6eccf91e71fa96b47bba3b0cc696b3b60ce45a65185570f21b47772679c9998f189f8f1d068737da7e019953083a152a14e8387d47b5d5941991629d0cb640bdc34b25bdba1149c20b434ba2c', 1478708441, 1),
+(6, 'Frahaanf', '$2y$10$k47vC2FvE5/3/zqBJ2hEm.K7qgSeQn8yDPHtlqcnelxus8dAQh/2e', 'contact2@contact.com', 'a76b830696ff966bf38d06d4d8d48a5e3cce40ef625f6f39f970f996d54480c8e6037e8d4a9effc970a03e31acac911d89eee0d7a306c9bd8589d52ed338f39b0c6324aad01232d852e501dd88904ca22c29a75cae3671aaf40d0c6ecd753163c2ca9b3fdec9801be6557433901b4e29df0efe35c70b5fc6a316460993545749', 1481732642, 1);
 
 -- --------------------------------------------------------
 
@@ -352,11 +397,23 @@ CREATE TABLE `users_sessions` (
 --
 
 INSERT INTO `users_sessions` (`id`, `user_id`, `hash`) VALUES
-(8, 5, 'b12170b8e21d4aed8a63ae163c809978743c7e4cb70c0cb74d33252fb1ffdd19');
+(9, 6, '76b3aa61e0bda44540a34b8cf7109d036eafa585010247308da4cf57f5891881');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `blogcomments`
+--
+ALTER TABLE `blogcomments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `blogposts`
+--
+ALTER TABLE `blogposts`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `commentlikes`
@@ -454,6 +511,11 @@ ALTER TABLE `users_sessions`
 --
 
 --
+-- AUTO_INCREMENT for table `blogposts`
+--
+ALTER TABLE `blogposts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `commentlikes`
 --
 ALTER TABLE `commentlikes`
@@ -477,27 +539,27 @@ ALTER TABLE `forumcategories`
 -- AUTO_INCREMENT for table `forumcommentlikes`
 --
 ALTER TABLE `forumcommentlikes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 --
 -- AUTO_INCREMENT for table `forumcomments`
 --
 ALTER TABLE `forumcomments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `forumfavourites`
 --
 ALTER TABLE `forumfavourites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `forumquestionlikes`
 --
 ALTER TABLE `forumquestionlikes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 --
 -- AUTO_INCREMENT for table `forumquestions`
 --
 ALTER TABLE `forumquestions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `forumsections`
 --
@@ -512,7 +574,7 @@ ALTER TABLE `google_users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `users_password_reset`
 --
@@ -522,7 +584,7 @@ ALTER TABLE `users_password_reset`
 -- AUTO_INCREMENT for table `users_sessions`
 --
 ALTER TABLE `users_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

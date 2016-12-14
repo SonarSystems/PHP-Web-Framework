@@ -1,8 +1,8 @@
 <?php
 
-namespace Sonar;
+namespace SonarApp;
 
-class MODELS_ResetPassword
+class ResetPassword
 {
 	public $resetCode = null;
 	public $username = null;

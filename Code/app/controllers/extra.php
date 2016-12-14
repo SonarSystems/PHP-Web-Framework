@@ -1,8 +1,8 @@
 <?php
 
-namespace Sonar;
+namespace SonarApp;
 
-class CONTROLLER_Extra extends Controller
+class Extra extends Controller
 {
 	public function index( )
 	{

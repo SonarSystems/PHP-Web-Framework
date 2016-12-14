@@ -32,7 +32,7 @@ if ( Sonar\Cookie::exists( Sonar\Config::get( "remember/cookieName" ) ) && !Sona
 
     if ( Sonar\Config::get( "mysql/enabled" ) )
     {
-        $hashCheck = Sonar\DB::getInstance( )->get( Sonar\Config::get( "mysql/usersSessionsTableName" ), array( "hash", "=", $hash ) );
+        $hashCheck = Sonar\DB::getInstance( )->get( Sonar\Config::get( "users/usersSessionsTableName" ), array( "hash", "=", $hash ) );
 
         if ( $hashCheck->count( ) )
         {

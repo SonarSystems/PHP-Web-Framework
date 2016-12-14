@@ -407,8 +407,7 @@ class Forum extends __Error
         $fields = array(
             "userid" => $user->Data( )->id,
             "questionid" => $id,
-            "timestamp" => time( ),
-            "timeedited" => 0
+            "timestamp" => time( )
         );
         
         if ( $favouriteResult->Count( ) ) // remove favourite

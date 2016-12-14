@@ -22,7 +22,7 @@ if ( Sonar\Input::exists( "post" ) )
                     'required' => true,
                     'min' => 2,
                     'max' => 32,
-                    'unique' => Sonar\Config::get( "mysql/usersTableName" ),
+                    'unique' => Sonar\Config::get( "users/usersTableName" ),
                     'numeric' => false,
                     'email' => false
                 ),
@@ -40,7 +40,7 @@ if ( Sonar\Input::exists( "post" ) )
                     'email' => true,
                     'min' => 2,
                     'max' => 32,
-                    'unique' => Sonar\Config::get( "mysql/usersTableName" )
+                    'unique' => Sonar\Config::get( "users/usersTableName" )
                 )
             ), array(
                 "Username",

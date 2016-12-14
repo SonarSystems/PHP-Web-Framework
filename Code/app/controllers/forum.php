@@ -1,8 +1,8 @@
 <?php
 
-namespace Sonar;
+namespace SonarApp;
 
-class CONTROLLER_Forum extends Controller
+class Forum extends Controller
 {
 	public function index( )
 	{
