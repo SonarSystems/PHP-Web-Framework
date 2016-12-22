@@ -16,6 +16,7 @@ class User extends __Error
             $_usersTable,
             $_usersResetPasswordTableName,
             $_usersSessionsTableName,
+            $_usersPrivilegesTableName,
             $_socialConfig,
             $_hybridAuth;
 
@@ -31,6 +32,7 @@ class User extends __Error
             $this->_usersTable = Config::Get( "users/usersTableName" );
             $this->_usersResetPasswordTableName = Config::Get( "users/usersResetPasswordTableName" );
             $this->_usersSessionsTableName = Config::Get( "users/usersSessionsTableName" );
+            $this->_usersPrivilegesTableName = Config::Get( "users/userPrivilegesTableName" );
             
             $this->_socialConfig = array(
                 "base_url" => "http://".Config::Get( "website/domainName" ).substr( Config::Get( "website/root" ), 0, -6 )."libs/hybridauth/hybridauth/index.php",
@@ -453,6 +455,7 @@ class User extends __Error
             $salt = Hash::Salt( 128 );
 
             $this->Create( array(
+                "privilege" => 'user',
                 "username" => '',
                 "password" => '',
                 "email_address" => $emailAddress,
@@ -472,5 +475,27 @@ class User extends __Error
     public function HybridAuth( )
     {
         return $this->_hybridAuth;
+    }
+    
+    // check if a user is an admin
+    public function IsAdmin( $username )
+    {
+        $data = $this->_db->Get( $this->_usersTable, array( "username", "=", $username ) );
+
+        if ( $data->count( ) )
+        {
+            if ( $data->First( )->privilege === "admin" )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 }

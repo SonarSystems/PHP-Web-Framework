@@ -80,6 +80,7 @@ if ( Sonar\Input::exists( "post" ) )
                             echo "Account created, please check your emails for an activation email.";
                             
                             $user->create( array(
+                                "privilege" => 'user',
                                 "username" => $username,
                                 "password" => password_hash( Sonar\Input::get( "password", $_POST ), PASSWORD_DEFAULT ),
                                 "email_address" => $emailAddress,

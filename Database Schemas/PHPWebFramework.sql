@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 14, 2016 at 05:55 PM
+-- Generation Time: Dec 22, 2016 at 06:04 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -45,11 +45,19 @@ CREATE TABLE `blogcomments` (
 
 CREATE TABLE `blogposts` (
   `id` int(11) NOT NULL,
-  `title` varchar(64) NOT NULL,
+  `title` text NOT NULL,
   `highlight` text NOT NULL,
   `body` text NOT NULL,
   `timestamp` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `blogposts`
+--
+
+INSERT INTO `blogposts` (`id`, `title`, `highlight`, `body`, `timestamp`) VALUES
+(1, 'Rmlyc3QgVGl0bGU=', '', 'VGhpcyBpcyBwcmV0dHkgYXdlc29tZS4NCg0KT2ggWWggOkQ=', 1482424591),
+(2, 'VGhpcyBpcyB0aGUgc2Vjb25kIHBvc3Q=', '', 'TEVBVkUgTUUgQUxPTkcNCg0KPHN0cm9uZz5TVFJPTkcgVEVTVDwvc3Ryb25nPg==', 1482425042);
 
 -- --------------------------------------------------------
 
@@ -346,11 +354,31 @@ CREATE TABLE `google_users` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `userprivileges`
+--
+
+CREATE TABLE `userprivileges` (
+  `id` int(11) NOT NULL,
+  `privilege` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `userprivileges`
+--
+
+INSERT INTO `userprivileges` (`id`, `privilege`) VALUES
+(1, 'admin'),
+(2, 'user');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `privilege` varchar(16) NOT NULL DEFAULT 'user',
   `username` varchar(32) DEFAULT NULL,
   `password` varchar(256) DEFAULT NULL,
   `email_address` varchar(767) NOT NULL,
@@ -363,9 +391,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `email_address`, `salt`, `joined`, `activated`) VALUES
-(5, 'Frajaamd', '$2y$10$Rwe0BJyCB3wL/e7IAZaFM.lkl3ggLitoOcPMYZliIOy4/U6YZ6tPC', 'contact@contact.com', '2b38ac1f5814ab5f3899cce8442302a775ca2cb27b7aee10d6c801b82bb3c23da323c5377ad87b3f08e69b5189901a552ae343d6eccf91e71fa96b47bba3b0cc696b3b60ce45a65185570f21b47772679c9998f189f8f1d068737da7e019953083a152a14e8387d47b5d5941991629d0cb640bdc34b25bdba1149c20b434ba2c', 1478708441, 1),
-(6, 'Frahaanf', '$2y$10$k47vC2FvE5/3/zqBJ2hEm.K7qgSeQn8yDPHtlqcnelxus8dAQh/2e', 'contact2@contact.com', 'a76b830696ff966bf38d06d4d8d48a5e3cce40ef625f6f39f970f996d54480c8e6037e8d4a9effc970a03e31acac911d89eee0d7a306c9bd8589d52ed338f39b0c6324aad01232d852e501dd88904ca22c29a75cae3671aaf40d0c6ecd753163c2ca9b3fdec9801be6557433901b4e29df0efe35c70b5fc6a316460993545749', 1481732642, 1);
+INSERT INTO `users` (`id`, `privilege`, `username`, `password`, `email_address`, `salt`, `joined`, `activated`) VALUES
+(5, 'user', 'Frajaamd', '$2y$10$Rwe0BJyCB3wL/e7IAZaFM.lkl3ggLitoOcPMYZliIOy4/U6YZ6tPC', 'contact@contact.com', '2b38ac1f5814ab5f3899cce8442302a775ca2cb27b7aee10d6c801b82bb3c23da323c5377ad87b3f08e69b5189901a552ae343d6eccf91e71fa96b47bba3b0cc696b3b60ce45a65185570f21b47772679c9998f189f8f1d068737da7e019953083a152a14e8387d47b5d5941991629d0cb640bdc34b25bdba1149c20b434ba2c', 1478708441, 1),
+(6, 'admin', 'Frahaanf', '$2y$10$k47vC2FvE5/3/zqBJ2hEm.K7qgSeQn8yDPHtlqcnelxus8dAQh/2e', 'contact2@contact.com', 'a76b830696ff966bf38d06d4d8d48a5e3cce40ef625f6f39f970f996d54480c8e6037e8d4a9effc970a03e31acac911d89eee0d7a306c9bd8589d52ed338f39b0c6324aad01232d852e501dd88904ca22c29a75cae3671aaf40d0c6ecd753163c2ca9b3fdec9801be6557433901b4e29df0efe35c70b5fc6a316460993545749', 1481732642, 1),
+(7, 'admin', 'FrahaanUI', '$2y$10$2ENNoCF.InUeF6ZOBZjIbOV6zdJX/q6ciHeHv1wQ/oiOY74EyQm1a', 'contact@contact.co.uk', '23abf8b5a4f1f5d7edf8ff85d29720a48f6904cb6d9ad6d869c27da3c9571bdc14119d5f912f0083c99ddb78f492f1ad2a35476f544bfe68eaef1506536e547e6e727c43dbe1c9aff3003fc1655b5a8afbc5568b2db1b8a76c31078ae0b884910a9cf180c0b5b7a2870f4bb1ea691081ebc5b3cf8fe14ef8761619852163b9c4', 1482422785, 1);
 
 -- --------------------------------------------------------
 
@@ -397,7 +426,7 @@ CREATE TABLE `users_sessions` (
 --
 
 INSERT INTO `users_sessions` (`id`, `user_id`, `hash`) VALUES
-(9, 6, '76b3aa61e0bda44540a34b8cf7109d036eafa585010247308da4cf57f5891881');
+(10, 7, 'dcecbc7848a6c82098368161df2e5d77de043b3adf251b82e4131df2b0c228cf');
 
 --
 -- Indexes for dumped tables
@@ -488,6 +517,13 @@ ALTER TABLE `google_users`
   ADD UNIQUE KEY `email_address` (`email_address`);
 
 --
+-- Indexes for table `userprivileges`
+--
+ALTER TABLE `userprivileges`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `privilege` (`privilege`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -514,7 +550,7 @@ ALTER TABLE `users_sessions`
 -- AUTO_INCREMENT for table `blogposts`
 --
 ALTER TABLE `blogposts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `commentlikes`
 --
@@ -549,7 +585,7 @@ ALTER TABLE `forumcomments`
 -- AUTO_INCREMENT for table `forumfavourites`
 --
 ALTER TABLE `forumfavourites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `forumquestionlikes`
 --
@@ -571,10 +607,15 @@ ALTER TABLE `forumsections`
 ALTER TABLE `google_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `userprivileges`
+--
+ALTER TABLE `userprivileges`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `users_password_reset`
 --
@@ -584,7 +625,7 @@ ALTER TABLE `users_password_reset`
 -- AUTO_INCREMENT for table `users_sessions`
 --
 ALTER TABLE `users_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
