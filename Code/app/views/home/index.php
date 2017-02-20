@@ -1,15 +1,17 @@
 <?php
 
-if ( Sonar\Session::exists( "home" ) )
+Sonar\Misc::ChangeWebsiteTitle( Sonar\Config::Get( "website/title" ) );
+
+if ( Sonar\Session::Exists( "home" ) )
 {
-    echo Sonar\Session::flash( "home" );
+    echo Sonar\Session::Flash( "home" );
 }
 
 $user = new Sonar\User( );
 
-if ( $user->isLoggedIn( ) )
+if ( $user->IsLoggedIn( ) )
 {
-    echo $user->data( )->username;
+    echo $user->Data( )->username;
     
 ?>
 

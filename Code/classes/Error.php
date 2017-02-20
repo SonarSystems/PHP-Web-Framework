@@ -12,17 +12,20 @@ class __Error
         
     }
     
+    // Add an error onto the error array
     public function AddError( $error )
     {
         $this->_errors[] = $error;
     }
     
+    // Get all errors
     public function Errors( )
     {
         return $this->_errors;
     }
     
-    public function passed( )
+    // Check if the desired function is successful
+    public function Passed( )
     {
         return $this->_passed;
     }

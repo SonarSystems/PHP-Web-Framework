@@ -1,17 +1,19 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Contact Us" );
+
 $sent = false;
 
-$name = Sonar\Input::get( "name", $_POST );
-$emailAddress = Sonar\Input::get( "email_address", $_POST );
-$message = Sonar\Input::get( "message", $_POST );
+$name = Sonar\Input::Get( "name", $_POST );
+$emailAddress = Sonar\Input::Get( "email_address", $_POST );
+$message = Sonar\Input::Get( "message", $_POST );
 
-if ( Sonar\Input::exists( "post" ) )
+if ( Sonar\Input::Exists( "post" ) )
 {
-    if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+    if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
     {
         $validate = new Sonar\Validate( );
-        $validation = $validate->check( $_POST, array(
+        $validation = $validate->Check( $_POST, array(
             'name' => array(
                 'required' => true
             ),
@@ -28,18 +30,18 @@ if ( Sonar\Input::exists( "post" ) )
             "Message"
         ) );
 
-        if ( $validation->passed( ) )
+        if ( $validation->Passed( ) )
         {   
             try
             {        
                 $email = new Sonar\Email( );
                 
-                $email = $email->send(
+                $email = $email->Send(
                     array(
                         array( $emailAddress, $name )
                     ),
-                    array( Sonar\Config::get( "website/contactEmailAddress" ), Sonar\Config::get( "website/contactName" ) ),
-                    array( Sonar\Config::get( "website/contactEmailAddress" ), Sonar\Config::get( "website/contactName" ) ),
+                    array( Sonar\Config::Get( "website/contactEmailAddress" ), Sonar\Config::Get( "website/contactName" ) ),
+                    array( Sonar\Config::Get( "website/contactEmailAddress" ), Sonar\Config::Get( "website/contactName" ) ),
                     "Contact Form Message",
                     $message
                 );
@@ -56,12 +58,12 @@ if ( Sonar\Input::exists( "post" ) )
             }
             catch ( Exception $error )
             {
-                die( $error->getMessage( ) );
+                die( $error->GetMessage( ) );
             }
         }
         else
         {
-            foreach( $validation->errors( ) as $error )
+            foreach( $validation->Errors( ) as $error )
             {
                 echo $error."<br />";
             }
@@ -95,7 +97,7 @@ if ( $sent )
         <textarea name="message" id="message" form="contactForm"><?= $message; ?></textarea>
     </div>
     
-    <input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+    <input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
     <input type="submit" value="Submit" />
 </form>
 

@@ -1,10 +1,12 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Reset Password" );
+
 $user = new Sonar\User( );
 
-if ( $user->isLoggedIn( ) )
+if ( $user->IsLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
 }
 
 $username = $data["username"];
@@ -19,9 +21,9 @@ if ( empty( $username ) || empty( $resetCode ) )
 }
 else
 {
-    if ( $user->find( $username ) )
+    if ( $user->Find( $username ) )
     {  
-        if ( $user->verifyResetCode( $username, $resetCode ) )
+        if ( $user->VerifyResetCode( $username, $resetCode ) )
         {
             $resetCodeValid = true;
         }
@@ -36,12 +38,12 @@ else
     }
 }
 
-if ( Sonar\Input::exists( "post" ) )
+if ( Sonar\Input::Exists( "post" ) )
 {
-	if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+	if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
 	{
 		$validate = new Sonar\Validate( );
-		$validation = $validate->check( $_POST, array(
+		$validation = $validate->Check( $_POST, array(
 			"password" => array(
 				"required" => true,
                 "min" => 6,
@@ -58,19 +60,19 @@ if ( Sonar\Input::exists( "post" ) )
         ) );
 
         // check if the password reset submission actually exists in the database
-		if ( $validation->passed( ) )
+		if ( $validation->Passed( ) )
 		{
             // update password in database
-            $result = $user->update( array(
-                "password" => password_hash( Sonar\Input::get( "password", $_POST ), PASSWORD_DEFAULT ),
-            ), $user->data( )->id );
+            $result = $user->Update( array(
+                "password" => password_hash( Sonar\Input::Get( "password", $_POST ), PASSWORD_DEFAULT ),
+            ), $user->Data( )->id );
             
             if ( $result )
             {
-                $user->clearPasswordResetTable( $username );
+                $user->ClearPasswordResetTable( $username );
                 
-			    Sonar\Session::flash( "home", "Your password has been reset. You can now login." );
-			    Sonar\Redirect::to( "home/index" );
+			    Sonar\Session::Flash( "home", "Your password has been reset. You can now login." );
+			    Sonar\Redirect::To( "home/index" );
             }
             else
             {
@@ -79,7 +81,7 @@ if ( Sonar\Input::exists( "post" ) )
 		}
 		else
 		{
-			foreach( $validation->errors( ) as $error )
+			foreach( $validation->Errors( ) as $error )
 			{
 				echo $error, "<br />";
 			}
@@ -101,7 +103,7 @@ if ( $resetCodeValid )
 		<input type="password" name="password_confirmation" id="password_confirmation" />
 	</div>
 
-	<input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+	<input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
 	<input type="submit" value="Submit" />
 </form>
 <?php

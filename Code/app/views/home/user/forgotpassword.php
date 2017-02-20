@@ -1,42 +1,46 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Forgot Password" );
+
 $user = new Sonar\User( );
 
-if ( $user->isLoggedIn( ) )
+if ( $user->IsLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
+    
+    exit( );
 }
 
-if ( Sonar\Input::exists( "post" ) )
+if ( Sonar\Input::Exists( "post" ) )
 {
-	if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+	if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
 	{
 		$validate = new Sonar\Validate( );
-		$validation = $validate->check( $_POST, array(
+		$validation = $validate->Check( $_POST, array(
 			"email_address" => array(
 				"required" => true,
                 "email" => true,
-                'exists' => Sonar\Config::get( "mysql/usersTableName" )
+                'exists' => Sonar\Config::Get( "mysql/usersTableName" )
 			)
 		), array(
             "Email Address"
         ) );
 
         // check if the email actually exists in the database
-		if ( $validation->passed( ) )
+		if ( $validation->Passed( ) )
 		{
-            $emailAddress = Sonar\Input::get( "email_address", $_POST );
+            $emailAddress = Sonar\Input::Get( "email_address", $_POST );
             
-            if ( $user->findUsingEmail( $emailAddress ) )
+            if ( $user->FindUsingEmail( $emailAddress ) )
             {
-                $username = $user->data( )->username;
-                $salt = Sonar\Hash::salt( 128 );
+                $username = $user->Data( )->username;
+                $salt = Sonar\Hash::Salt( 128 );
                 
-                if ( $user->createPasswordResetSalt( $username, $salt ) )
+                if ( $user->CreatePasswordResetSalt( $username, $salt ) )
                 {
                     $email = new Sonar\Email( );
 
-                    $email = $email->send(
+                    $email = $email->Send(
                         array(
                             array( $emailAddress, $username )
                         ),
@@ -46,7 +50,7 @@ if ( Sonar\Input::exists( "post" ) )
                         "_ForgotPasswordTemplate.php", // body/template
                         true,
                         array( // should only be a 1D array
-                            "&&resetURL&&" => Sonar\Config::get( "website/domainName" ).Sonar\Config::get( "website/root" )."/home/resetpassword/".$salt."/".$username
+                            "&&resetURL&&" => Sonar\Config::Get( "website/domainName" ).Sonar\Config::Get( "website/root" )."/home/resetpassword/".$salt."/".$username
                         )
                     );
 
@@ -71,7 +75,7 @@ if ( Sonar\Input::exists( "post" ) )
 		}
 		else
 		{
-			foreach( $validation->errors( ) as $error )
+			foreach( $validation->Errors( ) as $error )
 			{
 				echo $error, "<br />";
 			}
@@ -87,6 +91,6 @@ if ( Sonar\Input::exists( "post" ) )
 		<input type="text" name="email_address" id="email_address" />
 	</div>
 
-	<input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+	<input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
 	<input type="submit" value="Submit" />
 </form>

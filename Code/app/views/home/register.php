@@ -1,28 +1,28 @@
 <?php
 
-Sonar\Misc::changeWebsiteTitle( "Register" );
+Sonar\Misc::ChangeWebsiteTitle( "Register" );
 
 $user = new Sonar\User( );
 $recaptcha = new Sonar\ReCAPTCHA( );
 
-if ( $user->isLoggedIn( ) )
+if ( $user->IsLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
 }
 
-if ( Sonar\Input::exists( "post" ) )
+if ( Sonar\Input::Exists( "post" ) )
 {
-    if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+    if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
     {       
-        if ( Sonar\Input::get( "Register", $_POST ) )
+        if ( Sonar\Input::Get( "Register", $_POST ) )
         {
             $validate = new Sonar\Validate( );
-            $validation = $validate->check( $_POST, array(
+            $validation = $validate->Check( $_POST, array(
                 'username' => array(
                     'required' => true,
                     'min' => 2,
                     'max' => 32,
-                    'unique' => Sonar\Config::get( "users/usersTableName" ),
+                    'unique' => Sonar\Config::Get( "users/usersTableName" ),
                     'numeric' => false,
                     'email' => false
                 ),
@@ -40,7 +40,7 @@ if ( Sonar\Input::exists( "post" ) )
                     'email' => true,
                     'min' => 2,
                     'max' => 32,
-                    'unique' => Sonar\Config::get( "users/usersTableName" )
+                    'unique' => Sonar\Config::Get( "users/usersTableName" )
                 )
             ), array(
                 "Username",
@@ -49,19 +49,19 @@ if ( Sonar\Input::exists( "post" ) )
                 "Email Address"
             ) );
 
-            if ( $validation->passed( ) )
+            if ( $validation->Passed( ) )
             {
-                if ( $recaptcha->check( ) && $recaptcha->passed( ) )
+                if ( $recaptcha->Check( ) && $recaptcha->Passed( ) )
                 {
                     try
                     {
-                        $username = Sonar\Input::get( "username", $_POST );
-                        $emailAddress = Sonar\Input::get( "email_address", $_POST );
-                        $salt = Sonar\Hash::salt( 128 );
+                        $username = Sonar\Input::Get( "username", $_POST );
+                        $emailAddress = Sonar\Input::Get( "email_address", $_POST );
+                        $salt = Sonar\Hash::Salt( 128 );
 
                         $email = new Sonar\Email( );
 
-                        $email = $email->send(
+                        $email = $email->Send(
                             array(
                                 array( $emailAddress, $username )
                             ),
@@ -71,7 +71,7 @@ if ( Sonar\Input::exists( "post" ) )
                             "_ActivationTemplate.php", // body/template
                             true,
                             array( // should only be a 1D array
-                                "&&activationURL&&" => Sonar\Config::get( "website/domainName" ).Sonar\Config::get( "website/root" )."/home/activate/".$salt."/".$username
+                                "&&activationURL&&" => Sonar\Config::Get( "website/domainName" ).Sonar\Config::Get( "website/root" )."/home/activate/".$salt."/".$username
                             )
                         );
 
@@ -79,16 +79,16 @@ if ( Sonar\Input::exists( "post" ) )
                         {
                             echo "Account created, please check your emails for an activation email.";
                             
-                            $user->create( array(
+                            $user->Create( array(
                                 "privilege" => 'user',
                                 "username" => $username,
-                                "password" => password_hash( Sonar\Input::get( "password", $_POST ), PASSWORD_DEFAULT ),
+                                "password" => password_hash( Sonar\Input::Get( "password", $_POST ), PASSWORD_DEFAULT ),
                                 "email_address" => $emailAddress,
                                 "salt" => $salt,
                                 "joined" => time( )
                             ) );
                             
-                            Sonar\Session::flash( "home", "You have been registered, please check your email for an activation email." );
+                            Sonar\Session::Flash( "home", "You have been registered, please check your email for an activation email." );
                             Sonar\Redirect::To( "home" );
                         }
                         else
@@ -103,7 +103,7 @@ if ( Sonar\Input::exists( "post" ) )
                 }
                 else
                 {
-                    foreach( $recaptcha->errors( ) as $error )
+                    foreach( $recaptcha->Errors( ) as $error )
                     {
                         echo $error."<br />";
                     }
@@ -111,7 +111,7 @@ if ( Sonar\Input::exists( "post" ) )
             }
             else
             {
-                foreach( $validation->errors( ) as $error )
+                foreach( $validation->Errors( ) as $error )
                 {
                     echo $error."<br />";
                 }
@@ -119,13 +119,13 @@ if ( Sonar\Input::exists( "post" ) )
         }
         else
         {
-            if ( Sonar\Input::get( "Google", $_POST ) )
+            if ( Sonar\Input::Get( "Google", $_POST ) )
             {
-                $user->hybridAuth( )->authenticate( "Google" );
+                $user->HybridAuth( )->Authenticate( "Google" );
             }
             else if ( Sonar\Input::get( "Facebook", $_POST ) )
             {
-                $user->hybridAuth( )->authenticate( "Facebook" );
+                $user->HybridAuth( )->Authenticate( "Facebook" );
             }
         }
     }
@@ -136,7 +136,7 @@ if ( Sonar\Input::exists( "post" ) )
 <form action="" method="POST">
     <div class="field">
         <label for="username">Username</label>
-        <input type="text" name="username" id="username" value="<?php echo Sonar\Input::get( "username", $_POST ); ?>" />
+        <input type="text" name="username" id="username" value="<?php echo Sonar\Input::Get( "username", $_POST ); ?>" />
     </div>
     
     <div class="field">
@@ -151,13 +151,13 @@ if ( Sonar\Input::exists( "post" ) )
     
     <div class="field">
         <label for="email_address">Enter your Email Address MOFO</label>
-        <input type="email" name="email_address" id="email_address" value="<?php echo Sonar\Input::get( "email_address", $_POST ); ?>" />
+        <input type="email" name="email_address" id="email_address" value="<?php echo Sonar\Input::Get( "email_address", $_POST ); ?>" />
     </div>
     
-    <input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+    <input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
     <input type="submit" name="Register" id="Register" value="Register" />
     <input type="submit" name="Google" id="Google" value="Google" />
     <input type="submit" name="Facebook" id="Facebook" value="Facebook" />
     
-    <div class="g-recaptcha" data-sitekey="<?= Sonar\Config::get( "security/GooglereCAPTCHA" )["sitekey"]; ?>"></div>
+    <div class="g-recaptcha" data-sitekey="<?= Sonar\Config::Get( "security/GooglereCAPTCHA" )["sitekey"]; ?>"></div>
 </form>

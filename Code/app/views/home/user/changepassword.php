@@ -1,18 +1,22 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Change Password" );
+
 $user = new Sonar\User( );
 
-if ( !$user->isLoggedIn( ) )
+if ( !$user->IsLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
+    
+    exit( );
 }
 
-if ( Sonar\Input::exists( "post" ) )
+if ( Sonar\Input::Exists( "post" ) )
 {
-	if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+	if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
 	{
 		$validate = new Sonar\Validate( );
-		$validation = $validate->check( $_POST,
+		$validation = $validate->Check( $_POST,
             array(
                 "password_current" => array(
                     "required" => true
@@ -36,23 +40,23 @@ if ( Sonar\Input::exists( "post" ) )
             )
         );
 
-		if ( $validation->passed( ) )
+		if ( $validation->Passed( ) )
 		{
 			// change password
-			if ( !$user->verifyPassword( Sonar\Input::get( "password_current", $_POST ) ) )
+			if ( !$user->VerifyPassword( Sonar\Input::Get( "password_current", $_POST ) ) )
 			{
 				echo "Your current password is wrong";
 			}
 			else
 			{
-				$result = $user->update( array(
-					"password" => password_hash( Sonar\Input::get( "password_new", $_POST ), PASSWORD_DEFAULT ),
+				$result = $user->Update( array(
+					"password" => password_hash( Sonar\Input::Get( "password_new", $_POST ), PASSWORD_DEFAULT ),
 				) );
                 
                 if ( $result )
                 {
-				    Sonar\Session::flash( "home", "Your password has been changed!" );
-				    Sonar\Redirect::to( "home/index" );
+				    Sonar\Session::Flash( "home", "Your password has been changed!" );
+				    Sonar\Redirect::To( "home/index" );
                 }
                 else
                 {
@@ -62,7 +66,7 @@ if ( Sonar\Input::exists( "post" ) )
 		}
 		else
 		{
-			foreach ( $validation->errors( ) as $error )
+			foreach ( $validation->Errors( ) as $error )
 			{
 				echo $error, "<br />";
 			}
@@ -89,5 +93,5 @@ if ( Sonar\Input::exists( "post" ) )
 	</div>
 
 	<input type="submit" value="Change" />
-	<input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+	<input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
 </form>

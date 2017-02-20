@@ -1,21 +1,21 @@
 <?php
 
-Sonar\Misc::changeWebsiteTitle( "Login" );
+Sonar\Misc::ChangeWebsiteTitle( "Login" );
 
 $user = new Sonar\User( );
 
-if ( $user->isLoggedIn( ) )
+if ( $user->IsLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
 }
 
-if ( Sonar\Input::exists( "post" ) )
+if ( Sonar\Input::Exists( "post" ) )
 {
-	if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+	if ( Sonar\Token::Check( Sonar\Input::get( "token", $_POST ) ) )
 	{
-        if ( Sonar\Input::get( "Login", $_POST ) )
+        if ( Sonar\Input::Get( "Login", $_POST ) )
         {
-            if ( Sonar\Input::get( "remember", $_POST ) )
+            if ( Sonar\Input::Get( "remember", $_POST ) )
             {
                 $remember = true;
             }
@@ -25,7 +25,7 @@ if ( Sonar\Input::exists( "post" ) )
             }
             
             $validate = new Sonar\Validate( );
-            $validation = $validate->check( $_POST, array(
+            $validation = $validate->Check( $_POST, array(
                 "username" => array(
                     "required" => true
                 ),
@@ -37,20 +37,20 @@ if ( Sonar\Input::exists( "post" ) )
                 "Password"
             ) );
 
-            if ( $validation->passed( ) )
+            if ( $validation->Passed( ) )
             {
                 // log user in
                 $user = new Sonar\User( );
 
-                $login = $user->login( Sonar\Input::get( "username", $_POST ), Sonar\Input::get( "password", $_POST ), $remember );
+                $login = $user->Login( Sonar\Input::Get( "username", $_POST ), Sonar\Input::Get( "password", $_POST ), $remember );
 
                 if ( $login )
                 {
-                    Sonar\Redirect::to( "home/index" );
+                    Sonar\Redirect::To( "home/index" );
                 }
                 else
                 {
-                    foreach( $user->errors( ) as $error )
+                    foreach( $user->Errors( ) as $error )
                     {
                         echo $error, "<br />";
                     }
@@ -58,7 +58,7 @@ if ( Sonar\Input::exists( "post" ) )
             }
             else
             {
-                foreach( $validation->errors( ) as $error )
+                foreach( $validation->Errors( ) as $error )
                 {
                     echo $error, "<br />";
                 }
@@ -66,13 +66,13 @@ if ( Sonar\Input::exists( "post" ) )
         }
         else
         {
-            if ( Sonar\Input::get( "Google", $_POST ) )
+            if ( Sonar\Input::Get( "Google", $_POST ) )
             {
-                $user->hybridAuth( )->authenticate( "Google" );
+                $user->HybridAuth( )->Authenticate( "Google" );
             }
-            else if ( Sonar\Input::get( "Facebook", $_POST ) )
+            else if ( Sonar\Input::Get( "Facebook", $_POST ) )
             {
-                $user->hybridAuth( )->authenticate( "Facebook" );
+                $user->HybridAuth( )->Authenticate( "Facebook" );
             }
         }
 	}
@@ -83,7 +83,7 @@ if ( Sonar\Input::exists( "post" ) )
 <form action="" method="POST">
 	<div class="field">
 		<label for="username">Username</label>
-		<input type="text" name="username" id="username" value="<?php echo Sonar\Input::get( "username", $_POST ); ?>" />
+		<input type="text" name="username" id="username" value="<?php echo Sonar\Input::Get( "username", $_POST ); ?>" />
 	</div>
 
 	<div class="field">
@@ -97,19 +97,17 @@ if ( Sonar\Input::exists( "post" ) )
 		</label>
 	</div>
 
-	<input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+	<input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
 	<input type="submit" name="Login" id="Login" value="Login" />
     <input type="submit" name="Google" id="Google" value="Google" />
     <input type="submit" name="Facebook" id="Facebook" value="Facebook" />
     
     <br />
 
-    <a href="<?= Sonar\Path::to( "home/forgotpassword" ); ?>">Forgot Password</a>
+    <a href="<?= Sonar\Path::To( "home/forgotpassword" ); ?>">Forgot Password</a>
 </form>
 
-
-
 <ul>
-    <li><a href="<?= Sonar\Path::to( "home/index" ); ?>">index</a></li>
-    <li><a href="<?= Sonar\Path::to( "home/register" ); ?>">register</a></li>
+    <li><a href="<?= Sonar\Path::To( "home/index" ); ?>">index</a></li>
+    <li><a href="<?= Sonar\Path::To( "home/register" ); ?>">register</a></li>
 </ul>

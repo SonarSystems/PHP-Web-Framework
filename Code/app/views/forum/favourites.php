@@ -1,12 +1,14 @@
 <?php
 
-Sonar\Misc::changeWebsiteTitle( "Forum Favourites" );
+Sonar\Misc::ChangeWebsiteTitle( "Forum Favourites" );
 
 $user = new Sonar\User( );
 
-if ( !$user->isLoggedIn( ) )
+if ( !$user->IsLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
+    
+    exit( );
 }
 
 ?>
@@ -21,6 +23,7 @@ $forum = new Sonar\Forum( );
 
 $favourites = $forum->GetFavourites( $user->Data( )->id );
 
+// check if the user has favourited any questions
 if ( $favourites )
 {   
     foreach ( $favourites as $row )
@@ -35,7 +38,3 @@ else
 {
     echo "You have not favourited anything.";
 }
-
-$forum->EditQuestion( "14", "Updated", "Hello World" );
-
-?>

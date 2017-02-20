@@ -1,5 +1,7 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Changelog" );
+
 /*
 
 READ FIRST

@@ -7,15 +7,19 @@
 
 namespace Sonar;
 
+
+
 class Misc
-{    
-    public static function changeWebsiteTitle( $title )
+{
+    // Change website title that appears in the tab
+    public static function ChangeWebsiteTitle( $title )
     {
         echo "  <script type='text/javascript'>
                     document.title = '$title';
                 </script>";
     }
     
+    // Generate a single Lorem Ipsum paragraph
     public static function GenerateLoremIpsumShortText( )
     {
         return "
@@ -23,6 +27,7 @@ class Misc
         ";
     }
     
+    // Generate a long Lorem Ipsum passage
     public static function GenerateLoremIpsumLongText( )
     {
         return "

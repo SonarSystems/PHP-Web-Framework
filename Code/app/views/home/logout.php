@@ -1,6 +1,6 @@
 <?php
 
 $user = new Sonar\User( );
-$user->logout( );
+$user->Logout( );
 
-Sonar\Redirect::to( "home/index" );
+Sonar\Redirect::To( "home/index" );

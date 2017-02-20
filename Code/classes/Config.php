@@ -13,6 +13,7 @@ foreach ( glob( "../core/__CONFIGS/*.php" ) as $filename )
 
 class Config
 {
+    // Get configuration
 	public static function Get( $path = null )
 	{
 		if ( $path )

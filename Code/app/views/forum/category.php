@@ -3,30 +3,35 @@
 $categoryID = $data["id"];
 
 $user = new Sonar\User( );
-
 $forum = new Sonar\Forum( );
+
 $categoryResult = $forum->GetCategory( $categoryID );
 
 if ( $categoryResult )
 {
     echo "<h1>$categoryResult->title Category</h1>";
+    
+    Sonar\Misc::ChangeWebsiteTitle( "Forum - $categoryResult->title" );
 }
 else
 {
     Sonar\Redirect::To( "forum" );
+    
+    exit( );
 }
 
 $title = "";
 $description = "";
 
-if ( Sonar\Input::exists( "post" ) )
+// check if form has been submitted
+if ( Sonar\Input::Exists( "post" ) )
 {
-    if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+    if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
     {       
-        if ( Sonar\Input::get( "PostQuestion", $_POST ) )
+        if ( Sonar\Input::Get( "PostQuestion", $_POST ) )
         {
             $validate = new Sonar\Validate( );
-            $validation = $validate->check( $_POST, array(
+            $validation = $validate->Check( $_POST, array(
                 'TitleInput' => array(
                     'required' => true,
                     'min' => 5,
@@ -42,16 +47,16 @@ if ( Sonar\Input::exists( "post" ) )
                 "Description"
             ) );
             
-            $title = Sonar\Input::get( "TitleInput", $_POST );
-            $description = Sonar\Input::get( "DescriptionTextArea", $_POST );
+            $title = Sonar\Input::Get( "TitleInput", $_POST );
+            $description = Sonar\Input::Get( "DescriptionTextArea", $_POST );
 
-            if ( $validation->passed( ) )
+            if ( $validation->Passed( ) )
             {         
                 $result = $forum->InsertQuestion( $title, $description, $categoryID );
 
                 if ( !$result )
                 {
-                    foreach( $forum->errors( ) as $error )
+                    foreach( $forum->Errors( ) as $error )
                     {
                         echo $error."<br />";
                     }
@@ -63,7 +68,7 @@ if ( Sonar\Input::exists( "post" ) )
             }
             else
             {
-                foreach( $validation->errors( ) as $error )
+                foreach( $validation->Errors( ) as $error )
                 {
                     echo $error."<br />";
                 }
@@ -72,7 +77,8 @@ if ( Sonar\Input::exists( "post" ) )
     }
 }
 
-if ( $user->isLoggedIn( ) )
+// if user is logged in, show form to post questions
+if ( $user->IsLoggedIn( ) )
 {
 ?>
 
@@ -114,6 +120,7 @@ if ( !$questions )
 }
 else
 {
+    // loop over all the questions for this category and print them out
     for ( $i = count( $questions ) - 1; $i >= 0; $i-- )
     {
         $questionID = $questions[$i]->id;

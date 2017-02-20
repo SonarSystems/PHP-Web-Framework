@@ -7,6 +7,7 @@ require_once( "Misc.php" );
 
 class Path
 {
+    // Adds the root of the website so the location starts with the location of the public folder
     public static function PrependRoot( $location = null )
     {
         // get the root directory to modify
@@ -23,6 +24,7 @@ class Path
         return $location;
     }
     
+    // Adds the root of the website so the location starts with the location of the public folder
     public static function To( $location = null )
     {
         return self::PrependRoot( $location );

@@ -4,6 +4,7 @@ namespace Sonar;
 
 class Input
 {
+    // Check if any input has occured
     public static function Exists( $type )
     {
         switch ( strtolower( trim ( $type ) ) )
@@ -25,6 +26,7 @@ class Input
         }
     }
     
+    // Get any input data
     public static function Get( $item, $type )
     {
         if ( isset( $type[$item] ) )

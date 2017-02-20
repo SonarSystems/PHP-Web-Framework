@@ -1,17 +1,21 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Blog Admin Panel" );
+
+// create user and blog objects
 $user = new Sonar\User( );
 $blog = new Sonar\Blog( );
 
+// if the user is not logged in then redirect to blog homepage
 if ( !$user->IsLoggedIn( ) )
 {
-    Sonar\Redirect::to( "blog/home" );
+    Sonar\Redirect::To( "blog/home" );
     
     exit( );
 }
-else if ( !$user->IsAdmin( $user->Data( )->username ) )
+else if ( !$user->IsAdmin( $user->Data( )->username ) ) // if user is not an admin redirect to blog homepage
 {
-    Sonar\Redirect::to( "blog/home" );
+    Sonar\Redirect::To( "blog/home" );
     
     exit( );
 }
@@ -20,14 +24,15 @@ $title = "";
 $highlight = "";
 $body = "";
 
-if ( Sonar\Input::exists( "post" ) )
+// check if form has been submitted for inserting a new blog post
+if ( Sonar\Input::Exists( "post" ) )
 {
-    if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+    if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
     {       
-        if ( Sonar\Input::get( "InsertPost", $_POST ) )
+        if ( Sonar\Input::Get( "InsertPost", $_POST ) )
         {
             $validate = new Sonar\Validate( );
-            $validation = $validate->check( $_POST, array(
+            $validation = $validate->Check( $_POST, array(
                 'Title' => array(
                     'required' => true,
                     'min' => 1,
@@ -43,15 +48,15 @@ if ( Sonar\Input::exists( "post" ) )
                 "Body"
             ) );
             
-            $title = Sonar\Input::get( "Title", $_POST );
-            $highlight = Sonar\Input::get( "Highlight", $_POST );
-            $body = Sonar\Input::get( "Body", $_POST );
+            $title = Sonar\Input::Get( "Title", $_POST );
+            $highlight = Sonar\Input::Get( "Highlight", $_POST );
+            $body = Sonar\Input::Get( "Body", $_POST );
 
-            if ( $validation->passed( ) )
+            if ( $validation->Passed( ) )
             {
                 if ( !$blog->InsertPost( $title, $highlight, $body ) )
                 {
-                    foreach( $blog->errors( ) as $error )
+                    foreach( $blog->Errors( ) as $error )
                     {
                         echo $error."<br />";
                     }
@@ -67,7 +72,7 @@ if ( Sonar\Input::exists( "post" ) )
             }
             else
             {
-                foreach( $validation->errors( ) as $error )
+                foreach( $validation->Errors( ) as $error )
                 {
                     echo $error."<br />";
                 }
@@ -78,6 +83,7 @@ if ( Sonar\Input::exists( "post" ) )
 
 ?>
 
+<!-- Form for Blog post creation -->
 <form action="" method="POST">
     <div class="field">
         <label for="Title">Title</label>
@@ -98,6 +104,6 @@ if ( Sonar\Input::exists( "post" ) )
         </div>
     </div>
     
-    <input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+    <input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
     <input type="submit" name="InsertPost" id="InsertPost" value="Insert Post" />
 </form>

@@ -6,6 +6,7 @@ require_once( "Path.php" );
 
 class Redirect
 {
+    // Redirect the user to page/view
 	public static function To( $location = null )
 	{
 		if ( $location )

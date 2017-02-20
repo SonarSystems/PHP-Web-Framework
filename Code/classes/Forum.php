@@ -37,7 +37,7 @@ class Forum extends __Error
         }
     }
     
-    // load all the sections
+    // Load all the sections
     private function LoadSections( )
     {
         $this->_db->Query( "SELECT * From $this->_sectionsTableName" );
@@ -54,7 +54,7 @@ class Forum extends __Error
         }
     }
     
-    // get all the sections
+    // Get all the sections
     public function GetSections( $forceLoad = true )
     {
         // force loads/retrieves the forum sections from the database
@@ -74,7 +74,7 @@ class Forum extends __Error
         }
     }
     
-    // load all the categories for a section
+    // Load all the categories for a section
     private function LoadCategories( $id )
     {   
         $this->_db->Get( $this->_categoriesTableName, array( "sectionid", "=", $id ) );
@@ -91,7 +91,7 @@ class Forum extends __Error
         }
     }
     
-    // get all the categories for a section
+    // Get all the categories for a section
     public function GetCategories( $id, $forceLoad = true )
     {
         // force loads/retrieves the forum categories from the database
@@ -111,7 +111,7 @@ class Forum extends __Error
         }
     }
     
-    // get all the questions for a category
+    // Get all the questions for a category
     public function GetQuestions( $id, $forceLoad = true )
     {
         // force loads/retrieves the forum questions from the database
@@ -132,7 +132,7 @@ class Forum extends __Error
         return $this->_questions;
     }
     
-    // get the table row for a section
+    // Get the table row for a section
     public function GetSection( $id )
     {
         $this->_db->Get( $this->_sectionsTableName, array( "sectionid", "=", $id ) );
@@ -147,7 +147,7 @@ class Forum extends __Error
         }
     }
     
-    // get the table row for a category
+    // Get the table row for a category
     public function GetCategory( $id )
     {
         $this->_db->Get( $this->_categoriesTableName, array( "categoryid", "=", $id ) );
@@ -162,7 +162,7 @@ class Forum extends __Error
         }
     }
     
-    // get the table row for a question
+    // Get the table row for a question
     public function GetQuestion( $id )
     {
         $this->_db->Get( $this->_questionsTableName, array( "id", "=", $id ) );
@@ -177,7 +177,7 @@ class Forum extends __Error
         }
     }
     
-    // insert the question into the database
+    // Insert the question into the database
     public function InsertQuestion( $title, $description, $categoryID )
     {
         $user = new User( );
@@ -215,13 +215,13 @@ class Forum extends __Error
         }
     }
     
-    // get number of items loaded from the database
+    // Get number of items loaded from the database
     public function Count( )
     {
         return $this->_db->Count( );
     }
     
-    // check if the question has been liked
+    // Check if the question has been liked
     public function IsQuestionLiked( $id )
     {
         $user = new User( );
@@ -239,7 +239,7 @@ class Forum extends __Error
         }
     }
     
-    // check if the question has been disliked
+    // Check if the question has been disliked
     public function IsQuestionDisliked( $id )
     {
         $user = new User( );
@@ -257,6 +257,7 @@ class Forum extends __Error
         }
     }
     
+    // Like a question
     public function LikeQuestion( $id )
     {
         $user = new User( );
@@ -309,6 +310,7 @@ class Forum extends __Error
         }
     }
     
+    // Dislike a question
     public function DislikeQuestion( $id )
     {
         $user = new User( );
@@ -361,7 +363,7 @@ class Forum extends __Error
         }
     }
     
-    // counts how many times a question has been liked
+    // Counts how many times a question has been liked
     public function CountQuestionLikes( $id )
     {
         $likesResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND type = ?", array( $id, "like" ) );
@@ -369,7 +371,7 @@ class Forum extends __Error
         return $likesResult->Count( );
     }
     
-    // counts how many times a question has been disliked
+    // Counts how many times a question has been disliked
     public function CountQuestionDislikes( $id )
     {
         $dislikeResult = $this->_db->Query( "SELECT * From $this->_questionLikesTableName WHERE questionid = ? AND type = ?", array( $id, "dislike" ) );
@@ -377,13 +379,13 @@ class Forum extends __Error
         return $dislikeResult->Count( );
     }
     
-    // count how many times a question has been liked minus the dislikes
+    // Counts how many times a question has been liked minus the dislikes
     public function CountQuestionOverallLikes( $id )
     {
         return $this->CountQuestionLikes( $id ) - $this->CountQuestionDislikes( $id );
     }
     
-    // favourites a question for the user, for later use
+    // Favourites a question for the user, for later use
     public function FavouriteQuestion( $id )
     {
         $user = new User( );
@@ -422,7 +424,7 @@ class Forum extends __Error
         }
     }
     
-    // check if the question has been favourited
+    // Check if the question has been favourited
     public function IsQuestionFavourited( $id )
     {
         $user = new User( );
@@ -439,7 +441,7 @@ class Forum extends __Error
         }
     }
     
-    // get all the favourites for a question
+    // Get all the favourites for a question
     public function GetFavourites( $userid )
     {
         $this->_db->Get( $this->_favouriteQuestionsTableName, array( "userid", "=", $userid ) );
@@ -454,7 +456,7 @@ class Forum extends __Error
         }
     }
     
-    // edit/update question
+    // Edit/update question
     public function EditQuestion( $id, $title, $description )
     {
         return $this->_db->Update( $this->_questionsTableName, $id, array(

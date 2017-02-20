@@ -1,6 +1,7 @@
+<?php Sonar\Misc::ChangeWebsiteTitle( "Privacy Policy" ); ?>
+
 <div>
-	<h1>Policy for <?= Sonar\Config::get( "website/title" ); ?></h1>
-	<script>document.title = 'Privacy Policy';</script>
+	<h1>Policy for <?= Sonar\Config::Get( "website/title" ); ?></h1>
 	
 	<h6>First of all we want to tell you that we aren't selling your data like other websites nor will we be. We only use it for account and user purposes.</h6>
 			
@@ -44,5 +45,5 @@
 
 	<br />Hopefully that has clarified things for you and as was previously mentioned if there is something that you aren't sure whether you need or not it's usually safer to leave cookies enabled in case it does interact with one of the features you use on our site. However if you are still looking for more information then you can contact us through one of our preferred contact methods.
 
-	<br /><br />Email: <a href="mailto:<?= Sonar\Config::get( "website/contactEmailAddress" ); ?>" target="_blank"><?= Sonar\Config::get( "website/contactEmailAddress" ); ?></a><br /><br />
+	<br /><br />Email: <a href="mailto:<?= Sonar\Config::Get( "website/contactEmailAddress" ); ?>" target="_blank"><?= Sonar\Config::Get( "website/contactEmailAddress" ); ?></a><br /><br />
 </div>

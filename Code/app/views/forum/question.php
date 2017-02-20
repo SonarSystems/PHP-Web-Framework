@@ -3,36 +3,40 @@
 $questionID = $data["id"];
 
 $user = new Sonar\User( );
-
 $forum = new Sonar\Forum( );
+
 $questionResult = $forum->GetQuestion( $questionID );
 
+// check if the question exists
 if ( !$questionResult )
 {
     Sonar\Redirect::To( "forum" );
+    
+    exit( );
 }
 
-if ( Sonar\Input::exists( "post" ) )
+// check if a form has been submitted
+if ( Sonar\Input::Exists( "post" ) )
 {
-    $sessionToken = Sonar\Input::get( "token", $_POST );
+    $sessionToken = Sonar\Input::Get( "token", $_POST );
 
-    if ( Sonar\Token::check( $sessionToken ) )
+    if ( Sonar\Token::Check( $sessionToken ) )
     {
-        if ( Sonar\Input::get( "likeQuestion", $_POST ) )
+        if ( Sonar\Input::Get( "likeQuestion", $_POST ) )
         {
-            $id = Sonar\Input::get( "id", $_POST );
+            $id = Sonar\Input::Get( "id", $_POST );
             
             $forum->LikeQuestion( $id );
         }
-        else if ( Sonar\Input::get( "dislikeQuestion", $_POST ) )
+        else if ( Sonar\Input::Get( "dislikeQuestion", $_POST ) )
         {
-            $id = Sonar\Input::get( "id", $_POST );
+            $id = Sonar\Input::Get( "id", $_POST );
             
             $forum->DislikeQuestion( $id );
         }
-        else if ( Sonar\Input::get( "favouriteQuestion", $_POST ) )
+        else if ( Sonar\Input::Get( "favouriteQuestion", $_POST ) )
         {
-            $id = Sonar\Input::get( "id", $_POST );
+            $id = Sonar\Input::Get( "id", $_POST );
 
             $forum->FavouriteQuestion( $id );
         }
@@ -50,9 +54,11 @@ $questionArray["timeedited"] = $questionResult->timeedited;
 $questionArray["title"] = htmlspecialchars( base64_decode( $questionResult->title ) );
 $questionArray["description"] = nl2br( htmlspecialchars( base64_decode( $questionResult->description ) ) );
 
-$token = Sonar\Token::generate( );
+Sonar\Misc::ChangeWebsiteTitle( "Forum - " . $questionArray["title"] );
 
-if ( $user->isLoggedIn( ) )
+$token = Sonar\Token::Generate( );
+
+if ( $user->IsLoggedIn( ) )
 {
     $likedButtonText = "Like";
     $dislikedButtonText = "Dislike";
@@ -93,8 +99,7 @@ $questionLikes = $forum->CountQuestionOverallLikes( $questionArray["id"] );
         <input type='hidden' name='token' value='<?= $token; ?>' />
         <?php
         
-        if ( $user->isLoggedIn( ) )
-        
+        if ( $user->IsLoggedIn( ) )
         {
         
         ?>
@@ -129,5 +134,5 @@ $templateCommentsTableName = Sonar\Config::Get( "forum/forumQuestionCommentsTabl
 $templateCommentLikesTableName = Sonar\Config::Get( "forum/forumQuestionCommentLikesTableName" );
 $templateCommentsPostID = $questionID;
 
-
+// load in the template for showing comments on the forum
 require_once( "../templates/views/_templateForumComments.php" );

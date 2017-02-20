@@ -1,49 +1,51 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Update User Details" );
+
 $user = new Sonar\User( );
 
-if ( !$user->isLoggedIn( ) )
+if ( !$user->IsLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
 }
 
-if ( Sonar\Input::exists( "post" ) )
+if ( Sonar\Input::Exists( "post" ) )
 {
-	if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+	if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
 	{
 		$validate = new Sonar\Validate( );
-		$validation = $validate->check( $_POST, array(
+		$validation = $validate->Check( $_POST, array(
             'username' => array(
                 'required' => true,
                 'min' => 2,
                 'max' => 32,
-                'unique' => Sonar\Config::get( "users/usersTableName" ),
+                'unique' => Sonar\Config::Get( "users/usersTableName" ),
                 'numeric' => false,
                 'email' => false
             ),
 		) );
 
-		if ( $validation->passed( ) )
+		if ( $validation->Passed( ) )
 		{
 			// UPDATE DETAILS
 			try
 			{
-				$user->update( array(
-					"username" => Sonar\Input::get( "username", $_POST )
+				$user->Update( array(
+					"username" => Sonar\Input::Get( "username", $_POST )
 				) );
 
-				Sonar\Session::flash( "home", "Your details have been updated" );
+				Sonar\Session::Flash( "home", "Your details have been updated" );
 
-				Sonar\Redirect::to( "home/index" );
+				Sonar\Redirect::To( "home/index" );
 			}
 			catch( Exception $error )
 			{
-				die( $error->getMessage( ) );
+				die( $error->GetMessage( ) );
 			}
 		}
 		else
 		{
-			foreach( $validation->errors( ) as $error )
+			foreach( $validation->Errors( ) as $error )
 			{
 				echo $error, "<br />";
 			}
@@ -56,9 +58,9 @@ if ( Sonar\Input::exists( "post" ) )
 <form action="" method="POST">
 	<div class="field">
 		<label for="name">Username</label>
-		<input type="text" name="username" id="username" value="<?php echo $user->data( )->username; ?>" />
+		<input type="text" name="username" id="username" value="<?php echo $user->Data( )->username; ?>" />
 
 		<input type="submit" value="Update" />
-		<input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+		<input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
 	</div>
 </form>

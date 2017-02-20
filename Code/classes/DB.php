@@ -32,6 +32,7 @@ class DB
         }
     }
     
+    // Get the singleton instance of this class
     public static function GetInstance( )
     {
         if ( !isset( self::$_instance ) )
@@ -43,6 +44,7 @@ class DB
     }
     
     /*
+    *   Run a raw SQL query
     *   Example Call
     *   DB::getInstance( )->Query( "SELECT * From TableName WHERE id = ?", array( '18' ) );
     */
@@ -78,6 +80,7 @@ class DB
     }
     
     /*
+    *   Run a defined action
     *   Example Call
     *   DB::getInstance( )->Action( "SELECT *", "TableName", array( "id", "=", "3" ) );
     */
@@ -106,6 +109,7 @@ class DB
     }
     
     /*
+    *   Select data call
     *   Example Call
     *   DB::getInstance( )->Get( "TableName", array( "id", "=", "3" ) );
     */
@@ -114,12 +118,14 @@ class DB
         return $this->Action( 'SELECT *', $table, $where );
     }
     
+    // Get the ID of the last insert into the database
     public function GetLastInsertedID( )
     {
         return $this->_lastInsertedId;
     }
     
     /*
+    *   Delete a row
     *   Example Call
     *   DB::getInstance( )->Delete( "TableName", array( "id", "=", "3" ) );
     */
@@ -129,6 +135,7 @@ class DB
     }
     
     /*
+    *   Insert a row
     *   Example Call
     *   DB::getInstance( )->Insert( "TableName", array(
     *   "username" => "newusername",
@@ -169,6 +176,7 @@ class DB
     }
     
     /*
+    *   Update a row
     *   Example Call
     *   DB::getInstance( )->Update( "TableName", 3, array(
     *   "username" => "newusername",
@@ -204,21 +212,25 @@ class DB
         return false;
     }
     
+    // Get the data from the last successful database call
     public function Results( )
     {
         return $this->_results;
     }
     
+    // Get the first item from the the data
     public function First( )
     {
         return $this->Results( )[0];
     }
     
+    // Get any errors
     public function Error( )
     {
         return $this->_error;
     }
     
+    // Get the count of the number of rows retrieved
     public function Count( )
     {
         return $this->_count;

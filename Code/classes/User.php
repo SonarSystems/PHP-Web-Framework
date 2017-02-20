@@ -99,6 +99,7 @@ class User extends __Error
         }
 	}
 
+    // Update the users details
 	public function Update( $fields = array( ), $id = null )
 	{
 		if ( !$id && $this->IsLoggedIn( ) )
@@ -116,6 +117,7 @@ class User extends __Error
         }
 	}
 
+    // Create a new user
     public function Create( $fields = array( ) )
     {
         if ( !$this->_db->Insert( $this->_usersTable, $fields ) )
@@ -124,6 +126,7 @@ class User extends __Error
         }
     }
 
+    // Get information for a user
     public function Find( $user = null )
     {
     	if ( $user )
@@ -154,6 +157,7 @@ class User extends __Error
     	return false;
     }
 
+    // Get information for a user based on email
     public function FindUsingEmail( $email = null )
     {
         if ( $email )
@@ -171,11 +175,13 @@ class User extends __Error
     	return false;
     }
 
+    // Check if password matches password in database
     public function VerifyPassword( $passwordToVerify )
     {
         return password_verify( $passwordToVerify, $this->Data( )->password );
     }
 
+    // Log the user in
     public function Login( $username = null, $password = null, $remember = false )
     {
     	if ( !$username && !$password && $this->Exists( ) )
@@ -211,6 +217,7 @@ class User extends __Error
     	return false;
     }
     
+    // Log the user in without any validation
     private function LoginWithOutChecks( $remember = true )
     {
         Session::Put( $this->_sessionName, $this->Data( )->id );
@@ -243,6 +250,7 @@ class User extends __Error
         return true;
     }
 
+    // Check if activation code matches the users activation code
     public function VerifyActivationCode( $user, $code )
     {
         if ( is_numeric( $user ) )
@@ -270,6 +278,7 @@ class User extends __Error
         }
     }
 
+    // Check if the reset code matches the users reset code
     public function VerifyResetCode( $user, $code )
     {
         $data = $this->_db->Get( $this->_usersResetPasswordTableName, array( "username", "=", $user ) );
@@ -287,6 +296,7 @@ class User extends __Error
         }
     }
 
+    // Check if the user has activated their account
     public function IsActivated( $user = null )
     {
         if ( $user )
@@ -318,6 +328,7 @@ class User extends __Error
     	return false;
     }
 
+    // Activate user account
     public function ActivateUser( $user )
     {
         if ( is_numeric( $user ) )
@@ -348,11 +359,13 @@ class User extends __Error
         }
     }
 
+    // Check if the user exists
     public function Exists( )
     {
     	return ( !empty( $this->_data ) ) ? true : false;
     }
 
+    // Log the user out
     public function Logout( )
     {
         $this->_hybridAuth->logoutAllProviders( );
@@ -363,11 +376,13 @@ class User extends __Error
         Cookie::Delete( $this->_cookieName );
     }
 
+    // Get user information/data
     public function Data( )
     {
     	return $this->_data;
     }
 
+    // Check if the user is logged in
     public function IsLoggedIn( )
     {
         if ( $this->_isLoggedIn )
@@ -381,6 +396,7 @@ class User extends __Error
     	return $this->_isLoggedIn;
     }
     
+    // Check if the user has used social login
     public function IsOnlySociallyLoggedIn( )
     {
         if ( $this->_isLoggedIn )
@@ -394,6 +410,7 @@ class User extends __Error
         return false;
     }
 
+    // Check if the password salt still exists
     public function CheckPasswordSaltExists( $username )
     {
         $data = $this->_db->Get( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
@@ -408,6 +425,7 @@ class User extends __Error
         }
     }
 
+    // Create password for resetting a users password
     public function CreatePasswordResetSalt( $username, $salt )
     {
         $this->_db->Delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
@@ -428,11 +446,13 @@ class User extends __Error
         }
     }
 
+    // Remove the password reset salt from the database
     public function ClearPasswordResetTable( $username )
     {
         $this->_db->Delete( $this->_usersResetPasswordTableName, array( "username", "=", $username ) );
     }
 
+    // Log the user in using social media
     public function SocialLogin( $id, $emailAddress, $serviceName )
     {
         $serviceName = strtolower( $serviceName );
@@ -472,12 +492,13 @@ class User extends __Error
         Redirect::To( "home/index" );
     }
     
+    // Get the social media HydridAuth plugin object
     public function HybridAuth( )
     {
         return $this->_hybridAuth;
     }
     
-    // check if a user is an admin
+    // Check if a user is an admin
     public function IsAdmin( $username )
     {
         $data = $this->_db->Get( $this->_usersTable, array( "username", "=", $username ) );

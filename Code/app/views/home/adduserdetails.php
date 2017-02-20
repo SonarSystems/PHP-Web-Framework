@@ -1,25 +1,27 @@
 <?php
 
-Sonar\Misc::changeWebsiteTitle( "Finish Signup Process" );
+Sonar\Misc::ChangeWebsiteTitle( "Finish Signup Process" );
 
 $user = new Sonar\User( );
 
-if ( !$user->isOnlySociallyLoggedIn( ) )
+// if the user has already setup their account fully, redirect to homepage
+if ( !$user->IsOnlySociallyLoggedIn( ) )
 {
-	Sonar\Redirect::to( "home/index" );
+	Sonar\Redirect::To( "home/index" );
 }
 
-if ( Sonar\Input::exists( "post" ) )
+// check if a form has been submitted
+if ( Sonar\Input::Exists( "post" ) )
 {
-	if ( Sonar\Token::check( Sonar\Input::get( "token", $_POST ) ) )
+	if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )
 	{
 		$validate = new Sonar\Validate( );
-        $validation = $validate->check( $_POST, array(
+        $validation = $validate->Check( $_POST, array(
             'username' => array(
                 'required' => true,
                 'min' => 2,
                 'max' => 32,
-                'unique' => Sonar\Config::get( "users/usersTableName" ),
+                'unique' => Sonar\Config::Get( "users/usersTableName" ),
                 'numeric' => false,
                 'email' => false
             ),
@@ -38,28 +40,28 @@ if ( Sonar\Input::exists( "post" ) )
             "Password Confirmation",
         ) );
 
-        if ( $validation->passed( ) )
+        if ( $validation->Passed( ) )
 		{
 			// UPDATE DETAILS
 			try
 			{
-				$user->update( array(
-					"username" => Sonar\Input::get( "username", $_POST ),
-                    "password" => password_hash( Sonar\Input::get( "password", $_POST ), PASSWORD_DEFAULT )
-				), $user->data( )->id );
+				$user->Update( array(
+					"username" => Sonar\Input::Get( "username", $_POST ),
+                    "password" => password_hash( Sonar\Input::Get( "password", $_POST ), PASSWORD_DEFAULT )
+				), $user->Data( )->id );
 
-				Sonar\Session::flash( "home", "You have now completed the signup process." );
+				Sonar\Session::Flash( "home", "You have now completed the signup process." );
 
-                Sonar\Redirect::to( "home/index" );                
+                Sonar\Redirect::To( "home/index" );                
 			}
 			catch( Exception $error )
 			{
-				die( $error->getMessage( ) );
+				die( $error->GetMessage( ) );
 			}
 		}
 		else
 		{
-			foreach( $validation->errors( ) as $error )
+			foreach( $validation->Errors( ) as $error )
 			{
 				echo $error, "<br />";
 			}
@@ -75,7 +77,7 @@ if ( Sonar\Input::exists( "post" ) )
 	<div class="field">
         <div class="field">
             <label for="name">Username</label>
-            <input type="text" name="username" id="username" value="<?php echo Sonar\Input::get( "username", $_POST ); ?>" />
+            <input type="text" name="username" id="username" value="<?php echo Sonar\Input::Get( "username", $_POST ); ?>" />
         </div>
         
         <div class="field">
@@ -89,6 +91,6 @@ if ( Sonar\Input::exists( "post" ) )
         </div>
 
 		<input type="submit" value="Update" />
-		<input type="hidden" name="token" value="<?php echo Sonar\Token::generate( ); ?>" />
+		<input type="hidden" name="token" value="<?php echo Sonar\Token::Generate( ); ?>" />
 	</div>
 </form>

@@ -91,7 +91,7 @@ class Comments extends __Error
         return $this->GetComments( "parentid", $parentID, $forceLoad );
     }
     
-    public function GetCommentsForID( $id, $forceLoad = true )
+    public function GetCommentForID( $id, $forceLoad = true )
     {
         return $this->GetComments( "id", $id, $forceLoad );
     }

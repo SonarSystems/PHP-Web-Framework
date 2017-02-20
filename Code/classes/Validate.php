@@ -17,6 +17,7 @@ class Validate extends __Error
         }        
     }
     
+    // Check if items match validation criteria
     public function Check( $source, $items = array( ), $errorNames = array( ) )
     {
         $i = 0;
@@ -156,21 +157,25 @@ class Validate extends __Error
         return $this;
     }
     
+    // Check value's minimum length
     public static function Min( $value1, $value2 )
     {
         return ( strlen( $value1 ) < $value2 );
     }
     
+    // Check value's maximum length
     public static function Max( $value1, $value2 )
     {
         return ( strlen( $value1 ) > $value2 );
     }
     
+    // Check if 2 values match each other (value and typ)
     public static function Matches( $value1, $value2 )
     {
         return ( $value1 === $value2 );
     }
     
+    // Check if the value does not exist in the database
     public function Unique( $id, $value, $tablename )
     {
         $check = $this->_db->Get( $tablename, array( $id, "=", $value ) );
@@ -185,6 +190,7 @@ class Validate extends __Error
         }
     }
     
+    // Check if the value already exists in the database
     public function Exists( $id, $value, $tablename )
     {
         $check = $this->_db->Get( $tablename, array( $id, "=", $value ) );
@@ -199,16 +205,19 @@ class Validate extends __Error
         }
     }
     
+    // Check if the value is an email
     public static function Email( $value )
     {
         return filter_var( $value, FILTER_VALIDATE_EMAIL );
     }
     
+    // Check if the value is a URL
     public static function URL( $value )
     {
         return filter_var( $value, FILTER_VALIDATE_URL );
     }
     
+    // Check if the value is a number
     public static function Numeric( $value )
     {
         return is_numeric( $value );

@@ -1,5 +1,7 @@
 <?php
 
+Sonar\Misc::ChangeWebsiteTitle( "Account Activation" ) );
+
 $user = new Sonar\User( );
 
 $username = $data["username"];
@@ -12,19 +14,23 @@ if ( empty( $username ) || empty( $activationCode ) )
 }
 else
 {
-    if ( $user->find( $username ) )
+    // check if user exists
+    if ( $user->Find( $username ) )
     {
         echo "Valid user";
         
-        if ( $user->isActivated( $username ) )
+        // check if user is already activated
+        if ( $user->IsActivated( $username ) )
         {
             echo "User already activated. Please login to continue.";
         }
         else
         {   
-            if ( $user->verifyActivationCode( $username, $activationCode ) )
+            // check if activation code matches code in database for user
+            if ( $user->VerifyActivationCode( $username, $activationCode ) )
             {   
-                if ( $user->activateUser( $username ) )
+                // try to activate account
+                if ( $user->ActivateUser( $username ) )
                 {
                     echo "Account activated, you can now login to your account.";
                 }

@@ -19,6 +19,7 @@ class ReCAPTCHA extends __Error
         $this->_remoteIP = $_SERVER['REMOTE_ADDR'];
     }
     
+    // Check if the ReCAPTCHA was successful
     public function Check( )
     {
         $resp = $this->_recaptcha->verify( $this->_response, $this->_remoteIP );

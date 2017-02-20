@@ -1,5 +1,11 @@
 <?php
 
+/*
+
+This code should be used in conjunction with some sort of page or other post such as a blog post of forum question
+
+*/
+
 $comments = new Sonar\Comments( "comments", "commentlikes", 3 );
 $comments->SetMaxNestingLevel( 3 );
 $user = new Sonar\User( );
