@@ -25,5 +25,5 @@ if ( $user->IsLoggedIn( ) )
 }
 else
 {
-    echo "You need to <a href='" . Sonar\Path::To( "home/login" ) . "'>login</a> or <a href='" . Sonar\Path::To( "home/register" ) . "'>register</a>";
+    echo "You need to <a href='" . Sonar\Path::To( "home/loginhihi" ) . "'>login</a> or <a href='" . Sonar\Path::To( "home/register" ) . "'>register</a>";
 }

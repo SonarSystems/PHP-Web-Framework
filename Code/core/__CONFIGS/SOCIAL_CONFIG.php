@@ -8,6 +8,7 @@ $array = array(
         'facebook' => 'facebook_users'
     ),
     'isEnabled' => array(
+        'hybridAuth' => true, // this disables all social login functionality
         'google' => true,
         'facebook' => true
     ),

@@ -39,11 +39,15 @@ foreach ( $JS_INTERNAL_FILES as $file )
     
     echo "<script src='$path'></script>";
 }
-        
+
+if ( Sonar\Config::Get( "security/GooglereCAPTCHA/" )["enabled"] )
+{
 ?>
+
     <script src='https://www.google.com/recaptcha/api.js'></script>
 
 <?php
+}
         
 if ( Sonar\Config::get( "website/debug" ) )
 {

@@ -30,16 +30,19 @@ class Comments extends __Error
         $this->_maxLevel = 1;
     }
     
+    // Set the max number of child comment levels
     public function SetMaxNestingLevel( $maxLevel )
     {
         $this->_maxLevel = $maxLevel;
     }
     
+    // Get the max number of child comment levels
     public function GetMaxNestingLevel( )
     {
         return $this->_maxLevel;
     }
     
+    // Load all comments from the database for a specific post
     private function LoadComments( $column, $id )
     {
         $this->_db->Get( $this->_commentsTableName, array( $column, "=", $id ) );
@@ -57,6 +60,7 @@ class Comments extends __Error
         }
     }
     
+    // Get all comments for a specific post
     private function GetComments( $column, $id, $forceLoad )
     {
         // force loads/retrieves the comments from the database
@@ -76,32 +80,37 @@ class Comments extends __Error
         }
     }
     
+    // Get all comments for a specific post
     public function GetCommentsForPostID( $postID, $forceLoad = true )
     {
         return $this->GetComments( "postid", $postID, $forceLoad );
     }
     
+    // Get all comments for a specific user
     public function GetCommentsForUserID( $userID, $forceLoad = true )
     {
         return $this->GetComments( "userid", $userID, $forceLoad );
     }
     
+    // Get all comments for a specific comment
     public function GetCommentsForParentID( $parentID, $forceLoad = true )
     {
         return $this->GetComments( "parentid", $parentID, $forceLoad );
     }
     
+    // Get comment based on comment ID
     public function GetCommentForID( $id, $forceLoad = true )
     {
         return $this->GetComments( "id", $id, $forceLoad );
     }
     
-    // get number of comments for post
+    // Get number of comments for post
     public function Count( )
     {
         return $this->_db->Count( );
     }
     
+    // Insert comment into database
     public function InsertComment( $comment, $parentID = 0 )
     {
         $user = new User( );
@@ -142,6 +151,7 @@ class Comments extends __Error
         return $this->_db->insert( $this->_commentsTableName, $fields );
     }
     
+    // Edit/update comment in database
     public function EditComment( $id, $comment )
     {
         return $this->_db->Update( $this->_commentsTableName, $id, array(
@@ -150,7 +160,7 @@ class Comments extends __Error
         ) );   
     }
     
-    // check if the comment has been liked
+    // Check if the comment has been liked
     public function IsCommentLiked( $id )
     {
         $user = new User( );
@@ -168,7 +178,7 @@ class Comments extends __Error
         }
     }
     
-    // check if the comment has been disliked
+    // Check if the comment has been disliked
     public function IsCommentDisliked( $id )
     {
         $user = new User( );
@@ -186,6 +196,7 @@ class Comments extends __Error
         }
     }
     
+    // Like a comment
     public function LikeComment( $id )
     {
         $user = new User( );
@@ -238,6 +249,7 @@ class Comments extends __Error
         }
     }
     
+    // Dislike a comment
     public function DislikeComment( $id )
     {
         $user = new User( );
@@ -290,7 +302,7 @@ class Comments extends __Error
         }
     }
     
-    // counts how many times a comment has been liked
+    // Counts how many times a comment has been liked
     public function CountCommentLikes( $id )
     {
         $likesResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND type = ?", array( $id, "like" ) );
@@ -298,7 +310,7 @@ class Comments extends __Error
         return $likesResult->Count( );
     }
     
-    // counts how many times a comment has been disliked
+    // Counts how many times a comment has been disliked
     public function CountCommentDislikes( $id )
     {
         $dislikeResult = $this->_db->Query( "SELECT * From $this->_likesTableName WHERE commentid = ? AND type = ?", array( $id, "dislike" ) );
@@ -306,7 +318,7 @@ class Comments extends __Error
         return $dislikeResult->Count( );
     }
     
-    // count how many times a comment has been liked minus the dislikes
+    // Count how many times a comment has been liked minus the dislikes
     public function CountCommentOverallLikes( $id )
     {
         return $this->CountCommentLikes( $id ) - $this->CountCommentDislikes( $id );

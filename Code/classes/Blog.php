@@ -24,7 +24,7 @@ class Blog extends __Error
         }
     }
     
-    // insert a blog post
+    // Insert a blog post
     public function InsertPost( $title, $highlight, $body )
     {
         $user = new User( );
@@ -61,7 +61,7 @@ class Blog extends __Error
         }
     }
     
-    // get all the blog posts
+    // Get all the blog posts
     public function GetAllPosts( $order, $forceLoad = true )
     {
         if ( "desc" !== strtolower( $order ) && "asc" !== strtolower( $order ) )

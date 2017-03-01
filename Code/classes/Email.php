@@ -4,93 +4,97 @@ namespace Sonar;
 
 require_once( "DB.php" );
 require_once( "Error.php" );
+require_once( "Config.php" );
 
-require_once( "../libs/PHPMailer/PHPMailerAutoload.php" );
-
-class Email extends __Error
+if ( Config::Get( "email/isEnabled/" ) )
 {
-    public function __construct( )
-    {
+    require_once( "../libs/PHPMailer/PHPMailerAutoload.php" );
 
-    }
-    
-    // Send email
-    public function Send( $to = array( ), $from = array( ), $replyTo = array( ), $subject, $body, $isTemplate = false, $variables = false )
+    class Email extends __Error
     {
-        $mail = new \PHPMailer;
-        
-        // Set PHPMailer to use the sendmail transport
-        $mail->isSendmail( );
+        public function __construct( )
+        {
 
-        // check if the name is present in the from email
-        if ( !empty( $from[1] ) )
-        {
-            $mail->setFrom( $from[0], $from[1] );
         }
-        else
+
+        // Send email
+        public function Send( $to = array( ), $from = array( ), $replyTo = array( ), $subject, $body, $isTemplate = false, $variables = false )
         {
-            $mail->setFrom( $from[0] );
-        }
-        
-        // check if the name is present in the reply to email
-        if ( !empty( $replyTo[1] ) )
-        {
-            $mail->addReplyTo( $replyTo[0], $replyTo[1] );
-        }
-        else
-        {
-            $mail->addReplyTo( $replyTo[0] );
-        }
-        
-        foreach( $to as $email )
-        {
-            if ( !empty( $email[1] ) )
+            $mail = new \PHPMailer;
+
+            // Set PHPMailer to use the sendmail transport
+            $mail->isSendmail( );
+
+            // check if the name is present in the from email
+            if ( !empty( $from[1] ) )
             {
-                $mail->addAddress( $email[0], $email[1] );
+                $mail->setFrom( $from[0], $from[1] );
             }
             else
             {
-                $mail->addAddress( $email[0] );
+                $mail->setFrom( $from[0] );
             }
-        }
-        
-        $mail->Subject = $subject;
-        $mail->IsHTML( true );
-                        
-        if ( $isTemplate )
-        {
-            if ( file_exists( "../templates/email/" . $body ) )
+
+            // check if the name is present in the reply to email
+            if ( !empty( $replyTo[1] ) )
             {
-                $templateBody = file_get_contents( "../templates/email/" . $body, false );
-                
-                if ( $variables )
+                $mail->addReplyTo( $replyTo[0], $replyTo[1] );
+            }
+            else
+            {
+                $mail->addReplyTo( $replyTo[0] );
+            }
+
+            foreach( $to as $email )
+            {
+                if ( !empty( $email[1] ) )
                 {
-                    foreach( $variables as $name => $value )
-                    {
-                        $templateBody = str_replace( $name, $value, $templateBody );
-                    }
+                    $mail->addAddress( $email[0], $email[1] );
                 }
-                
-                $mail->Body = $templateBody;
+                else
+                {
+                    $mail->addAddress( $email[0] );
+                }
+            }
+
+            $mail->Subject = $subject;
+            $mail->IsHTML( true );
+
+            if ( $isTemplate )
+            {
+                if ( file_exists( "../templates/email/" . $body ) )
+                {
+                    $templateBody = file_get_contents( "../templates/email/" . $body, false );
+
+                    if ( $variables )
+                    {
+                        foreach( $variables as $name => $value )
+                        {
+                            $templateBody = str_replace( $name, $value, $templateBody );
+                        }
+                    }
+
+                    $mail->Body = $templateBody;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
+            {
+                $mail->Body = $body;
+            }
+
+            if ( !$mail->send( ) )
             {
                 return false;
             }
+            else
+            {
+                return true;
+            }
+
         }
-        else
-        {
-            $mail->Body = $body;
-        }
-        
-        if ( !$mail->send( ) )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-        
     }
 }

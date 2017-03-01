@@ -48,28 +48,30 @@ class User extends __Error
                 )
             );
             
-
-            $this->_hybridAuth = new \Hybrid_Auth( $this->_socialConfig );
-            
-            foreach ( Config::Get( "social/isEnabled" ) as $provider => $value )
+            if ( Config::Get( "social/isEnabled/" )["hybridAuth"] )
             {
-                // check if social login for a particular provider is enabled
-                if ( $value )
+                $this->_hybridAuth = new \Hybrid_Auth( $this->_socialConfig );
+
+                foreach ( Config::Get( "social/isEnabled" ) as $provider => $value )
                 {
-                    // loop through the providors from _socialConfig
-                    if ( $this->_hybridAuth->isConnectedWith( $provider ) )
+                    // check if social login for a particular provider is enabled
+                    if ( $value )
                     {
-                        $adapter = $this->_hybridAuth->authenticate( $provider );
-
-                        try
+                        // loop through the providors from _socialConfig
+                        if ( $this->_hybridAuth->isConnectedWith( $provider ) )
                         {
-                            $user_profile = $adapter->getUserProfile( );
+                            $adapter = $this->_hybridAuth->authenticate( $provider );
 
-                            $this->SocialLogin( $user_profile->identifier, $user_profile->email, $provider );
-                        }
-                        catch( Exception $e )
-                        {
-                            $this->_hybridAuth->logoutAllProviders( );
+                            try
+                            {
+                                $user_profile = $adapter->getUserProfile( );
+
+                                $this->SocialLogin( $user_profile->identifier, $user_profile->email, $provider );
+                            }
+                            catch( Exception $e )
+                            {
+                                $this->_hybridAuth->logoutAllProviders( );
+                            }
                         }
                     }
                 }
@@ -368,7 +370,10 @@ class User extends __Error
     // Log the user out
     public function Logout( )
     {
-        $this->_hybridAuth->logoutAllProviders( );
+        if ( Config::Get( "social/isEnabled/" )["hybridAuth"] )
+        {
+            $this->_hybridAuth->logoutAllProviders( );
+        }
 
         $this->_db->Delete( "users_sessions", array( "user_id", "=", $this->Data( )->id ) );
 

@@ -39,7 +39,7 @@ if ( Sonar\Input::Exists( "post" ) )
                     'required' => true,
                     'email' => true,
                     'min' => 2,
-                    'max' => 32,
+                    'max' => 767,
                     'unique' => Sonar\Config::Get( "users/usersTableName" )
                 )
             ), array(
