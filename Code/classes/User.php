@@ -494,7 +494,7 @@ class User extends __Error
         $this->Find( $emailAddress );
         $this->LoginWithOutChecks( true );
         
-        //Redirect::To( "home/index" );
+        Redirect::To( "home/index" );
     }
     
     // Get the social media HydridAuth plugin object
