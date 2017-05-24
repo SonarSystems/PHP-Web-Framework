@@ -2,5 +2,4 @@
 
 ## SSO
 
-* Send data from slave to master
-* Verify data and send different response from master to slave
+* On master check if something is set like a user is logged in and return response
