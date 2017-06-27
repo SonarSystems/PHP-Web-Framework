@@ -7,5 +7,5 @@ $array = array(
     'host' => 'localhost',
     'username' => 'root',
     'password' => '',
-    'dbName' => 'PHPWebFramework'
+    'dbName' => 'phpframework'
 );

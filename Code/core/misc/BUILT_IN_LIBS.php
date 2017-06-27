@@ -15,6 +15,9 @@ $__CSS_BIL_LIBS = array
     array( 'W3.CSS', '<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css" />' ),
 
     array( 'Materialize-V0-97-7', '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css" />' ),
+    
+    array( 'MDL-V1.3.0', '<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />' ),
+    array( 'MDL-V1.3.0', '<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css" />' ),
 );
 
 
@@ -35,6 +38,8 @@ $__JS_BIL_LIBS = array
     array( 'Foundation-V6-2-3', '<script src="https://cdn.jsdelivr.net/foundation/6.2.3/foundation.min.js"></script>' ),
 
     array( 'Materialize-V0-97-7', '<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>' ),
+    
+    array( 'MDL-V1.3.0', '<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>' ),
 );
 
 

@@ -57,7 +57,9 @@ $LIBS_BUILT_IN = array
     
     array( "W3.CSS", 0 ),
     
-    array( "Materialize-V0-97-7", 0 )
+    array( "Materialize-V0-97-7", 0 ),
+    
+    array( "MDL-V1.3.0", 1 )
 );
 
 require_once( "misc/BUILT_IN_LIBS.php" );
