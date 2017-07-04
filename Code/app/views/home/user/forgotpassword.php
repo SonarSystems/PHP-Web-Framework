@@ -20,7 +20,7 @@ if ( Sonar\Input::Exists( "post" ) )
 			"email_address" => array(
 				"required" => true,
                 "email" => true,
-                'exists' => Sonar\Config::Get( "mysql/usersTableName" )
+                'exists' => Sonar\Config::Get( "users/usersTableName" )
 			)
 		), array(
             "Email Address"
