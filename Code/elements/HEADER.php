@@ -14,25 +14,7 @@ if ( Sonar\Config::get( "mysql/enabled" ) )
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="<?= Sonar\Config::get( "meta/charset" ); ?>" />
-        <meta name="description" content="<?= Sonar\Config::get( "meta/description" ); ?>" />
-        <meta name="keywords" content="<?php
-                                       $index = 0;
-                                       
-                                       foreach( Sonar\Config::get( "meta/keywords" ) as $keyword )
-                                       {
-                                           $index++;
-                                           
-                                           echo $keyword;
-                                           
-                                           if ( $index < count( Sonar\Config::get( "meta/keywords" ) ) )
-                                           {
-                                            echo ", ";
-                                           }
-                                       }
-                                       ?>" />
-        <meta name="author" content="<?= Sonar\Config::get( "meta/author" ); ?>" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?php require_once( "SUB/METATAGS.php" ); ?>
         
         <?php require_once( "SUB/FAVICON.php" ); ?>
 
@@ -76,6 +58,22 @@ if ( Sonar\Config::get( "mysql/enabled" ) )
             }
             
             $path = Sonar\Path::PrependRoot( "css/$file[0].css?v=$version" );
+            
+            echo "<link rel='stylesheet' type='text/css' href='$path' />";
+        }
+        
+        foreach ( $PHP_CSS_INTERNAL_FILES as $file )
+        {
+            if ( Sonar\Config::get( "website/debug" ) )
+            {
+                $version = time( );
+            }
+            else
+            {
+                $version = $file[1];
+            }
+            
+            $path = Sonar\Path::PrependRoot( "css/$file[0].php?v=$version" );
             
             echo "<link rel='stylesheet' type='text/css' href='$path' />";
         }
