@@ -11,6 +11,11 @@ if ( $user->IsLoggedIn( ) )
     exit( );
 }
 
+if ( Sonar\Session::Exists( "forgotpassword" ) )
+{
+    echo Sonar\Session::Flash( "forgotpassword" );
+}
+
 if ( Sonar\Input::Exists( "post" ) )
 {
 	if ( Sonar\Token::Check( Sonar\Input::Get( "token", $_POST ) ) )

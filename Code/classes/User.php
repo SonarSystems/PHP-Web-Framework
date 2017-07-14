@@ -524,4 +524,28 @@ class User extends __Error
             return false;
         }
     }
+    
+    // Get the users password expiration start time
+    public function VerifyPasswordResetTime( $user )
+    {
+        $data = $this->_db->Get( $this->_usersResetPasswordTableName, array( "username", "=", $user ) );
+
+        if ( $data->count( ) )
+        {
+            $passwordResetDuration = Config::Get( "users/passwordResetExpiration" );
+            
+            if ( $data->First( )->starttime + $passwordResetDuration > time( ) || $passwordResetDuration === 0 )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

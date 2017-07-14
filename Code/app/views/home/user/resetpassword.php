@@ -25,7 +25,15 @@ else
     {  
         if ( $user->VerifyResetCode( $username, $resetCode ) )
         {
-            $resetCodeValid = true;
+            if ( $user->VerifyPasswordResetTime( $username ) )
+            {
+                $resetCodeValid = true;
+            }
+            else
+            {
+                Sonar\Session::Flash( "forgotpassword", "The password reset code expired, please submit again." );
+			    Sonar\Redirect::To( "home/forgotpassword" );
+            }
         }
         else
         {
