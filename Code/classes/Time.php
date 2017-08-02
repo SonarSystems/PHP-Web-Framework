@@ -184,7 +184,7 @@ class Time
     }
     
     // Convert a value below 10 such as 9 to 09
-    private static function AddZero( $number )
+    public static function AddZero( $number )
     {
         if ( $number < 10 )
         {

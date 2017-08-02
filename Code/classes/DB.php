@@ -235,4 +235,10 @@ class DB
     {
         return $this->_count;
     }
+    
+    // Remove all results
+    public function Flush( )
+    {
+        $this->_results = null;
+    }
 }

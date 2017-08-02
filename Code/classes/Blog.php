@@ -64,14 +64,14 @@ class Blog extends __Error
     // Get all the blog posts
     public function GetAllPosts( $order, $forceLoad = true )
     {
-        if ( "desc" !== strtolower( $order ) && "asc" !== strtolower( $order ) )
-        {
-            $order = "asc";
-        }
-        
         // force loads/retrieves the blog posts from the database
         if ( $forceLoad )
         {
+            if ( "desc" !== strtolower( $order ) && "asc" !== strtolower( $order ) )
+            {
+                $order = "asc";
+            }
+            
             $this->_db->Query( "SELECT * From $this->_postsTableName ORDER BY timestamp $order" );
 
             if ( $this->_db->Count( ) )

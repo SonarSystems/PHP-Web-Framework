@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.2
--- http://www.phpmyadmin.net
+-- version 4.7.0
+-- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 22, 2016 at 06:04 PM
--- Server version: 10.1.16-MariaDB
--- PHP Version: 7.0.9
+-- Generation Time: Aug 02, 2017 at 07:48 PM
+-- Server version: 10.1.22-MariaDB
+-- PHP Version: 7.1.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -17,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `PHPWebFramework`
+-- Database: `phpframework`
 --
 
 -- --------------------------------------------------------
@@ -153,12 +155,12 @@ CREATE TABLE `forumcategories` (
 --
 
 INSERT INTO `forumcategories` (`id`, `categoryid`, `sectionid`, `title`, `description`) VALUES
-(1, 'generaldiscussion', 'general', 'General Discussion', 'For everything that isn''t a help request.'),
+(1, 'generaldiscussion', 'general', 'General Discussion', 'For everything that isn\'t a help request.'),
 (2, 'askforfeatures', 'general', 'Ask For Features', 'If there is a feature that you desire then come on in and ask.'),
 (3, 'bugs', 'general', 'Bugs', 'Found any problems whilst using Sonar Learning, then let us know.'),
 (4, 'showcase', 'general', 'Showcase', 'Want to showcase something epic, this is the right place.'),
 (5, 'competitions', 'general', 'Competitions/Giveaways', 'Stay tuned for new competitions and giveaways.'),
-(6, 'generalhelp', 'help', 'General', 'If you have any general help requests but there isn''t a specific section then ask it here.'),
+(6, 'generalhelp', 'help', 'General', 'If you have any general help requests but there isn\'t a specific section then ask it here.'),
 (7, 'programming', 'help', 'Programming', 'Help with programming/coding.'),
 (8, 'science', 'help', 'Science', 'Help with science.'),
 (9, 'computerscience', 'help', 'Computer Science', 'Help with computer science.'),
@@ -354,6 +356,50 @@ CREATE TABLE `google_users` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `type` varchar(32) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `title` text NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  `isviewed` tinyint(1) NOT NULL DEFAULT '0',
+  `isopened` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `type`, `userid`, `title`, `timestamp`, `isviewed`, `isopened`) VALUES
+(1, 'like', 8, 'Hello this is awesome', 1500585915, 1, 0),
+(2, 'like', 10, 'SGVsbG8gdGhpcyBpcyBhd2Vzb21l', 1500586119, 0, 0),
+(3, 'response', 10, 'SGVsbG8gdGhpcyBpcyBhd2Vzb21l', 1501001245, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notificationtypes`
+--
+
+CREATE TABLE `notificationtypes` (
+  `id` int(11) NOT NULL,
+  `type` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `notificationtypes`
+--
+
+INSERT INTO `notificationtypes` (`id`, `type`) VALUES
+(2, 'like'),
+(1, 'response');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `userprivileges`
 --
 
@@ -392,9 +438,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `privilege`, `username`, `password`, `email_address`, `salt`, `joined`, `activated`) VALUES
-(5, 'user', 'Frajaamd', '$2y$10$Rwe0BJyCB3wL/e7IAZaFM.lkl3ggLitoOcPMYZliIOy4/U6YZ6tPC', 'contact@contact.com', '2b38ac1f5814ab5f3899cce8442302a775ca2cb27b7aee10d6c801b82bb3c23da323c5377ad87b3f08e69b5189901a552ae343d6eccf91e71fa96b47bba3b0cc696b3b60ce45a65185570f21b47772679c9998f189f8f1d068737da7e019953083a152a14e8387d47b5d5941991629d0cb640bdc34b25bdba1149c20b434ba2c', 1478708441, 1),
-(6, 'admin', 'Frahaanf', '$2y$10$k47vC2FvE5/3/zqBJ2hEm.K7qgSeQn8yDPHtlqcnelxus8dAQh/2e', 'contact2@contact.com', 'a76b830696ff966bf38d06d4d8d48a5e3cce40ef625f6f39f970f996d54480c8e6037e8d4a9effc970a03e31acac911d89eee0d7a306c9bd8589d52ed338f39b0c6324aad01232d852e501dd88904ca22c29a75cae3671aaf40d0c6ecd753163c2ca9b3fdec9801be6557433901b4e29df0efe35c70b5fc6a316460993545749', 1481732642, 1),
-(7, 'admin', 'FrahaanUI', '$2y$10$2ENNoCF.InUeF6ZOBZjIbOV6zdJX/q6ciHeHv1wQ/oiOY74EyQm1a', 'contact@contact.co.uk', '23abf8b5a4f1f5d7edf8ff85d29720a48f6904cb6d9ad6d869c27da3c9571bdc14119d5f912f0083c99ddb78f492f1ad2a35476f544bfe68eaef1506536e547e6e727c43dbe1c9aff3003fc1655b5a8afbc5568b2db1b8a76c31078ae0b884910a9cf180c0b5b7a2870f4bb1ea691081ebc5b3cf8fe14ef8761619852163b9c4', 1482422785, 1);
+(8, 'user', 'frahaan', '$2y$10$7ldrcRrr14Sw7eHl8lXNGOaq6NjfcSl/79KX45GdnXnUzB.qX54B6', 'contact@contact.com', '6f5c788a96dd294289c5d855e57b6d15e93526236e6208e26d31acc6f1a3d15b9f66da67965eb9e7a88d10f7169c9b7c795068f008fa3942d6bc24d89407cbea88fb437b4a763dbd221c76ec861c8510e1a3fbf48c97d1c516c46111188766a454a00b9dadf14d28c7782d368b1d45fb5b9e05e3ff6f51ebd85456627754e2e0', 1498561308, 1),
+(9, 'user', 'test12345', '$2y$10$fpk9XI5I.oz/yb90xD3mLOYtCG.TWHE85b3njfEpN8UKrkLdnvLv6', 'contact@contact.comm', 'f2028f76187a66087f6e9f34cd11afe9aee87a5b3a69387a1423c8300513d0ddbf040cee5ed4776767bba575b0c58e86d3f509ae9caf82cbfe6fa2f5e15076b20cf5250a878e2a4b4eac131f85596652eae4b2b8e08ec6d109db24c5f365da157d1762bfc778f736766ec2b46cd6cbee15cbf1f19212bc5cc663e1fe98a834b3', 1499188634, 0),
+(10, 'user', 'iuhiuhihiuhui', '$2y$10$0nBqB8rokn2ke5K823wnfOKaOec79OPDjlsxeWkBwjXJit5uyFURm', 'ojsdiojfds@dsiofjiods.commm', 'b1bb835a4d1acfe19300be181211b3a87bba07d85eb62d2197f57c0c29a35ec195878e77b0bc31ff80c8fac87bf2cf63196c9d97b45575734709eed129ade7d2d289038f772daf666b09d5f982e756bf161e3a84289d049648a354de03341a7a42babce4b96c70d04d3995aff7ea09812114dda6e84738984b5076312ab7af42', 1499188793, 0);
 
 -- --------------------------------------------------------
 
@@ -408,6 +454,13 @@ CREATE TABLE `users_password_reset` (
   `salt` varchar(1024) NOT NULL,
   `starttime` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users_password_reset`
+--
+
+INSERT INTO `users_password_reset` (`id`, `username`, `salt`, `starttime`) VALUES
+(8, 'frahaan', 'c79b0433241be95f44b2e5b9bd09158e0dd6e1ae8d56a15c3f3644e685b0cd075499c43dac05372d6868e725a53a69ad0b837b06d21534d20f0a4f445ae6755bfe17d966aa74dede18096b54e781a16292cfd97c9290d01c79e7321045679398f145f6360fccf08e5f8ebed55115e596c7e364a13bb587a2fabcfcf65c14ba3f', 1500038257);
 
 -- --------------------------------------------------------
 
@@ -426,7 +479,8 @@ CREATE TABLE `users_sessions` (
 --
 
 INSERT INTO `users_sessions` (`id`, `user_id`, `hash`) VALUES
-(10, 7, 'dcecbc7848a6c82098368161df2e5d77de043b3adf251b82e4131df2b0c228cf');
+(10, 7, 'dcecbc7848a6c82098368161df2e5d77de043b3adf251b82e4131df2b0c228cf'),
+(12, 8, '9a241ab88a40a070b26052e136eca0c25496be494ca072211373ff02c84322a6');
 
 --
 -- Indexes for dumped tables
@@ -515,6 +569,19 @@ ALTER TABLE `google_users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `auth_id` (`auth_id`),
   ADD UNIQUE KEY `email_address` (`email_address`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notificationtypes`
+--
+ALTER TABLE `notificationtypes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `type` (`type`);
 
 --
 -- Indexes for table `userprivileges`
@@ -607,6 +674,16 @@ ALTER TABLE `forumsections`
 ALTER TABLE `google_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `notificationtypes`
+--
+ALTER TABLE `notificationtypes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `userprivileges`
 --
 ALTER TABLE `userprivileges`
@@ -615,17 +692,18 @@ ALTER TABLE `userprivileges`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `users_password_reset`
 --
 ALTER TABLE `users_password_reset`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `users_sessions`
 --
 ALTER TABLE `users_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
