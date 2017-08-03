@@ -4,8 +4,8 @@ $name = 'social';
 
 $array = array(
     'tableNames' => array(
-        'google' => 'google_users',
-        'facebook' => 'facebook_users'
+        'google' => 'googleusers',
+        'facebook' => 'facebookusers'
     ),
     'isEnabled' => array(
         'hybridAuth' => true, // this disables all social login functionality

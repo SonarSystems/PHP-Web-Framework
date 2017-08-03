@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 02, 2017 at 07:48 PM
+-- Generation Time: Aug 03, 2017 at 07:01 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -126,10 +126,10 @@ INSERT INTO `comments` (`id`, `postid`, `parentid`, `userid`, `timeposted`, `tim
 -- --------------------------------------------------------
 
 --
--- Table structure for table `facebook_users`
+-- Table structure for table `facebookusers`
 --
 
-CREATE TABLE `facebook_users` (
+CREATE TABLE `facebookusers` (
   `id` int(11) NOT NULL,
   `auth_id` varchar(767) NOT NULL,
   `email_address` varchar(767) NOT NULL,
@@ -343,10 +343,10 @@ INSERT INTO `forumsections` (`id`, `sectionid`, `title`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `google_users`
+-- Table structure for table `googleusers`
 --
 
-CREATE TABLE `google_users` (
+CREATE TABLE `googleusers` (
   `id` int(11) NOT NULL,
   `auth_id` varchar(767) NOT NULL,
   `email_address` varchar(767) NOT NULL,
@@ -445,10 +445,10 @@ INSERT INTO `users` (`id`, `privilege`, `username`, `password`, `email_address`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users_password_reset`
+-- Table structure for table `userspasswordreset`
 --
 
-CREATE TABLE `users_password_reset` (
+CREATE TABLE `userspasswordreset` (
   `id` int(11) NOT NULL,
   `username` varchar(32) NOT NULL,
   `salt` varchar(1024) NOT NULL,
@@ -456,29 +456,29 @@ CREATE TABLE `users_password_reset` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `users_password_reset`
+-- Dumping data for table `userspasswordreset`
 --
 
-INSERT INTO `users_password_reset` (`id`, `username`, `salt`, `starttime`) VALUES
+INSERT INTO `userspasswordreset` (`id`, `username`, `salt`, `starttime`) VALUES
 (8, 'frahaan', 'c79b0433241be95f44b2e5b9bd09158e0dd6e1ae8d56a15c3f3644e685b0cd075499c43dac05372d6868e725a53a69ad0b837b06d21534d20f0a4f445ae6755bfe17d966aa74dede18096b54e781a16292cfd97c9290d01c79e7321045679398f145f6360fccf08e5f8ebed55115e596c7e364a13bb587a2fabcfcf65c14ba3f', 1500038257);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users_sessions`
+-- Table structure for table `userssessions`
 --
 
-CREATE TABLE `users_sessions` (
+CREATE TABLE `userssessions` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `hash` varchar(1024) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `users_sessions`
+-- Dumping data for table `userssessions`
 --
 
-INSERT INTO `users_sessions` (`id`, `user_id`, `hash`) VALUES
+INSERT INTO `userssessions` (`id`, `user_id`, `hash`) VALUES
 (10, 7, 'dcecbc7848a6c82098368161df2e5d77de043b3adf251b82e4131df2b0c228cf'),
 (12, 8, '9a241ab88a40a070b26052e136eca0c25496be494ca072211373ff02c84322a6');
 
@@ -511,9 +511,9 @@ ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `facebook_users`
+-- Indexes for table `facebookusers`
 --
-ALTER TABLE `facebook_users`
+ALTER TABLE `facebookusers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `auth_id` (`auth_id`),
   ADD UNIQUE KEY `email_address` (`email_address`);
@@ -563,9 +563,9 @@ ALTER TABLE `forumsections`
   ADD UNIQUE KEY `sectionid` (`sectionid`);
 
 --
--- Indexes for table `google_users`
+-- Indexes for table `googleusers`
 --
-ALTER TABLE `google_users`
+ALTER TABLE `googleusers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `auth_id` (`auth_id`),
   ADD UNIQUE KEY `email_address` (`email_address`);
@@ -598,15 +598,15 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `email_address` (`email_address`);
 
 --
--- Indexes for table `users_password_reset`
+-- Indexes for table `userspasswordreset`
 --
-ALTER TABLE `users_password_reset`
+ALTER TABLE `userspasswordreset`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users_sessions`
+-- Indexes for table `userssessions`
 --
-ALTER TABLE `users_sessions`
+ALTER TABLE `userssessions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -629,9 +629,9 @@ ALTER TABLE `commentlikes`
 ALTER TABLE `comments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
--- AUTO_INCREMENT for table `facebook_users`
+-- AUTO_INCREMENT for table `facebookusers`
 --
-ALTER TABLE `facebook_users`
+ALTER TABLE `facebookusers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `forumcategories`
@@ -669,9 +669,9 @@ ALTER TABLE `forumquestions`
 ALTER TABLE `forumsections`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `google_users`
+-- AUTO_INCREMENT for table `googleusers`
 --
-ALTER TABLE `google_users`
+ALTER TABLE `googleusers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -694,14 +694,14 @@ ALTER TABLE `userprivileges`
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
--- AUTO_INCREMENT for table `users_password_reset`
+-- AUTO_INCREMENT for table `userspasswordreset`
 --
-ALTER TABLE `users_password_reset`
+ALTER TABLE `userspasswordreset`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
--- AUTO_INCREMENT for table `users_sessions`
+-- AUTO_INCREMENT for table `userssessions`
 --
-ALTER TABLE `users_sessions`
+ALTER TABLE `userssessions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
