@@ -4,6 +4,11 @@ namespace Sonar;
 
 require_once( "Config.php" );
 
+if ( Config::Get( "mysql/dbBackup" ) )
+{
+    require_once( "../libs/DBBackup/db.backup.class.php" );
+}
+
 class DB
 {
     private static $_instance = null;
@@ -240,5 +245,60 @@ class DB
     public function Flush( )
     {
         $this->_results = null;
+    }
+    
+    /*
+    *   Exports the entire Database into an SQL file in the public directory
+    *   Example Call
+    *   DB::getInstance( )->Backup( "Location/Filename");
+    */
+    public function Backup( $saveLocation )
+    {
+        $dbBackup = new \DBBackup( array
+        (
+            'driver' => 'mysql',
+            'host' => Config::Get( "mysql/host" ),
+            'user' => Config::Get( "mysql/username" ),
+            'password' => Config::Get( "mysql/password" ),
+            'database' => Config::Get( "mysql/dbName" )
+        ) );
+        
+        $backup = $dbBackup->backup( );
+        
+        if( !$backup['error'] )
+        {
+            $filepath = fopen( $saveLocation . ".sql", 'w+' );
+            fwrite( $filepath, $backup['msg']);
+            fclose( $filepath );
+            
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    /*
+    *   Downloads the Database backup
+    *   Example Call
+    *   DB::getInstance( )->DownloadBackup( "Location/Filename");
+    */
+    public function DownloadBackup( $location )
+    {
+        $location .= ".sql";
+        
+        header( 'Content-Description: File Transfer' );
+        header( 'Content-Type: application/octet-stream' );
+        header( 'Content-Disposition: attachment; filename=' . basename( $location ) );
+        header( 'Content-Transfer-Encoding: binary' );
+        header( 'Expires: 0' );
+        header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+        header( 'Pragma: public' );
+        header( 'Content-Length: ' . filesize( $location ) );
+        
+        ob_clean( );
+        flush( );
+        readfile( $location );
     }
 }

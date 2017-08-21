@@ -7,5 +7,6 @@ $array = array(
     'host' => 'localhost',
     'username' => 'root',
     'password' => '',
-    'dbName' => 'phpframework'
+    'dbName' => 'phpframework',
+    'dbBackup' => true
 );

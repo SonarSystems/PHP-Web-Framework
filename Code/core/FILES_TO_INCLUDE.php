@@ -7,7 +7,7 @@
 */
 $CSS_INTERNAL_FILES = array
 (
-    array( "test/index", "1" )
+    array( "index", "1" )
 );
 
 /*

@@ -44,22 +44,24 @@ $JS_LOCAL_LIBS = array
 */
 $LIBS_BUILT_IN = array
 (
-    array( "jQuery-V3-1-0", 0 ),
+    array( "jQuery-V3-2-1", 0 ),
     array( "jQuery-V2-2-4", 0 ),
     array( "jQuery-V1-12-4", 0 ),
     
     array( "Bootstrap-V3-3-7", 0 ),
-    array( "Bootstrap-V4.0.0-alpha.6", 1 ),
+    array( "Bootstrap-V4.0.0-beta", 1 ),
 
     array( "Skeleton-V2-0-4", 0 ),
     
-    array( "Foundation-V6-2-3", 0 ),
+    array( "Foundation-V6-4-2", 0 ),
     
     array( "W3.CSS", 0 ),
     
-    array( "Materialize-V0-97-7", 0 ),
+    array( "Materialize-V0-100-1", 0 ),
     
-    array( "MDL-V1.3.0", 1 )
+    array( "MDL-V1.3.0", 0 ),
+    
+    array( "Material-V0-17-0", 0 ),
 );
 
 require_once( "misc/BUILT_IN_LIBS.php" );
