@@ -6,11 +6,11 @@ class Admin extends Controller
 {
 	public function index( )
 	{
-		$this->view( "admin/backup" );
+		$this->view( "admin/index" );
 	}
     
     public function backup( )
     {
-        $this->index( );
+        $this->view( "admin/backup" );
     }
 }

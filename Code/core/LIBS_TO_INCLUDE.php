@@ -61,7 +61,7 @@ $LIBS_BUILT_IN = array
     
     array( "MDL-V1.3.0", 0 ),
     
-    array( "Material-V0-17-0", 0 ),
+    array( "Material-V0-17-0", 1 ),
 );
 
 require_once( "misc/BUILT_IN_LIBS.php" );

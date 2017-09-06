@@ -1,21 +1,17 @@
 <?php
 
-$notifications = new Sonar\Notifications( Sonar\Config::Get( "notifications/notificationsTableName" ), Sonar\Config::Get( "notifications/notificationTypesTableName" ) );
+$image = new Sonar\Image( );
 
-/*if ( $notifications->Create( "like", 10, "Hello this is awesome" ) )
-{
-    echo "Yay";
-}
-else
-{
-    echo "Nay";
-}*/
+//print_r( $image->GifRandomSearch(  ) );
 
-print_r( $notifications->GetAllForUser( 8, "desc", true ) );
-//print_r( $notifications->GetAll("desc", true ) );
+$image->GifSearch( "rick and morty", 6 ) ;
+    
+$image = $image->GetAllGifURLs( "original" );
 
-print_r( $notifications->GetAllForUserSignedInAndType( "like", "desc", true ) );
-
-$notifications->UnmarkAsOpened( 1 );
+print_r( $image );
 
 ?>
+
+<br />
+
+<img src="<?= $image[5]; ?>" />
