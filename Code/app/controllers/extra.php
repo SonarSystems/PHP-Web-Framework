@@ -18,4 +18,9 @@ class Extra extends Controller
 	{
 		$this->view( "extra/changelog" );
 	}
+    
+    public function faq( )
+	{
+		$this->view( "extra/faq" );
+	}
 }
