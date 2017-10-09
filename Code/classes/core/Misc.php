@@ -7,8 +7,6 @@
 
 namespace Sonar;
 
-
-
 class Misc
 {
     // Change website title that appears in the tab
@@ -41,5 +39,17 @@ class Misc
 
         Magna consequuntur id quo, aeterno prompta in vix, solum reque sanctus at vel. Libris vocibus philosophia his at, qui at ferri adipisci. Eos consul volumus percipitur te, integre insolens quaestio id mel. Nam partem eruditi id, mea harum insolens no, cu est elitr probatus indoctum.
         ";
+    }
+    
+    public static function Copyright( $year = NULL )
+    {
+        if ( NULL === $year )
+        {
+            $year = date( "Y" );
+        }
+        
+        $companyName = Config::Get( "website/companyName" );
+        
+        return "Copyright &copy; $year $companyName";
     }
 }

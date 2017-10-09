@@ -8,6 +8,7 @@ $array = array(
     'title' => 'Awesome Site Title',
     'contactEmailAddress' => 'contact@domain.com', // INSERT contact email address here
     'contactName' => 'Name',
+    'companyName' => 'Microsoft',
     'root' => dirname( $_SERVER["SCRIPT_NAME"] ),
     'domainName' => $_SERVER['HTTP_HOST']
 );

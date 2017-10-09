@@ -1,6 +1,6 @@
 <?php
 
-require_once( "../classes/Config.php" );
+require_once( "../classes/core/Config.php" );
 
 if ( !Sonar\Config::get( "website/debug" ) )
 {
@@ -13,8 +13,8 @@ else
 
 session_start( );
 
-// require all the classes
-foreach ( glob( "../classes/*.php" ) as $filename )
+// require all core framework classes
+foreach ( glob( "../classes/core/*.php" ) as $filename )
 {
     require_once( $filename );
 }
@@ -49,4 +49,10 @@ if ( Sonar\Cookie::Exists( Sonar\Config::get( "remember/cookieName" ) ) && !Sona
             $user->login( );
         }
     }
+}
+
+// require all custom user site classes
+foreach ( glob( "../classes/custom/*.php" ) as $filename )
+{
+    require_once( $filename );
 }
