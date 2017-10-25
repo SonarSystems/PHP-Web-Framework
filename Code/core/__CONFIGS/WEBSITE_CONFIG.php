@@ -10,5 +10,6 @@ $array = array(
     'contactName' => 'Name',
     'companyName' => 'Microsoft',
     'root' => dirname( $_SERVER["SCRIPT_NAME"] ),
-    'domainName' => $_SERVER['HTTP_HOST']
+    'domainName' => $_SERVER['HTTP_HOST'],
+    'isAMPEnabled' => false
 );

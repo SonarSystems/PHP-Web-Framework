@@ -2,7 +2,7 @@
 
 header( "Content-type: text/css; charset: UTF-8" );
 
-require_once( "../../classes/CSS.php" );
+require_once( "../../classes/core/CSS.php" );
 
 $cssAgent = new Sonar\CSS( );
 

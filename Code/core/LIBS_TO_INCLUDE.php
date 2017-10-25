@@ -49,7 +49,7 @@ $LIBS_BUILT_IN = array
     array( "jQuery-V1-12-4", 0 ),
     
     array( "Bootstrap-V3-3-7", 0 ),
-    array( "Bootstrap-V4.0.0-beta", 1 ),
+    array( "Bootstrap-V4.0.0-beta-2", 1 ),
 
     array( "Skeleton-V2-0-4", 0 ),
     

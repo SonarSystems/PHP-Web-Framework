@@ -41,6 +41,7 @@ class Misc
         ";
     }
     
+    // Generates copyright text with the company name and year
     public static function Copyright( $year = NULL )
     {
         if ( NULL === $year )
