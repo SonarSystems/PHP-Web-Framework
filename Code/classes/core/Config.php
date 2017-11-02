@@ -4,7 +4,14 @@ namespace Sonar;
 
 $GLOBALS['config'] = array( );
 
-foreach ( glob( "../core/__CONFIGS/*.php" ) as $filename )
+foreach ( glob( "../core/__CONFIGS/core/*.php" ) as $filename )
+{
+    require_once( $filename );
+
+    $GLOBALS['config'][$name] = $array;
+}
+
+foreach ( glob( "../core/__CONFIGS/custom/*.php" ) as $filename )
 {
     require_once( $filename );
 
