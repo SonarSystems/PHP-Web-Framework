@@ -1,6 +1,6 @@
 <?php
 
-Sonar\Misc::ChangeWebsiteTitle( "Account Activation" ) );
+Sonar\Misc::ChangeWebsiteTitle( "Account Activation" );
 
 $user = new Sonar\User( );
 
