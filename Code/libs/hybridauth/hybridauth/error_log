@@ -1,0 +1,2 @@
+[11-Aug-2018 15:22:09 America/Chicago] PHP Warning:  require_once(../vendor/autoload.php): failed to open stream: No such file or directory in /home4/sonarsystems/public_html/__sites/__internal/sonartesting.space/ucab/libs/hybridauth/hybridauth/index.php on line 14
+[11-Aug-2018 15:22:09 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '../vendor/autoload.php' (include_path='.:/opt/php70/lib/php') in /home4/sonarsystems/public_html/__sites/__internal/sonartesting.space/ucab/libs/hybridauth/hybridauth/index.php on line 14

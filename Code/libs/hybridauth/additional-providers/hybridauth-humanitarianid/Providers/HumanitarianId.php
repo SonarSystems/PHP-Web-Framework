@@ -17,34 +17,7 @@ class Hybrid_Providers_HumanitarianId extends Hybrid_Provider_Model_OAuth2
    * Adapter initializer
    */
   function initialize() {
-    if (!$this->config["keys"]["id"] || !$this->config["keys"]["secret"]) {
-      throw new Exception("Your application id and secret are required in order to connect to {$this->providerId}.", 4);
-    }
-
-    // override requested scope
-    if (isset($this->config["scope"]) && !empty($this->config["scope"])) {
-      $this->scope = $this->config["scope"];
-    }
-
-    // include OAuth2 client
-    require_once Hybrid_Auth::$config["path_libraries"] . "OAuth/OAuth2Client.php";
-    require_once Hybrid_Auth::$config["path_libraries"] . "HumanitarianId/HumanitarianIdOAuth2Client.php";
-
-    // create a new OAuth2 client instance
-    $this->api = new HumanitarianIdOAuth2Client($this->config["keys"]["id"], $this->config["keys"]["secret"], $this->endpoint, $this->compressed);
-
-    // If we have an access token, set it
-    if ($this->token("access_token")) {
-      $this->api->access_token = $this->token("access_token");
-      $this->api->refresh_token = $this->token("refresh_token");
-      $this->api->access_token_expires_in = $this->token("expires_in");
-      $this->api->access_token_expires_at = $this->token("expires_at");
-    }
-
-    // Set curl proxy if exist
-    if (isset(Hybrid_Auth::$config["proxy"])) {
-      $this->api->curl_proxy = Hybrid_Auth::$config["proxy"];
-    }
+    parent::initialize();
 
     // Provider api end-points
     $this->api->api_base_url  = "https://auth.humanitarian.id/";
@@ -105,7 +78,10 @@ class Hybrid_Providers_HumanitarianId extends Hybrid_Provider_Model_OAuth2
    * load the user profile from the IDp api client
   */
   function getUserProfile() {
-    $data = $this->api->api( "account.json" );
+    $this->api->curl_header = array(
+      "Authorization: Bearer {$this->api->access_token}",
+    );
+    $data = $this->api->post( "account.json" );
     if ( ! isset( $data->id ) ){
       throw new Exception( "User profile request failed! {$this->providerId} returned an invalid response.", 6 );
     }
@@ -116,6 +92,9 @@ class Hybrid_Providers_HumanitarianId extends Hybrid_Provider_Model_OAuth2
     $this->user->profile->firstName   = @ $data->given_name;
     $this->user->profile->lastName    = @ $data->family_name;
     $this->user->profile->emailVerified    = @ $data->email_verified;
+    $this->user->profile->locale = @ $data->locale;
+    $this->user->profile->zoneinfo = @ $data->zoneinfo;
+    $this->user->profile->photoURL = @ $data->picture;
 
     if( empty($this->user->profile->displayName) ){
       $this->user->profile->displayName = @ $data->user_id;
