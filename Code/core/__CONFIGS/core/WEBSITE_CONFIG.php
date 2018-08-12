@@ -4,6 +4,7 @@ $name = 'website';
 
 $array = array(
     'debug' => true,
+    'ssl' => false,
     'version' => '1', // website version
     'title' => 'Awesome Site Title',
     'contactEmailAddress' => 'contact@domain.com', // INSERT contact email address here
