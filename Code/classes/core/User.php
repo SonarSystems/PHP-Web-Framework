@@ -34,8 +34,15 @@ class User extends __Error
             $this->_usersSessionsTableName = Config::Get( "users/usersSessionsTableName" );
             $this->_usersPrivilegesTableName = Config::Get( "users/userPrivilegesTableName" );
             
+            $ssl = "";
+          
+            if ( Config::Get( "website/ssl" ) )
+            {
+              $ssl = "s";
+            }
+          
             $this->_socialConfig = array(
-                "base_url" => "http://".Config::Get( "website/domainName" ).substr( Config::Get( "website/root" ), 0, -6 )."libs/hybridauth/hybridauth/index.php",
+                "base_url" => "http$ssl://".Config::Get( "website/domainName" ).substr( Config::Get( "website/root" ), 0, -6 )."libs/hybridauth/hybridauth/index.php",
                 "providers" => array (
                     "Google" => array (
                         "enabled" => Config::Get( "social/isEnabled/google" ),
