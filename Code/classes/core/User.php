@@ -395,9 +395,9 @@ class User extends __Error
     }
 
     // Check if the user is logged in
-    public function IsLoggedIn( )
+    public function IsLoggedIn( $checkSocial = true )
     {
-        if ( $this->_isLoggedIn )
+        if ( $this->_isLoggedIn && $checkSocial )
         {
             if ( $this->IsOnlySociallyLoggedIn( ) )
             {
